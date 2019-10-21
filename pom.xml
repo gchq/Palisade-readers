@@ -56,8 +56,7 @@
 
 
     <modules>
-        <module>library</module>
-        <module>readers</module>
+        <module>shade-hadoop-client</module>
     </modules>
 
     <scm>

@@ -3,16 +3,11 @@
     <parent>
         <artifactId>library</artifactId>
         <groupId>uk.gov.gchq.palisade</groupId>
-        <version>0.4.0-${revision}</version>
+        <version>0.3.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>shade-hadoop-client</artifactId>
-
-    <properties>
-        <maven-shade-plugin.version>3.1.1</maven-shade-plugin.version>
-        <jar.plugin.version>3.1.1</jar.plugin.version>
-    </properties>
 
     <!-- Hadoop includes many older dependencies that conflict with later versions in Palisade, several have to be
     excluded here. Hadoop also uses an older version of Google's Guava that later versions are not backwards
@@ -379,8 +374,8 @@
                                 </filter>
                             </filters>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"/>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer" />
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
                             </transformers>
                         </configuration>
                     </execution>
