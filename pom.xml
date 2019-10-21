@@ -52,6 +52,9 @@
         <jetcd.version>0.3.0</jetcd.version>
         <protobuf.version>3.5.1</protobuf.version>
         <hadoop.version>2.8.5</hadoop.version>
+        
+        <checkstyle.plugin.version>3.1.0</checkstyle.plugin.version>
+        <checkstyle.phase>verify</checkstyle.phase>
     </properties>
 
 
@@ -64,6 +67,43 @@
         <developerConnection>scm:git:ssh://git@github.com:gchq/Palisade-readers.git</developerConnection>
         <url>https://github.com/gchq/Palisade-readers</url>
     </scm>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle.plugin.version}</version>
+                <configuration>
+                    <configLocation>code-style/checkstyle.xml</configLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <headerLocation>code-style/licenseHeader.txt
+                    </headerLocation>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>${checkstyle.phase}</phase>
+                        <configuration>
+                            <configLocation>code-style/checkstyle.xml
+                            </configLocation>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                            <headerLocation>code-style/licenseHeader.txt
+                            </headerLocation>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <distributionManagement>
         <!-- in order to use this, one must have nexus up and running on a given url -->
