@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.hadoopreader;
+package uk.gov.gchq.palisade.reader;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.google.common.collect.Maps;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -37,8 +36,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -109,13 +106,13 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
     @JsonGetter("conf")
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
     Map<String, String> getConfMap() {
-        Map<String, String> rtn = Maps.newHashMap();
+        Map<String, String> rtn = new HashMap<String, String>();
         Map<String, String> plainJobConfWithoutResolvingValues = getPlainJobConfWithoutResolvingValues();
 
         for (Entry<String, String> entry : getConf()) {
             final String plainValue = plainJobConfWithoutResolvingValues.get(entry.getKey());
             final String thisValue = entry.getValue();
-            if (isNull(plainValue) || !plainValue.equals(thisValue)) {
+            if (plainValue == null || !plainValue.equals(thisValue)) {
                 rtn.put(entry.getKey(), entry.getValue());
             }
         }
@@ -123,7 +120,7 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
     }
 
     private Map<String, String> getPlainJobConfWithoutResolvingValues() {
-        Map<String, String> plainMapWithoutResolvingValues = new HashMap<>();
+        Map<String, String> plainMapWithoutResolvingValues = new HashMap<String, String>();
         for (Entry<String, String> entry : new Configuration()) {
             plainMapWithoutResolvingValues.put(entry.getKey(), entry.getValue());
         }
@@ -132,7 +129,7 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
 
     private static Configuration createConfig(final Map<String, String> conf) {
         final Configuration config = new Configuration();
-        if (nonNull(conf)) {
+        if ((conf != null)) {
             for (final Entry<String, String> entry : conf.entrySet()) {
                 config.set(entry.getKey(), entry.getValue());
             }

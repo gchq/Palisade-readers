@@ -57,6 +57,8 @@
 
     <modules>
         <module>shade-hadoop-client</module>
+        <module>readers-common</module>
+        <module>hadoop-reader</module>
     </modules>
 
     <scm>
