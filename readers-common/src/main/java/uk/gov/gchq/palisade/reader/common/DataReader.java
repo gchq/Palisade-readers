@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 
 import uk.gov.gchq.palisade.reader.exception.NoCapacityException;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
+import uk.gov.gchq.palisade.reader.request.DataReaderResponse;
 import uk.gov.gchq.palisade.service.Service;
 
 /**

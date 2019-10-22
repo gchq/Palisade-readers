@@ -28,6 +28,7 @@ import uk.gov.gchq.palisade.reader.common.DataFlavour.FlavourDeserializer;
 import uk.gov.gchq.palisade.reader.common.DataFlavour.FlavourSerializer;
 import uk.gov.gchq.palisade.reader.request.AddCacheRequest;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
+import uk.gov.gchq.palisade.reader.request.DataReaderResponse;
 import uk.gov.gchq.palisade.reader.request.GetCacheRequest;
 import uk.gov.gchq.palisade.reader.service.CacheService;
 import uk.gov.gchq.palisade.service.Service;
