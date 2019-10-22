@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>uk.gov.gchq.palisade</groupId>
-        <artifactId>Palisade-readers</artifactId>
+        <artifactId>readers</artifactId>
         <version>0.4.0-${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -21,6 +21,7 @@
         <checkstyle.phase>verify</checkstyle.phase>
         <maven-shade-plugin.version>3.1.1</maven-shade-plugin.version>
         <jar.plugin.version>3.1.1</jar.plugin.version>
+        <hadoop.version>2.8.5</hadoop.version>
 
     </properties>
 
