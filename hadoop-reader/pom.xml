@@ -32,6 +32,7 @@
         <jar.plugin.version>3.1.1</jar.plugin.version>
         <surefire.plugin.version>2.22.1</surefire.plugin.version>
         <failsafe.version>2.22.1</failsafe.version>
+        <revision>SNAPSHOT</revision>
 
     </properties>
     <!--  *********** Aritfact ID ***********    -->
