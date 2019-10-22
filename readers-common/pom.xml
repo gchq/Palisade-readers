@@ -20,7 +20,7 @@
     <parent>
         <groupId>uk.gov.gchq.palisade</groupId>
         <artifactId>readers</artifactId>
-        <version>0.4.0-${revision}</version>
+        <version>0.4.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -32,7 +32,6 @@
         <jar.plugin.version>3.1.1</jar.plugin.version>
         <surefire.plugin.version>2.22.1</surefire.plugin.version>
         <failsafe.version>2.22.1</failsafe.version>
-        <revision>SNAPSHOT</revision>
 
     </properties>
     <!--  *********** Aritfact ID ***********    -->
@@ -52,7 +51,7 @@
         <dependency>
             <groupId>uk.gov.gchq.palisade</groupId>
             <artifactId>common</artifactId>
-            <version>${parent.version}</version>
+            <version>0.4.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

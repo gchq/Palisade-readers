@@ -20,7 +20,7 @@
 
     <groupId>uk.gov.gchq.palisade</groupId>
     <artifactId>readers</artifactId>
-    <version>0.4.0-${revision}</version>
+    <version>0.4.1-SNAPSHOT</version>
     <name>readers</name>
     <description>Reader and library code</description>
     <packaging>pom</packaging>
@@ -44,7 +44,7 @@
         <java.version>11</java.version>
         <encoding>UTF-8</encoding>
         <!-- Sane default when no revision property is passed in from the command line -->
-        <revision>SNAPSHOT</revision>
+        <!--<revision>SNAPSHOT</revision>-->
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
