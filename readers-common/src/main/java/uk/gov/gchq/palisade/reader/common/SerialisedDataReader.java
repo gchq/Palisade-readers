@@ -87,14 +87,16 @@ public abstract class SerialisedDataReader implements DataReader {
      * resource to serialise the raw data and apply the rules to the data and
      * then deserialise it back to the raw format expected by the client.
      *
-     * @param request {@link DataReaderRequest} containing the resource to be
-     *                read, rules to be applied, the user requesting the data
-     *                and the purpose for accessing the data.
+     * @param request          {@link DataReaderRequest} containing the resource to be
+     *                         read, rules to be applied, the user requesting the data
+     *                         and the purpose for accessing the data.
+     * @param completeReceiver the auditing object
+     * @param service          the class for the reader service
      * @return a {@link DataReaderResponse} containing the stream of data
      * read to be streamed back to the client
      */
     @Override
-    public DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service, AuditRequestCompleteReceiver completeReceiver) {
+    public DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service, final AuditRequestCompleteReceiver completeReceiver) {
         requireNonNull(request, "The request cannot be null.");
 
         final Serialiser<Object> serialiser = getSerialiser(request.getResource());
@@ -116,14 +118,14 @@ public abstract class SerialisedDataReader implements DataReader {
      */
     protected abstract InputStream readRaw(final LeafResource resource);
 
-    public <RULES_DATA_TYPE> Serialiser<RULES_DATA_TYPE> getSerialiser(final DataFlavour flavour) {
+    public <T> Serialiser<T> getSerialiser(final DataFlavour flavour) {
         requireNonNull(flavour, "The flavour cannot be null.");
         Serialiser<?> serialiser = serialisers.get(flavour);
 
         if (null == serialiser) {
             serialiser = defaultSerialiser;
         }
-        return (Serialiser<RULES_DATA_TYPE>) serialiser;
+        return (Serialiser<T>) serialiser;
     }
 
     public <I> Serialiser<I> getSerialiser(final LeafResource resource) {

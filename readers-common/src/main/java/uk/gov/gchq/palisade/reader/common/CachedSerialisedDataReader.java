@@ -81,6 +81,8 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
     /**
      * Load the map of serialisers from the cache service. The map retrieved will be merged into the current list by calling
      * {@link SerialisedDataReader#addAllSerialisers(Map)}.
+     *
+     * @param service the service to retrieve the serialisers for
      */
     public void retrieveSerialisersFromCache(final Class<? extends Service> service) {
         Map<DataFlavour, Serialiser<?>> newTypeMap = retrieveFromCache(getCacheService(), service);
@@ -122,7 +124,7 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
      * {@inheritDoc} Overridden to update the list of serialisers before attempting the read.
      */
     @Override
-    public DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service, AuditRequestCompleteReceiver auditRequestCompleteReceiver) {
+    public DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service, final AuditRequestCompleteReceiver auditRequestCompleteReceiver) {
         retrieveSerialisersFromCache(service);
         return super.read(request, service, auditRequestCompleteReceiver);
     }
@@ -132,6 +134,7 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
      * retrieved from the cache.
      *
      * @param cache the cache service to use
+     * @param service the service class being retrieved from the cache
      * @return new mappings
      */
     private static Map<DataFlavour, Serialiser<?>> retrieveFromCache(final CacheService cache, final Class<? extends Service> service) {
@@ -158,6 +161,7 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
      * @param cache      the cache service to use
      * @param flavour    the data flavour to apply
      * @param serialiser the serialiser
+     * @param service    the service class being added to the cache
      * @return a boolean that will complete when the map is updated in the cache
      */
     public static CompletableFuture<Boolean> addSerialiserToCache(final CacheService cache, final DataFlavour flavour, final Serialiser<?> serialiser, final Class<? extends Service> service) {

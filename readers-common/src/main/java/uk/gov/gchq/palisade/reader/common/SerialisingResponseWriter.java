@@ -75,9 +75,10 @@ public class SerialisingResponseWriter implements ResponseWriter {
     /**
      * Create a serialising response writer instance.
      *
-     * @param stream     the underlying data stream
-     * @param serialiser the serialiser for the request
-     * @param request    the context for the request
+     * @param stream                       the underlying data stream
+     * @param serialiser                   the serialiser for the request
+     * @param request                      the context for the request
+     * @param auditRequestCompleteReceiver the auditor for the request
      */
     public SerialisingResponseWriter(final InputStream stream, final Serialiser<?> serialiser, final DataReaderRequest request, final AuditRequestCompleteReceiver auditRequestCompleteReceiver) {
         requireNonNull(stream, "stream");

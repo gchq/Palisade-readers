@@ -30,19 +30,17 @@ import java.util.StringJoiner;
 public abstract class CacheRequest extends Request {
 
     /**
+     * Separator string used internally to the cache.
+     */
+    public static final String SEPARATOR = ":";
+    /**
      * The key to use when interacting with the cache.
      */
     private String key;
-
     /**
      * The service class that is interacting with the cache.
      */
     private Class<? extends Service> service;
-
-    /**
-     * Separator string used internally to the cache.
-     */
-    public static final String SEPARATOR = ":";
 
     public CacheRequest() {
     }
@@ -91,15 +89,6 @@ public abstract class CacheRequest extends Request {
     }
 
     /**
-     * Set the key for cache interaction. This key should not be <code>null</code> or empty.
-     *
-     * @param key the cache key
-     */
-    public void setKey(final String key) {
-        key(key);
-    }
-
-    /**
      * Get the cache key.
      *
      * @return the key
@@ -107,6 +96,15 @@ public abstract class CacheRequest extends Request {
     public String getKey() {
         Objects.requireNonNull(key, "key cannot be null");
         return key;
+    }
+
+    /**
+     * Set the key for cache interaction. This key should not be <code>null</code> or empty.
+     *
+     * @param key the cache key
+     */
+    public void setKey(final String key) {
+        key(key);
     }
 
     /**
@@ -129,10 +127,16 @@ public abstract class CacheRequest extends Request {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CacheRequest)) return false;
-        if (!super.equals(o)) return false;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CacheRequest)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
         CacheRequest that = (CacheRequest) o;
         return getKey().equals(that.getKey()) &&
                 getService().equals(that.getService());

@@ -50,14 +50,16 @@ public interface DataReader {
      * to do so, or if it is currently serving too many requests then it may throw a
      * {@link NoCapacityException}.
      *
+     * @param completeReceiver where to send the audit details
+     * @param service the class name for the service performing the read
      * @param request {@link DataReaderRequest} containing the resource to be
      *                read, rules to be applied, the user requesting the data
      *                and the purpose for accessing the data.
-     * @return a {@link DataReaderRequest} that contains the stream of data.
+     * @return a {@link DataReaderRequest} that contains the stream of data
      * @throws NoCapacityException if the data reader is unable to serve this request due to
      *                             workload issues or lack of capacity
      */
-    DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service, AuditRequestCompleteReceiver completeReceiver) throws NoCapacityException;
+    DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service, final AuditRequestCompleteReceiver completeReceiver) throws NoCapacityException;
 
     @JsonGetter("class")
     default String _getClass() {

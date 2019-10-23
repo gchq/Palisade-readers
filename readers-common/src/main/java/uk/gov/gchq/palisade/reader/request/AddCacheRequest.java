@@ -48,32 +48,59 @@ import java.util.StringJoiner;
 @JsonIgnoreProperties(value = {"originalRequestId"})
 public class AddCacheRequest<V> extends CacheRequest {
 
-    public AddCacheRequest() {
-    }
-
     /**
      * An empty optional indicates no time to live specified.
      */
     private Optional<Duration> timeToLive = Optional.empty();
-
     /**
      * The object to cache.
      */
     private V value;
-
     /**
      * Hint as to whether this cache value may be stored locally by clients.
      */
     private boolean locallyCacheable;
 
-    @Override
-    public void setOriginalRequestId(final RequestId originalRequestId) {
-        throw new ForbiddenException("Should not call AddCacheRequest.setOriginalRequestId()");
+    public AddCacheRequest() {
+    }
+
+    /**
+     * Converts a {@link Temporal} point to a {@link Duration}.
+     *
+     * @param pointInTime the point in time
+     * @return the duration from now
+     * @throws IllegalArgumentException if the resulting duration is negative
+     */
+    private static Optional<Duration> until(final Temporal pointInTime) {
+        Duration ttl = Duration.between(LocalDateTime.now(), pointInTime);
+        if (ttl.isNegative()) {
+            throw new IllegalArgumentException("negative time to live specified!");
+        }
+        return Optional.of(ttl);
+    }
+
+    /**
+     * Converts the given milliseconds into a {@link Duration}.
+     *
+     * @param ttlMillis the milliseconds to convert
+     * @return a {@link Duration}
+     * @throws IllegalArgumentException if <code>ttlMillis</code> is negative
+     */
+    private static Optional<Duration> toDuration(final long ttlMillis) {
+        if (ttlMillis < 0) {
+            throw new IllegalArgumentException("negative time to live specified!");
+        }
+        return Optional.of(Duration.ofMillis(ttlMillis));
     }
 
     @Override
     public RequestId getOriginalRequestId() {
         throw new ForbiddenException("Should not call AddCacheRequest.getOriginalRequestId()");
+    }
+
+    @Override
+    public void setOriginalRequestId(final RequestId originalRequestId) {
+        throw new ForbiddenException("Should not call AddCacheRequest.setOriginalRequestId()");
     }
 
     /**
@@ -135,20 +162,20 @@ public class AddCacheRequest<V> extends CacheRequest {
      * Sets whether this cache request key/value can be locally cached by clients.
      *
      * @param locallyCacheable if true, then clients may cache the key/value locally upon retrieval
-     * @return this object
      */
-    public AddCacheRequest locallyCacheable(final boolean locallyCacheable) {
-        this.locallyCacheable = locallyCacheable;
-        return this;
+    public void setLocallyCacheable(final boolean locallyCacheable) {
+        locallyCacheable(locallyCacheable);
     }
 
     /**
      * Sets whether this cache request key/value can be locally cached by clients.
      *
      * @param locallyCacheable if true, then clients may cache the key/value locally upon retrieval
+     * @return this object
      */
-    public void setLocallyCacheable(final boolean locallyCacheable) {
-        locallyCacheable(locallyCacheable);
+    public AddCacheRequest locallyCacheable(final boolean locallyCacheable) {
+        this.locallyCacheable = locallyCacheable;
+        return this;
     }
 
     /**
@@ -159,55 +186,6 @@ public class AddCacheRequest<V> extends CacheRequest {
     public Optional<Duration> getTimeToLive() {
         // can never be null
         return timeToLive;
-    }
-
-    /**
-     * Set the value to be cached.
-     *
-     * @param value object to be cached
-     * @return this object
-     */
-    public AddCacheRequest value(final V value) {
-        Objects.requireNonNull(value, "value");
-        this.value = value;
-        return this;
-    }
-
-    /**
-     * Set value to be cached.
-     *
-     * @param value object to be cached
-     */
-    public void setValue(final V value) {
-        value(value);
-    }
-
-    /**
-     * Get the cached object.
-     *
-     * @return the object
-     */
-    public V getValue() {
-        Objects.requireNonNull(value, "value cannot be null");
-        return value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public AddCacheRequest key(final String key) {
-        super.key(key);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public AddCacheRequest service(final Class<? extends Service> service) {
-        super.service(service);
-        return this;
     }
 
     /**
@@ -244,32 +222,52 @@ public class AddCacheRequest<V> extends CacheRequest {
     }
 
     /**
-     * Converts a {@link Temporal} point to a {@link Duration}.
+     * Set the value to be cached.
      *
-     * @param pointInTime the point in time
-     * @return the duration from now
-     * @throws IllegalArgumentException if the resulting duration is negative
+     * @param value object to be cached
+     * @return this object
      */
-    private static Optional<Duration> until(final Temporal pointInTime) {
-        Duration ttl = Duration.between(LocalDateTime.now(), pointInTime);
-        if (ttl.isNegative()) {
-            throw new IllegalArgumentException("negative time to live specified!");
-        }
-        return Optional.of(ttl);
+    public AddCacheRequest value(final V value) {
+        Objects.requireNonNull(value, "value");
+        this.value = value;
+        return this;
     }
 
     /**
-     * Converts the given milliseconds into a {@link Duration}.
+     * Get the cached object.
      *
-     * @param ttlMillis the milliseconds to convert
-     * @return a {@link Duration}
-     * @throws IllegalArgumentException if <code>ttlMillis</code> is negative
+     * @return the object
      */
-    private static Optional<Duration> toDuration(final long ttlMillis) {
-        if (ttlMillis < 0) {
-            throw new IllegalArgumentException("negative time to live specified!");
-        }
-        return Optional.of(Duration.ofMillis(ttlMillis));
+    public V getValue() {
+        Objects.requireNonNull(value, "value cannot be null");
+        return value;
+    }
+
+    /**
+     * Set value to be cached.
+     *
+     * @param value object to be cached
+     */
+    public void setValue(final V value) {
+        value(value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public AddCacheRequest key(final String key) {
+        super.key(key);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public AddCacheRequest service(final Class<? extends Service> service) {
+        super.service(service);
+        return this;
     }
 
     /**
@@ -279,10 +277,16 @@ public class AddCacheRequest<V> extends CacheRequest {
         this.timeToLive = Optional.empty();
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AddCacheRequest)) return false;
-        if (!super.equals(o)) return false;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AddCacheRequest)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
         AddCacheRequest<?> that = (AddCacheRequest<?>) o;
         return getLocallyCacheable() == that.getLocallyCacheable() &&
                 getTimeToLive().equals(that.getTimeToLive()) &&
