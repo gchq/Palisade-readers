@@ -35,7 +35,7 @@
 
     </properties>
     <!--  *********** Aritfact ID ***********    -->
-    <artifactId>hadoop-readers</artifactId>
+    <artifactId>hadoop-reader</artifactId>
     <!--  *********** Aritfact ID ***********    -->
     <dependencies>
         <dependency>
