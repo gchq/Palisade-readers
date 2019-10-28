@@ -17,3 +17,12 @@ limitations under the License.
 # <img src="logos/logo.svg" width="180">
 
 ### Scalable Data Access Policy Management and Enforcement
+
+The responsibility of the data service is to take the read request from the
+client, request the trusted details about the request from the Palisade
+service (what policies to apply, user details, context, etc). The data service then
+passes that information to the `DataReader` which is then responsible for connecting to the resource, 
+deserialising the data, applying the rules and then serialising the data ready to be sent to the client.
+The data service is also responsible for ensuring the relevant audit logs are generated.
+
+This repository contains implementations of the `DataReader`
