@@ -66,7 +66,7 @@ public abstract class SerialisedDataReader implements DataReader {
     private Map<DataFlavour, Serialiser<?>> serialisers = new ConcurrentHashMap<>();
 
     /**
-     * @param serialisers a mapping of data type to serialiser
+     * @param serialisers a mapping of data type to serialisers {@link SerialisedDataReader}
      * @return the {@link SerialisedDataReader}
      */
     public SerialisedDataReader serialisers(final Map<DataFlavour, Serialiser<?>> serialisers) {
