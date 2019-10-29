@@ -24,9 +24,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <properties>
-        <revision>SNAPSHOT</revision>
-    </properties>
 
     <!--  *********** Aritfact ID ***********    -->
     <artifactId>readers-common</artifactId>

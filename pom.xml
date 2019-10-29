@@ -45,7 +45,6 @@
         <encoding>UTF-8</encoding>
         <!-- Sane default when no revision property is passed in from the command line -->
         <revision>SNAPSHOT</revision>
-
         <compiler.plugin.version>3.8.1</compiler.plugin.version>
         <javadoc.plugin.version>3.0.1</javadoc.plugin.version>
         <jar.plugin.version>3.1.1</jar.plugin.version>
