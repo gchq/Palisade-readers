@@ -21,7 +21,7 @@
     <groupId>uk.gov.gchq.palisade</groupId>
     <artifactId>readers</artifactId>
     <version>0.4.0-${revision}</version>
-    <name>palisade</name>
+    <name>readers</name>
     <description>Data Services Readers layer for Palisade</description>
     <packaging>pom</packaging>
 
@@ -46,7 +46,7 @@
         <!-- Sane default when no revision property is passed in from the command line -->
         <revision>SNAPSHOT</revision>
 
-        <compiler.plugin.version>3.8.0</compiler.plugin.version>
+        <compiler.plugin.version>3.8.1</compiler.plugin.version>
         <javadoc.plugin.version>3.0.1</javadoc.plugin.version>
         <jar.plugin.version>3.1.1</jar.plugin.version>
         <surefire.plugin.version>2.22.1</surefire.plugin.version>
