@@ -28,6 +28,9 @@
     <!--  *********** Aritfact ID ***********    -->
     <artifactId>hadoop-reader</artifactId>
     <!--  *********** Aritfact ID ***********    -->
+    <properties>
+        <revision>SNAPSHOT</revision>
+    </properties>
 
     <dependencies>
         <dependency>
