@@ -20,13 +20,9 @@
     <parent>
         <groupId>uk.gov.gchq.palisade</groupId>
         <artifactId>readers</artifactId>
-        <version>0.4.0-SNAPSHOT</version>
+        <version>0.4.0-${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
-    <properties>
-        <revision>SNAPSHOT</revision>
-    </properties>
 
 
     <!--  *********** Aritfact ID ***********    -->
