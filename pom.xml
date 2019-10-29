@@ -25,6 +25,7 @@
     <description>Data Services Readers layer for Palisade</description>
     <packaging>pom</packaging>
 
+
     <developers>
         <developer>
             <name>PalisadeDevelopers</name>
@@ -93,67 +94,17 @@
     </distributionManagement>
 
     <build>
+        <!--this extension provides version number substitution for child poms-->
+        <!--see here: https://github.com/jcgay/unique-revision-maven-filtering-->
+        <!--ths article explains the issue solved by this extension: https://jeanchristophegay.com/en/posts/maven-unique-version-multi-modules-build/-->
+        <extensions>
+            <extension>
+                <groupId>fr.jcgay.maven.extension</groupId>
+                <artifactId>unique-revision-maven-filtering</artifactId>
+                <version>1.1</version>
+            </extension>
+        </extensions>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${compiler.plugin.version}</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <compilerArgs>
-                        <arg>-Xlint:deprecation</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${jar.plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire.plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${failsafe.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${javadoc.plugin.version}</version>
-                <configuration>
-                    <header>Palisade ${project.version}</header>
-                    <footer>Palisade ${project.version}</footer>
-                    <doctitle>Palisade ${project.version}</doctitle>
-                    <show>public</show>
-                    <nohelp>true</nohelp>
-                    <tags>
-                        <tag>
-                            <name>apiNote</name>
-                            <placement>a</placement>
-                            <head>API Note:</head>
-                        </tag>
-                        <tag>
-                            <name>implNote</name>
-                            <placement>a</placement>
-                            <head>Implementation note:</head>
-                        </tag>
-                    </tags>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>aggregate</id>
-                        <goals>
-                            <goal>aggregate</goal>
-                        </goals>
-                        <phase>site</phase>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
