@@ -13,62 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+podTemplate(containers: [
+        containerTemplate(name: 'maven', image: 'maven:3.6.1-jdk-11', ttyEnabled: true, command: 'cat')
+]) {
 
-
-podTemplate(yaml: '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: docker-cmds
-    image: jnlp-did:jdk11
-    imagePullPolicy: Never
-    command:
-    - sleep
-    args:
-    - 99d
-    env:
-      - name: DOCKER_HOST
-        value: tcp://localhost:2375
-        
-  - name: docker-daemon
-    image: docker:19.03.1-dind
-    securityContext:
-      privileged: true
-    resources: 
-      requests: 
-        cpu: 20m 
-        memory: 512Mi 
-    volumeMounts: 
-      - name: docker-graph-storage 
-        mountPath: /var/lib/docker 
-    env:
-      - name: DOCKER_TLS_CERTDIR
-        value: ""
-        
-  - name: maven
-    image: jnlp-slave-palisade:jdk11
-    imagePullPolicy: Never
-    command: ['cat']
-    tty: true
-    env:
-    - name: TILLER_NAMESPACE
-      value: tiller
-    - name: HELM_HOST
-      value: :44134
-    volumeMounts:
-      - mountPath: /var/run
-        name: docker-sock
-  volumes:
-    - name: docker-graph-storage
-      emptyDir: {}
-    - name: docker-sock
-      hostPath:
-         path: /var/run
-''') {
     node(POD_LABEL) {
         stage('Bootstrap') {
-            echo sh(script: 'env|sort', returnStdout: true)
+            sh "echo ${env.BRANCH_NAME}"
         }
         stage('Install a Maven project') {
             git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
@@ -78,12 +29,17 @@ spec:
                 }
             }
         }
-        stage('Deploy a Maven project') {
+        stage('Build a Maven project') {
             git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
             container('maven') {
-                configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                    sh 'palisade-login'
-                    sh 'mvn -s $MAVEN_SETTINGS deploy -Dmaven.test.skip=true'
+                configFileProvider(
+                        [configFile(fileId: '450d38e2-db65-4601-8be0-8621455e93b5', variable: 'MAVEN_SETTINGS')]) {
+                    if (("${env.BRANCH_NAME}" == "develop") ||
+                            ("${env.BRANCH_NAME}" == "master")) {
+                        sh 'mvn -s $MAVEN_SETTINGS deploy'
+                    } else {
+                        sh "echo - no deploy"
+                    }
                 }
             }
         }
