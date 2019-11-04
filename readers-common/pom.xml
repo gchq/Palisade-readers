@@ -24,6 +24,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+
     <!--  *********** Aritfact ID ***********    -->
     <artifactId>readers-common</artifactId>
     <!--  *********** Aritfact ID ***********    -->

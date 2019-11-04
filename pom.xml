@@ -21,9 +21,10 @@
     <groupId>uk.gov.gchq.palisade</groupId>
     <artifactId>readers</artifactId>
     <version>0.4.0-${revision}</version>
-    <name>palisade</name>
+    <name>readers</name>
     <description>Data Services Readers layer for Palisade</description>
     <packaging>pom</packaging>
+
 
     <developers>
         <developer>
@@ -42,25 +43,16 @@
 
     <properties>
         <java.version>11</java.version>
-        <encoding>UTF-8</encoding>
         <!-- Sane default when no revision property is passed in from the command line -->
         <revision>SNAPSHOT</revision>
-
-        <compiler.plugin.version>3.8.0</compiler.plugin.version>
-        <javadoc.plugin.version>3.0.1</javadoc.plugin.version>
-        <jar.plugin.version>3.1.1</jar.plugin.version>
-        <surefire.plugin.version>2.22.1</surefire.plugin.version>
-        <failsafe.version>2.22.1</failsafe.version>
-
-        <commons-io.version>2.6</commons-io.version>
-        <jackson.version>2.10.0</jackson.version>
-
-        <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <checkstyle.plugin.version>3.1.0</checkstyle.plugin.version>
         <checkstyle.phase>verify</checkstyle.phase>
+        <depends.phase>validate</depends.phase>
+        <commons-io.version>2.6</commons-io.version>
+        <jackson.version>2.10.0</jackson.version>
+        <depends-maven-version>1.4.0</depends-maven-version>
     </properties>
 
 
@@ -94,64 +86,33 @@
     </distributionManagement>
 
     <build>
+        <!--this extension provides version number substitution for child poms-->
+        <!--see here: https://github.com/jcgay/unique-revision-maven-filtering-->
+        <!--ths article explains the issue solved by this extension: https://jeanchristophegay.com/en/posts/maven-unique-version-multi-modules-build/-->
+        <extensions>
+            <extension>
+                <groupId>fr.jcgay.maven.extension</groupId>
+                <artifactId>unique-revision-maven-filtering</artifactId>
+                <version>1.1</version>
+            </extension>
+        </extensions>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${compiler.plugin.version}</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <compilerArgs>
-                        <arg>-Xlint:deprecation</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${jar.plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire.plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${failsafe.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${javadoc.plugin.version}</version>
-                <configuration>
-                    <header>Palisade ${project.version}</header>
-                    <footer>Palisade ${project.version}</footer>
-                    <doctitle>Palisade ${project.version}</doctitle>
-                    <show>public</show>
-                    <nohelp>true</nohelp>
-                    <tags>
-                        <tag>
-                            <name>apiNote</name>
-                            <placement>a</placement>
-                            <head>API Note:</head>
-                        </tag>
-                        <tag>
-                            <name>implNote</name>
-                            <placement>a</placement>
-                            <head>Implementation note:</head>
-                        </tag>
-                    </tags>
-                </configuration>
+                <groupId>org.apache.servicemix.tooling</groupId>
+                <artifactId>depends-maven-plugin</artifactId>
+                <version>${depends-maven-version}</version>
                 <executions>
                     <execution>
-                        <id>aggregate</id>
+                        <configuration>
+                            <outputFile>mvn_dependency_tree.txt</outputFile>
+                            <includeScope>false</includeScope>
+                            <includeType>false</includeType>
+                        </configuration>
+                        <id>depends</id>
+                        <phase>${depends.phase}</phase>
                         <goals>
-                            <goal>aggregate</goal>
+                            <goal>generate-depends-file</goal>
                         </goals>
-                        <phase>site</phase>
                     </execution>
                 </executions>
             </plugin>
