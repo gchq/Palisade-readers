@@ -25,6 +25,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+
     <!--  *********** Aritfact ID ***********    -->
     <artifactId>hadoop-reader</artifactId>
     <!--  *********** Aritfact ID ***********    -->
