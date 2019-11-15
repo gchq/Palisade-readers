@@ -30,7 +30,15 @@ podTemplate(containers: [
             }
         }
         stage('Build a Maven project') {
-            git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
+            sh "echo ${env.BRANCH_NAME}.substring(0,2)"
+            sh "echo ${env.BRANCH_NAME}.substring(4)"
+ 
+            if (${env.BRANCH_NAME}.substring(0,2) == "PR") {
+              git url: 'https://github.com/gchq/Palisade-readers.git'
+              git pull origin pull/${env.BRANCH_NAME}.substring(4)/head
+            } else {
+               git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
+            }
             container('maven') {
                 configFileProvider(
                         [configFile(fileId: '450d38e2-db65-4601-8be0-8621455e93b5', variable: 'MAVEN_SETTINGS')]) {
