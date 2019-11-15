@@ -30,12 +30,15 @@ podTemplate(containers: [
             }
         }
         stage('Build a Maven project') {
-            sh "echo ${env.BRANCH_NAME : 0 : 2}"
-            sh "echo ${env.BRANCH_NAME : 4}"
+            sh "echo ${env.BRANCH_NAME}"
+            sh "echo ${env.BRANCH_NAME}"
+            x = $ { env.BRANCH_NAME };
 
-            if ("${env.BRANCH_NAME : 0 : 2}" == "PR") {
+
+            if (x.substring(0, 2) == "PR") {
+                y = x.substring(4);
                 git url: 'https://github.com/gchq/Palisade-readers.git'
-                git pull origin pull / $ { env.BRANCH_NAME : 4 } / head
+                git pull origin pull / y / head
             } else {
                 git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
             }
