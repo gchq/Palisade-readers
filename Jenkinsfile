@@ -38,22 +38,11 @@ podTemplate(containers: [
             sh "echo ${x}"
             sh "echo after"
 
-            z = x.substring(0, 2)
-            sh "echo before3"
-            sh "echo ${z}"
-            sh "echo after3"
-            y = x.substring(4)
-            sh "echo ${y}"
-
 
             if (x.substring(0, 2) == "PR") {
-                y = x.substring(4)
-                sh "echo before2"
-                sh "echo ${y}"
-                sh "echo after2"
-
+                y = x.substring(3)
                 git url: 'https://github.com/gchq/Palisade-readers.git'
-                git pull origin pull / y / head
+                git pull origin pull / $ { y } / head
             } else {
                 git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
             }
