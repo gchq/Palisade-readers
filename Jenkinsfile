@@ -33,7 +33,7 @@ podTemplate(containers: [
             sh "echo ${env.BRANCH_NAME : 0 : 2}"
             sh "echo ${env.BRANCH_NAME : 4}"
 
-            if ("${env.BRANCH_NAME : 0 : 2}.substring(0,2)" == "PR") {
+            if ("${env.BRANCH_NAME : 0 : 2}" == "PR") {
                 git url: 'https://github.com/gchq/Palisade-readers.git'
                 git pull origin pull / $ { env.BRANCH_NAME : 4 } / head
             } else {
