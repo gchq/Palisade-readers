@@ -32,7 +32,7 @@ podTemplate(containers: [
         stage('Build a Maven project') {
             sh "echo ${env.BRANCH_NAME}"
             sh "echo ${env.BRANCH_NAME}"
-            x = $ { env.BRANCH_NAME }
+            x = env.BRANCH_NAME
 
             sh "echo before"
             sh "echo ${x}"
