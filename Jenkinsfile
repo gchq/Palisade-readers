@@ -22,7 +22,22 @@ podTemplate(containers: [
             sh "echo ${env.BRANCH_NAME}"
         }
         stage('Install a Maven project') {
-            git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
+            sh "echo ${env.BRANCH_NAME}"
+            sh "echo ${env.BRANCH_NAME}"
+            x = env.BRANCH_NAME
+
+            sh "echo before"
+            sh "echo ${x}"
+            sh "echo after"
+
+
+            if (x.substring(0, 2) == "PR") {
+                y = x.substring(3)
+                git url: 'https://github.com/gchq/Palisade-readers.git'
+                git pull origin pull / $ { y } / head
+            } else {
+                git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
+            }
             container('maven') {
                 configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
                     sh 'mvn -s $MAVEN_SETTINGS install'
