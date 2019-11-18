@@ -22,31 +22,14 @@ podTemplate(containers: [
             sh "echo ${env.BRANCH_NAME}"
         }
         stage('Install a Maven project') {
-            sh "echo ${env.BRANCH_NAME}"
-            sh "echo ${env.BRANCH_NAME}"
             x = env.BRANCH_NAME
 
-            sh "echo before"
-            sh "echo ${x}"
-            sh "echo after"
-            z = x.substring(1, 2)
-            zz = x.substring(0, 1)
-            zzz = x.substring(0, 2);
-            sh "echo ${z}"
-            sh "echo ${zz}"
-            sh "echo ${zzz}"
-            zzzz = x.substring(3);
-            sh "echo ${zzzz}"
-
-
             if (x.substring(0, 2) == "PR") {
-                sh "echo in substring"
                 y = x.substring(3)
                 git url: 'https://github.com/gchq/Palisade-readers.git'
                 sh "git fetch origin pull/${y}/head:${x}"
                 sh "git checkout ${x}"
-            } else {
-                sh "echo not in substring"
+            } else { //just a normal branch
                 git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
             }
             container('maven') {
@@ -56,19 +39,13 @@ podTemplate(containers: [
             }
         }
         stage('Build a Maven project') {
-            sh "echo ${env.BRANCH_NAME}"
-            sh "echo ${env.BRANCH_NAME}"
             x = env.BRANCH_NAME
-
-            sh "echo before"
-            sh "echo ${x}"
-            sh "echo after"
-
 
             if (x.substring(0, 2) == "PR") {
                 y = x.substring(3)
                 git url: 'https://github.com/gchq/Palisade-readers.git'
-                git pull origin pull / $ { y } / head
+                sh "git fetch origin pull/${y}/head:${x}"
+                sh "git checkout ${x}"
             } else {
                 git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
             }
@@ -77,6 +54,7 @@ podTemplate(containers: [
                         [configFile(fileId: '450d38e2-db65-4601-8be0-8621455e93b5', variable: 'MAVEN_SETTINGS')]) {
                     if (("${env.BRANCH_NAME}" == "develop") ||
                             ("${env.BRANCH_NAME}" == "master")) {
+                        //this will upload to ECR
                         sh 'mvn -s $MAVEN_SETTINGS deploy -Dmaven.test.skip=true'
                     } else {
                         sh "echo - no deploy"
