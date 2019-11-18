@@ -35,9 +35,11 @@ podTemplate(containers: [
             sh "echo ${z}"
             sh "echo ${zz}"
             sh "echo ${zzz}"
+            zzzz = x.substring(3);
+            sh "echo ${zzzz}"
 
 
-            if (x.substring(1, 2) == "PR") {
+            if (x.substring(0, 2) == "PR") {
                 sh "echo in substring"
                 y = x.substring(3)
                 git url: 'https://github.com/gchq/Palisade-readers.git'
