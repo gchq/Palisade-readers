@@ -44,7 +44,7 @@ podTemplate(containers: [
                 y = x.substring(3)
                 git url: 'https://github.com/gchq/Palisade-readers.git'
                 sh "git fetch origin pull/${y}/head:${x}"
-                git checkout $ { x }
+                sh "git checkout ${x}"
             } else {
                 sh "echo not in substring"
                 git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
