@@ -29,13 +29,21 @@ podTemplate(containers: [
             sh "echo before"
             sh "echo ${x}"
             sh "echo after"
+            z = x.substring(1, 2)
+            zz = x.substring(0, 1)
+            zzz = x.substring(0, 2);
+            sh "echo ${z}"
+            sh "echo ${zz}"
+            sh "echo ${zzz}"
 
 
-            if (x.substring(0, 2) == "PR") {
+            if (x.substring(1, 2) == "PR") {
+                sh "echo in substring"
                 y = x.substring(3)
                 git url: 'https://github.com/gchq/Palisade-readers.git'
                 git pull origin pull / $ { y } / head
             } else {
+                sh "echo not in substring"
                 git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
             }
             container('maven') {
