@@ -49,10 +49,10 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <checkstyle.plugin.version>3.1.0</checkstyle.plugin.version>
         <checkstyle.phase>verify</checkstyle.phase>
-        <depends.phase>validate</depends.phase>
         <commons-io.version>2.6</commons-io.version>
         <jackson.version>2.10.0</jackson.version>
-        <depends-maven-version>1.4.0</depends-maven-version>
+        <depends.phase>validate</depends.phase>
+        <depends.maven.version>3.1.1</depends.maven.version>
     </properties>
 
 
@@ -98,21 +98,19 @@
         </extensions>
         <plugins>
             <plugin>
-                <groupId>org.apache.servicemix.tooling</groupId>
-                <artifactId>depends-maven-plugin</artifactId>
-                <version>${depends-maven-version}</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${depends.maven.version}</version>
                 <executions>
                     <execution>
-                        <configuration>
-                            <outputFile>mvn_dependency_tree.txt</outputFile>
-                            <includeScope>false</includeScope>
-                            <includeType>false</includeType>
-                        </configuration>
-                        <id>depends</id>
+                        <id>dependencies</id>
                         <phase>${depends.phase}</phase>
                         <goals>
-                            <goal>generate-depends-file</goal>
+                            <goal>tree</goal>
                         </goals>
+                        <configuration>
+                            <outputFile>mvn_dependency_tree.txt</outputFile>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
