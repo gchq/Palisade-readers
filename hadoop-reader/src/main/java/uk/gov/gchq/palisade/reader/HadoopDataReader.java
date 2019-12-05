@@ -24,6 +24,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.reader.common.CachedSerialisedDataReader;
 import uk.gov.gchq.palisade.resource.LeafResource;
@@ -43,6 +45,8 @@ import static java.util.Objects.requireNonNull;
  * a single {@link InputStream} containing all the records.
  */
 public class HadoopDataReader extends CachedSerialisedDataReader {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HadoopDataReader.class);
+
     @JsonIgnore
     private FileSystem fs;
 
@@ -56,16 +60,19 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
 
     public HadoopDataReader conf(final Map<String, String> conf) throws IOException {
         requireNonNull(conf, "The conf cannot be null.");
+        LOGGER.debug("Updated config from map: {}", conf);
         return conf(createConfig(conf));
     }
 
     public HadoopDataReader conf(final Configuration conf) throws IOException {
         requireNonNull(conf, "The conf cannot be null.");
+        LOGGER.debug("Updated internal config: {}", conf);
         return fs(FileSystem.get(conf));
     }
 
     public HadoopDataReader fs(final FileSystem fs) {
         requireNonNull(fs, "The file system cannot be set to null.");
+        LOGGER.debug("Updated filesystem: {}", fs);
         this.fs = fs;
         return this;
     }
@@ -76,6 +83,7 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
 
     public FileSystem getFs() {
         requireNonNull(fs, "The file system has not been set.");
+        LOGGER.debug("Got request for filesystem");
         return fs;
     }
 
@@ -93,9 +101,11 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
                 inputStream = fs.open(new Path(resource.getId()));
             }
         } catch (final IOException e) {
+            LOGGER.error("Error encountered while reading resource {}: {}", resource, e.getMessage());
             throw new RuntimeException("Unable to read resource: " + resource.getId(), e);
         }
 
+        LOGGER.debug("Created stream to LeafResource successfully");
         return inputStream;
     }
 
@@ -106,7 +116,7 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
     @JsonGetter("conf")
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
     Map<String, String> getConfMap() {
-        Map<String, String> rtn = new HashMap<String, String>();
+        Map<String, String> rtn = new HashMap<>();
         Map<String, String> plainJobConfWithoutResolvingValues = getPlainJobConfWithoutResolvingValues();
 
         for (Entry<String, String> entry : getConf()) {
@@ -120,7 +130,7 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
     }
 
     private Map<String, String> getPlainJobConfWithoutResolvingValues() {
-        Map<String, String> plainMapWithoutResolvingValues = new HashMap<String, String>();
+        Map<String, String> plainMapWithoutResolvingValues = new HashMap<>();
         for (Entry<String, String> entry : new Configuration()) {
             plainMapWithoutResolvingValues.put(entry.getKey(), entry.getValue());
         }
