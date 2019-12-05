@@ -93,7 +93,7 @@ public class HadoopResourceService implements ResourceService {
         requireNonNull(config, "service");
         this.config = config;
         this.fileSystem = FileSystem.get(config);
-        LOGGER.debug("Loaded Hadoop configuration: \n{}", config.toString());
+        LOGGER.debug("Loaded Hadoop configuration: {}", config);
     }
 
     public HadoopResourceService(@JsonProperty("conf") final Map<String, String> conf) throws IOException {
@@ -152,7 +152,7 @@ public class HadoopResourceService implements ResourceService {
     }
 
     private static Configuration createConfig(final Map<String, String> conf) {
-        LOGGER.debug("Creating config from map: {}", conf.toString());
+        LOGGER.debug("Creating config from map: {}", conf);
         final Configuration config = new Configuration();
         if (nonNull(conf)) {
             for (final Entry<String, String> entry : conf.entrySet()) {
