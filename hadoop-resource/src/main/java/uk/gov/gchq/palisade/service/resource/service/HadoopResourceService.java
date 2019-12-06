@@ -214,7 +214,7 @@ public class HadoopResourceService implements ResourceService {
         throw new UnsupportedOperationException(ERROR_ADD_RESOURCE);
     }
 
-    private CompletableFuture<Map<LeafResource, ConnectionDetail>> getFutureMappings(final String pathString, final Predicate<ResourceDetails> predicate) {
+    CompletableFuture<Map<LeafResource, ConnectionDetail>> getFutureMappings(final String pathString, final Predicate<ResourceDetails> predicate) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 //pull latest connection details
