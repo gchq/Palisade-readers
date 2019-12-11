@@ -83,8 +83,6 @@ public class HadoopResourceService implements ResourceService {
      */
     private static final Pattern FILE_PAT = Pattern.compile("(?i)(?<=^file:)/(?=([^/]|$))");
     private static final String ERROR_RESOLVING_PARENTS = "Error occurred while resolving resourceParents";
-    private static final String HADOOP_CONF_STRING = "hadoop.init.conf";
-    private static final String DATASERVICE_LIST = "hadoop.data.svc.list";
 
     private Configuration config;
     private FileSystem fileSystem;
