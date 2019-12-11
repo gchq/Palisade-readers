@@ -131,28 +131,26 @@ public class HadoopResourceService implements ResourceService {
         Matcher match = FILE_PAT.matcher(uri);
         if (match.find()) {
             String fixed = match.replaceFirst("///");
-            LOGGER.debug("Fixing uri scheme: {} -> {}", uri, fixed);
             return fixed;
         } else {
-            LOGGER.debug("Not fixing ri scheme: {}", uri);
             return uri;
         }
     }
 
     protected static Collection<String> getPaths(final RemoteIterator<LocatedFileStatus> remoteIterator) throws IOException {
-        LOGGER.debug("Getting paths for iterator...");
+        LOGGER.debug("Getting paths for iterator");
         final ArrayList<String> paths = new ArrayList<>();
         while (remoteIterator.hasNext()) {
             final LocatedFileStatus next = remoteIterator.next();
             final String pathWithoutFSName = next.getPath().toUri().toString();
             paths.add(pathWithoutFSName);
-            LOGGER.debug("Got path: {}", pathWithoutFSName);
         }
+        LOGGER.debug("Got {} paths for iterator", paths.size());
         return paths;
     }
 
     private static Configuration createConfig(final Map<String, String> conf) {
-        LOGGER.debug("Creating config from map: {}", conf);
+        LOGGER.debug("Creating config from map");
         final Configuration config = new Configuration();
         if (nonNull(conf)) {
             for (final Entry<String, String> entry : conf.entrySet()) {
@@ -168,9 +166,7 @@ public class HadoopResourceService implements ResourceService {
         LOGGER.info("Invoking getResourcesByResource request: {}", request);
         GetResourcesByIdRequest getResourcesByIdRequest = new GetResourcesByIdRequest().resourceId(request.getResource().getId());
         getResourcesByIdRequest.setOriginalRequestId(request.getOriginalRequestId());
-        CompletableFuture<Map<LeafResource, ConnectionDetail>> response = getResourcesById(getResourcesByIdRequest);
-        LOGGER.info("Got resources {} for request {}", response, request);
-        return response;
+        return getResourcesById(getResourcesByIdRequest);
     }
 
     @Override
@@ -182,9 +178,8 @@ public class HadoopResourceService implements ResourceService {
         if (!resourceId.startsWith(path)) {
             throw new UnsupportedOperationException(java.lang.String.format(ERROR_OUT_SCOPE, resourceId, path));
         }
-        CompletableFuture<Map<LeafResource, ConnectionDetail>> response = getFutureMappings(resourceId, ignore -> true);
-        LOGGER.info("Got resources {} for request {}", response, request);
-        return response;
+        LOGGER.info("Returning future of resources for id {}, predicate ignore->true", resourceId);
+        return getFutureMappings(resourceId, ignore -> true);
     }
 
     @Override
@@ -193,9 +188,8 @@ public class HadoopResourceService implements ResourceService {
         LOGGER.info("Invoking getResourcesByType request: {}", request);
         final String pathString = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
         final Predicate<ResourceDetails> predicate = detail -> request.getType().equals(detail.getType());
-        CompletableFuture<Map<LeafResource, ConnectionDetail>> response = getFutureMappings(pathString, predicate);
-        LOGGER.info("Got resources {} for request {}", response, request);
-        return response;
+        LOGGER.info("Returning future of resources for id {}, predicate detail->resource.type==detail.type", pathString);
+        return getFutureMappings(pathString, predicate);
     }
 
     @Override
@@ -204,9 +198,8 @@ public class HadoopResourceService implements ResourceService {
         LOGGER.info("Invoking getResourcesBySerialisedFormat request: {}", request);
         final String pathString = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
         final Predicate<ResourceDetails> predicate = detail -> request.getSerialisedFormat().equals(detail.getFormat());
-        CompletableFuture<Map<LeafResource, ConnectionDetail>> response = getFutureMappings(pathString, predicate);
-        LOGGER.info("Got resources {} for request {}", response, request);
-        return response;
+        LOGGER.info("Returning future of resources for id {}, predicate detail->resource.format==detail.format", pathString);
+        return getFutureMappings(pathString, predicate);
     }
 
     @Override

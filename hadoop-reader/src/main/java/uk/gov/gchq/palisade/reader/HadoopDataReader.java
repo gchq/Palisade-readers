@@ -60,19 +60,16 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
 
     public HadoopDataReader conf(final Map<String, String> conf) throws IOException {
         requireNonNull(conf, "The conf cannot be null.");
-        LOGGER.debug("Updated config from map: {}", conf);
         return conf(createConfig(conf));
     }
 
     public HadoopDataReader conf(final Configuration conf) throws IOException {
         requireNonNull(conf, "The conf cannot be null.");
-        LOGGER.debug("Updated internal config: {}", conf);
         return fs(FileSystem.get(conf));
     }
 
     public HadoopDataReader fs(final FileSystem fs) {
         requireNonNull(fs, "The file system cannot be set to null.");
-        LOGGER.debug("Updated filesystem: {}", fs);
         this.fs = fs;
         return this;
     }
@@ -83,7 +80,6 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
 
     public FileSystem getFs() {
         requireNonNull(fs, "The file system has not been set.");
-        LOGGER.debug("Got request for filesystem");
         return fs;
     }
 
@@ -105,7 +101,7 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
             throw new RuntimeException("Unable to read resource: " + resource.getId(), e);
         }
 
-        LOGGER.debug("Created stream to LeafResource successfully");
+        LOGGER.debug("Successfully created stream to resource {}", resource);
         return inputStream;
     }
 
