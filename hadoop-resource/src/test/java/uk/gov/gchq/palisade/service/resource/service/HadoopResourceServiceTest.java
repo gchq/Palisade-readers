@@ -96,7 +96,8 @@ public class HadoopResourceServiceTest {
 
     @Before
     public void setup() throws IOException {
-        System.setProperty("hadoop.home.dir", Paths.get(".").toAbsolutePath().normalize().toString() + "/src/test/resources/hadoop-3.0.0.bin");
+        // Windows hadoop
+        System.setProperty("hadoop.home.dir", Paths.get(".").toAbsolutePath().normalize().toString() + "/src/test/resources/hadoop-bin");
         config = createConf();
         inputPathString = testFolder.getRoot().getAbsolutePath() + "/inputDir";
         fs = FileSystem.get(config);
