@@ -17,11 +17,11 @@
 package uk.gov.gchq.palisade.service.resource.service;
 
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.test.PathUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,6 +37,7 @@ import uk.gov.gchq.palisade.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.palisade.resource.ChildResource;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.ParentResource;
+import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.resource.impl.DirectoryResource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SystemResource;
@@ -86,7 +87,7 @@ public class HadoopResourceServiceTest {
     private SimpleConnectionDetail simpleConnection;
     private String inputPathString;
     private FileSystem fs;
-    private HashMap<uk.gov.gchq.palisade.resource.Resource, ConnectionDetail> expected;
+    private HashMap<Resource, ConnectionDetail> expected;
     private Configuration config = new Configuration();
     private HadoopResourceService resourceService;
 
@@ -430,5 +431,41 @@ public class HadoopResourceServiceTest {
     private static String getFileNameFromResourceDetails(final String name, final String type, final String format) {
         //Type, Id, Format
         return type + "_" + name + "." + format;
+    }
+
+
+    // PathUtils has been removed (?) from Hadoop at some point
+    // It used to be available under hadoop-hdfs, it is now included here
+    // This was previously presenting some windows/unix compatibility problems
+    private static class PathUtils {
+        public static Path getTestPath(Class<?> caller) {
+            return getTestPath(caller, true);
+        }
+
+        public static Path getTestPath(Class<?> caller, boolean create) {
+            return new Path(getTestDirName(caller));
+        }
+
+        public static File getTestDir(Class<?> caller) {
+            return getTestDir(caller, true);
+        }
+
+        public static File getTestDir(Class<?> caller, boolean create) {
+            File dir = new File(System.getProperty("test.build.data", "target/test/data")
+                            + "/" + RandomStringUtils.randomAlphanumeric(10),
+                            caller.getSimpleName());
+            if (create) {
+                dir.mkdirs();
+            }
+            return dir;
+        }
+
+        public static String getTestDirName(Class<?> caller) {
+            return getTestDirName(caller, true);
+        }
+
+        public static String getTestDirName(Class<?> caller, boolean create) {
+            return getTestDir(caller, create).getAbsolutePath();
+        }
     }
 }
