@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.Util;
 import uk.gov.gchq.palisade.data.serialise.Serialiser;
-import uk.gov.gchq.palisade.reader.request.AuditRequest.ReadRequestCompleteAuditRequest;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
 import uk.gov.gchq.palisade.rule.Rules;
 
@@ -70,24 +69,20 @@ public class SerialisingResponseWriter implements ResponseWriter {
      */
     private final AtomicLong recordsReturned = new AtomicLong(0);
 
-    private AuditRequestCompleteReceiver auditRequestCompleteReceiver;
-
     /**
      * Create a serialising response writer instance.
      *
      * @param stream                       the underlying data stream
      * @param serialiser                   the serialiser for the request
      * @param request                      the context for the request
-     * @param auditRequestCompleteReceiver the auditor for the request
      */
-    public SerialisingResponseWriter(final InputStream stream, final Serialiser<?> serialiser, final DataReaderRequest request, final AuditRequestCompleteReceiver auditRequestCompleteReceiver) {
+    public SerialisingResponseWriter(final InputStream stream, final Serialiser<?> serialiser, final DataReaderRequest request) {
         requireNonNull(stream, "stream");
         requireNonNull(serialiser, "serialiser");
         requireNonNull(request, "request");
         this.stream = stream;
         this.serialiser = (Serialiser<Object>) serialiser;
         this.request = request;
-        this.auditRequestCompleteReceiver = auditRequestCompleteReceiver;
     }
 
     @Override
@@ -130,18 +125,6 @@ public class SerialisingResponseWriter implements ResponseWriter {
 
     @Override
     public void close() {
-        // Audit log the number of results returned
-        if (auditRequestCompleteReceiver != null) {
-            ReadRequestCompleteAuditRequest auditRequest = ReadRequestCompleteAuditRequest.create(request.getOriginalRequestId())
-                    .withUser(request.getUser())
-                    .withLeafResource(request.getResource())
-                    .withContext(request.getContext())
-                    .withRulesApplied(request.getRules())
-                    .withNumberOfRecordsReturned(recordsReturned.get())
-                    .withNumberOfRecordsProcessed(recordsProcessed.get());
-            auditRequestCompleteReceiver.receive(auditRequest);
-        }
-
         try {
             stream.close();
         } catch (IOException ignored) {

@@ -121,12 +121,11 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
     }
 
     /**
-     * {@inheritDoc} Overridden to update the list of serialisers before attempting the read.
+     * {@inheritDoc} Update the list of serialisers before attempting the read.
      */
-    @Override
-    public DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service, final AuditRequestCompleteReceiver auditRequestCompleteReceiver) {
+    public DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service) {
         retrieveSerialisersFromCache(service);
-        return super.read(request, service, auditRequestCompleteReceiver);
+        return super.read(request);
     }
 
     /**
@@ -139,9 +138,8 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
      */
     private static Map<DataFlavour, Serialiser<?>> retrieveFromCache(final CacheService cache, final Class<? extends Service> service) {
         requireNonNull(cache, "cache");
-        GetCacheRequest<MapWrap> request = new GetCacheRequest<>()
-                .service(service)
-                .key(SERIALISER_KEY);
+        GetCacheRequest<MapWrap> request = new GetCacheRequest<>();
+        request.service(service).key(SERIALISER_KEY);
         //go retrieve this from the cache
         Optional<MapWrap> map = cache.get(request).join();
 
@@ -177,10 +175,8 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
         typeMap.put(flavour, serialiser);
 
         //now record this back into the cache
-        AddCacheRequest<MapWrap> cacheRequest = new AddCacheRequest<>()
-                .service(service)
-                .key(SERIALISER_KEY)
-                .value(new MapWrap(typeMap));
+        AddCacheRequest<MapWrap> cacheRequest = new AddCacheRequest<>();
+        cacheRequest.service(service).key(SERIALISER_KEY).value(new MapWrap(typeMap));
 
         LOGGER.debug("Adding {} for flavour {} to the cache", serialiser, flavour);
         return cache.add(cacheRequest);

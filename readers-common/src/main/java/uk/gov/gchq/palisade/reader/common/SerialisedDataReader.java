@@ -27,7 +27,6 @@ import uk.gov.gchq.palisade.data.serialise.SimpleStringSerialiser;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
 import uk.gov.gchq.palisade.reader.request.DataReaderResponse;
 import uk.gov.gchq.palisade.resource.LeafResource;
-import uk.gov.gchq.palisade.service.Service;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -90,20 +89,18 @@ public abstract class SerialisedDataReader implements DataReader {
      * @param request          {@link DataReaderRequest} containing the resource to be
      *                         read, rules to be applied, the user requesting the data
      *                         and the purpose for accessing the data.
-     * @param completeReceiver the auditing object
-     * @param service          the class for the reader service
      * @return a {@link DataReaderResponse} containing the stream of data
      * read to be streamed back to the client
      */
     @Override
-    public DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service, final AuditRequestCompleteReceiver completeReceiver) {
+    public DataReaderResponse read(final DataReaderRequest request) {
         requireNonNull(request, "The request cannot be null.");
 
         final Serialiser<Object> serialiser = getSerialiser(request.getResource());
         //set up the raw input stream from the data source
         final InputStream rawStream = readRaw(request.getResource());
 
-        ResponseWriter serialisedWriter = new SerialisingResponseWriter(rawStream, serialiser, request, completeReceiver);
+        ResponseWriter serialisedWriter = new SerialisingResponseWriter(rawStream, serialiser, request);
 
         //set response object to use the writer above
         return new DataReaderResponse().writer(serialisedWriter);

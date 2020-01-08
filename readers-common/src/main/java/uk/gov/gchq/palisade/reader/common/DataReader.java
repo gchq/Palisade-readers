@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import uk.gov.gchq.palisade.reader.exception.NoCapacityException;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
 import uk.gov.gchq.palisade.reader.request.DataReaderResponse;
-import uk.gov.gchq.palisade.service.Service;
 
 /**
  * The core API for the data reader.
@@ -50,8 +49,6 @@ public interface DataReader {
      * to do so, or if it is currently serving too many requests then it may throw a
      * {@link NoCapacityException}.
      *
-     * @param completeReceiver where to send the audit details
-     * @param service the class name for the service performing the read
      * @param request {@link DataReaderRequest} containing the resource to be
      *                read, rules to be applied, the user requesting the data
      *                and the purpose for accessing the data.
@@ -59,7 +56,7 @@ public interface DataReader {
      * @throws NoCapacityException if the data reader is unable to serve this request due to
      *                             workload issues or lack of capacity
      */
-    DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service, final AuditRequestCompleteReceiver completeReceiver) throws NoCapacityException;
+    DataReaderResponse read(final DataReaderRequest request) throws NoCapacityException;
 
     @JsonGetter("class")
     default String _getClass() {
