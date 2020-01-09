@@ -77,7 +77,8 @@ public class HadoopResourceServiceTest {
     private static final String TYPE_VALUE = "bob";
     private static final String FILE_NAME_VALUE_00001 = "00001";
     private static final String FILE_NAME_VALUE_00002 = "00002";
-    private static final String FILE = System.getProperty("os.name").toLowerCase().startsWith("win") ? "file:///" : "file://";
+    private static final Boolean IS_WIN = System.getProperty("os.name").toLowerCase().startsWith("win");
+    private static final String FILE = IS_WIN ? "file:///" : "file://";
     private static final String HDFS = "hdfs:///";
     private static File TMP_DIRECTORY;
 
@@ -95,10 +96,29 @@ public class HadoopResourceServiceTest {
         TMP_DIRECTORY = PathUtils.getTestDir(HadoopResourceServiceTest.class);
     }
 
+    // An attempt to mimic hadoop's internal path resolution
+    private String unixify(String path) {
+        if (IS_WIN) {
+            // Windows paths use "\" whereas unix uses "/"
+            String unix = path.replace("\\", "/");
+            // Unixy paths are all expected to be under root "/"
+            // Windows paths are all under the machine's collection of devices "X://"
+            if (!unix.startsWith("/")) {
+                return "/" + unix;
+            } else {
+                return unix;
+            }
+        } else {
+            // We would expect a Unix machine to be reporting unix paths
+            // This implies no support for filepaths other than Windows and Unix
+            return path;
+        }
+    }
+
     @Before
     public void setup() throws IOException {
         // Windows hadoop
-        System.setProperty("hadoop.home.dir", Paths.get(".").toAbsolutePath().normalize().toString() + "/src/test/resources/hadoop-bin");
+        System.setProperty("hadoop.home.dir", Paths.get(".").toAbsolutePath().normalize().toString() + "/src/test/resources");
         config = createConf();
         inputPathString = testFolder.getRoot().getAbsolutePath() + "/inputDir";
         fs = FileSystem.get(config);
@@ -353,7 +373,7 @@ public class HadoopResourceServiceTest {
 
     @Test
     public void shouldResolveParents() throws Exception {
-        final String parent = testFolder.getRoot().getAbsolutePath().replace("\\", "/") + "/inputDir" + "/" + "folder1" + "/" + "folder2/";
+        final String parent = unixify(testFolder.getRoot().getAbsolutePath() + "/inputDir/folder1/folder2/");
         final String id = parent + "/" + getFileNameFromResourceDetails(FILE_NAME_VALUE_00001, TYPE_VALUE, FORMAT_VALUE);
         final FileResource fileResource = new FileResource().id(id);
         HadoopResourceService.resolveParents(fileResource, config);
