@@ -208,9 +208,9 @@ public class HadoopResourceService implements ResourceService {
                         .collect(Collectors.toMap(
                                 resourceDetails -> {
                                     final String fileName = resourceDetails.getFileName();
-                                    final FileResource fileFileResource = new FileResource().id(fileName).type(resourceDetails.getType()).serialisedFormat(resourceDetails.getFormat());
-                                    resolveParents(fileFileResource, getInternalConf());
-                                    return fileFileResource;
+                                    final FileResource fileResource = new FileResource().id(fileName).type(resourceDetails.getType()).serialisedFormat(resourceDetails.getFormat());
+                                    resolveParents(fileResource, getInternalConf());
+                                    return fileResource;
                                 },
                                 resourceDetails -> {
                                     if (this.dataServices.size() < 1) {
