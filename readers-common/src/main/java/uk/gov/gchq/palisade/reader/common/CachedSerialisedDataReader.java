@@ -26,12 +26,12 @@ import org.slf4j.LoggerFactory;
 import uk.gov.gchq.palisade.data.serialise.Serialiser;
 import uk.gov.gchq.palisade.reader.common.DataFlavour.FlavourDeserializer;
 import uk.gov.gchq.palisade.reader.common.DataFlavour.FlavourSerializer;
-import uk.gov.gchq.palisade.reader.request.AddCacheRequest;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
 import uk.gov.gchq.palisade.reader.request.DataReaderResponse;
-import uk.gov.gchq.palisade.reader.request.GetCacheRequest;
-import uk.gov.gchq.palisade.reader.service.CacheService;
+import uk.gov.gchq.palisade.service.CacheService;
 import uk.gov.gchq.palisade.service.Service;
+import uk.gov.gchq.palisade.service.request.AddCacheRequest;
+import uk.gov.gchq.palisade.service.request.GetCacheRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -85,7 +85,7 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
      * @param service the service to retrieve the serialisers for
      */
     public void retrieveSerialisersFromCache(final Class<? extends Service> service) {
-        Map<DataFlavour, Serialiser<?>> newTypeMap = retrieveFromCache(getCacheService(), service);
+        Map<DataFlavour, Serialiser<?>> newTypeMap = retrieveFromCache(getCacheService());
         addAllSerialisers(newTypeMap);
     }
 
@@ -134,13 +134,12 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
      * retrieved from the cache.
      *
      * @param cache the cache service to use
-     * @param service the service class being retrieved from the cache
      * @return new mappings
      */
-    private static Map<DataFlavour, Serialiser<?>> retrieveFromCache(final CacheService cache, final Class<? extends Service> service) {
+    private static Map<DataFlavour, Serialiser<?>> retrieveFromCache(final CacheService cache) {
         requireNonNull(cache, "cache");
         GetCacheRequest<MapWrap> request = new GetCacheRequest<>()
-                .service(service)
+                .service(Service.class)
                 .key(SERIALISER_KEY);
         //go retrieve this from the cache
         Optional<MapWrap> map = cache.get(request).join();
@@ -161,24 +160,22 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
      * @param cache      the cache service to use
      * @param flavour    the data flavour to apply
      * @param serialiser the serialiser
-     * @param service    the service class being added to the cache
      * @return a boolean that will complete when the map is updated in the cache
      */
-    public static CompletableFuture<Boolean> addSerialiserToCache(final CacheService cache, final DataFlavour flavour, final Serialiser<?> serialiser, final Class<? extends Service> service) {
+    public static CompletableFuture<Boolean> addSerialiserToCache(final CacheService cache, final DataFlavour flavour, final Serialiser<?> serialiser) {
         requireNonNull(cache, "cache");
         requireNonNull(flavour, "flavour");
         requireNonNull(serialiser, "serialiser");
-        requireNonNull(service, "service");
 
         //get the current map
-        Map<DataFlavour, Serialiser<?>> typeMap = retrieveFromCache(cache, service);
+        Map<DataFlavour, Serialiser<?>> typeMap = retrieveFromCache(cache);
 
         //add the new flavour to it
         typeMap.put(flavour, serialiser);
 
         //now record this back into the cache
         AddCacheRequest<MapWrap> cacheRequest = new AddCacheRequest<>()
-                .service(service)
+                .service(Service.class)
                 .key(SERIALISER_KEY)
                 .value(new MapWrap(typeMap));
 

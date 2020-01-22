@@ -27,7 +27,6 @@ import org.apache.hadoop.fs.Path;
 
 import uk.gov.gchq.palisade.reader.common.CachedSerialisedDataReader;
 import uk.gov.gchq.palisade.resource.LeafResource;
-import uk.gov.gchq.palisade.service.CacheService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,11 +46,8 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
     @JsonIgnore
     private FileSystem fs;
 
-    public HadoopDataReader() {
-    }
-
-    public HadoopDataReader(final CacheService cacheService) {
-        this.cacheService(cacheService);
+    public HadoopDataReader() throws IOException {
+        conf(new Configuration());
     }
 
     @JsonCreator
@@ -92,12 +88,17 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
         try {
             //1st attempt: process this as a URI
             try {
+                System.out.println("Attempting to open uri resource");
                 inputStream = fs.open(new Path(new URI(resource.getId())));
+                System.out.println("Finished opening uri resource.");
             } catch (URISyntaxException e) {
                 //2nd attempt: process as a string
+                System.out.println("Attempting to open path resource");
                 inputStream = fs.open(new Path(resource.getId()));
+                System.out.println("Finished opening resource.");
             }
-        } catch (final IOException e) {
+        } catch (Exception e) {
+            System.out.println("Runtime Exception: " + e.getMessage());
             throw new RuntimeException("Unable to read resource: " + resource.getId(), e);
         }
 
