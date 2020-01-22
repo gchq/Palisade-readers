@@ -46,7 +46,6 @@ import uk.gov.gchq.palisade.resource.request.GetResourcesBySerialisedFormatReque
 import uk.gov.gchq.palisade.resource.request.GetResourcesByTypeRequest;
 import uk.gov.gchq.palisade.service.ConnectionDetail;
 import uk.gov.gchq.palisade.service.SimpleConnectionDetail;
-import uk.gov.gchq.palisade.service.resource.impl.MockDataService;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -103,7 +102,7 @@ public class HadoopResourceServiceTest {
         fs = FileSystem.get(config);
         fs.mkdirs(new Path(inputPathString));
         expected = Maps.newHashMap();
-        simpleConnection = new SimpleConnectionDetail().service(new MockDataService());
+        simpleConnection = new SimpleConnectionDetail().uri("localhost:8080");
 
         resourceService = new HadoopResourceService(config);
         resourceService.addDataService(simpleConnection);

@@ -27,6 +27,7 @@ import org.apache.hadoop.fs.Path;
 
 import uk.gov.gchq.palisade.reader.common.CachedSerialisedDataReader;
 import uk.gov.gchq.palisade.resource.LeafResource;
+import uk.gov.gchq.palisade.service.CacheService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,6 +48,10 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
     private FileSystem fs;
 
     public HadoopDataReader() {
+    }
+
+    public HadoopDataReader(final CacheService cacheService) {
+        this.cacheService(cacheService);
     }
 
     @JsonCreator
