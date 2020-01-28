@@ -24,6 +24,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.reader.common.CachedSerialisedDataReader;
 import uk.gov.gchq.palisade.resource.LeafResource;
@@ -43,6 +45,8 @@ import static java.util.Objects.requireNonNull;
  * a single {@link InputStream} containing all the records.
  */
 public class HadoopDataReader extends CachedSerialisedDataReader {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HadoopDataReader.class);
+
     @JsonIgnore
     private FileSystem fs;
 
@@ -93,10 +97,12 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
                 //2nd attempt: process as a string
                 inputStream = fs.open(new Path(resource.getId()));
             }
-        } catch (Exception e) {
+        } catch (final IOException e) {
+            LOGGER.error("Error encountered while reading resource {}: {}", resource, e.getMessage());
             throw new RuntimeException("Unable to read resource: " + resource.getId(), e);
         }
 
+        LOGGER.debug("Successfully created stream to resource {}", resource);
         return inputStream;
     }
 
@@ -107,7 +113,7 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
     @JsonGetter("conf")
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
     Map<String, String> getConfMap() {
-        Map<String, String> rtn = new HashMap<String, String>();
+        Map<String, String> rtn = new HashMap<>();
         Map<String, String> plainJobConfWithoutResolvingValues = getPlainJobConfWithoutResolvingValues();
 
         for (Entry<String, String> entry : getConf()) {
@@ -121,7 +127,7 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
     }
 
     private Map<String, String> getPlainJobConfWithoutResolvingValues() {
-        Map<String, String> plainMapWithoutResolvingValues = new HashMap<String, String>();
+        Map<String, String> plainMapWithoutResolvingValues = new HashMap<>();
         for (Entry<String, String> entry : new Configuration()) {
             plainMapWithoutResolvingValues.put(entry.getKey(), entry.getValue());
         }
