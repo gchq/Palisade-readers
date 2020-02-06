@@ -103,7 +103,7 @@ public class HadoopResourceServiceTest {
         fs = FileSystem.get(config);
         fs.mkdirs(new Path(inputPathString));
         expected = Maps.newHashMap();
-        simpleConnection = new SimpleConnectionDetail().uri("localhost:8082");
+        simpleConnection = new SimpleConnectionDetail().uri("data-service");
 
         resourceService = new HadoopResourceService(config);
         resourceService.addDataService(simpleConnection);
