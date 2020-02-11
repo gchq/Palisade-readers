@@ -50,7 +50,8 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
     @JsonIgnore
     private FileSystem fs;
 
-    public HadoopDataReader() {
+    public HadoopDataReader() throws IOException {
+        conf(new Configuration());
     }
 
     @JsonCreator
