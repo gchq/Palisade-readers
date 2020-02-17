@@ -85,7 +85,7 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
      * @param service the service to retrieve the serialisers for
      */
     public void retrieveSerialisersFromCache(final Class<? extends Service> service) {
-        Map<DataFlavour, Serialiser<?>> newTypeMap = retrieveFromCache(getCacheService());
+        Map<DataFlavour, Serialiser<?>> newTypeMap = retrieveFromCache(getCacheService(), service);
         addAllSerialisers(newTypeMap);
     }
 
@@ -133,6 +133,8 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
      * retrieved from the cache.
      *
      * @param cache the cache service to use
+     * @param service the service to add to the cache request
+     *
      * @return new mappings
      */
     private static Map<DataFlavour, Serialiser<?>> retrieveFromCache(final CacheService cache, final Class<? extends Service> service) {
@@ -166,14 +168,14 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
         requireNonNull(serialiser, "serialiser");
 
         //get the current map
-        Map<DataFlavour, Serialiser<?>> typeMap = retrieveFromCache(cache);
+        Map<DataFlavour, Serialiser<?>> typeMap = retrieveFromCache(cache, Service.class);
 
         //add the new flavour to it
         typeMap.put(flavour, serialiser);
 
         //now record this back into the cache
         AddCacheRequest<MapWrap> cacheRequest = new AddCacheRequest<>();
-        cacheRequest.service(service).key(SERIALISER_KEY).value(new MapWrap(typeMap));
+        cacheRequest.service(Service.class).key(SERIALISER_KEY).value(new MapWrap(typeMap));
 
         LOGGER.debug("Adding {} for flavour {} to the cache", serialiser, flavour);
         return cache.add(cacheRequest);
