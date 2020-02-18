@@ -37,12 +37,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * Adds behaviour to the {@link SerialisedDataReader} to keep details of the serialisers in the cache. This means
- * that the serialisers are global across the Palisade deployment. When a call to {@link CachedSerialisedDataReader#read(DataReaderRequest, Class)} (DataReaderRequest)}
+ * that the serialisers are global across the Palisade deployment. When a call to {@link CachedSerialisedDataReader#read(DataReaderRequest, Class, AtomicLong, AtomicLong)} (DataReaderRequest)}
  * is made, then the map of current serialisers is loaded from the cache and merged into the existing map. Therefore,
  * if a serialiser is added, then the {@link DataReader} will find it dynamically and does not need to be restarted.
  */
@@ -123,9 +124,9 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
     /**
      * {@inheritDoc} Update the list of serialisers before attempting the read.
      */
-    public DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service) {
+    public DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service, final AtomicLong recordsProcessed, final AtomicLong recordsReturned) {
         retrieveSerialisersFromCache(service);
-        return super.read(request);
+        return super.read(request, recordsProcessed, recordsReturned);
     }
 
     /**

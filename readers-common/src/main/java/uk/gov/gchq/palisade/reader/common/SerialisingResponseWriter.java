@@ -63,11 +63,11 @@ public class SerialisingResponseWriter implements ResponseWriter {
     /**
      * Atomic counter to know the number of records that have been processed
      */
-    private final AtomicLong recordsProcessed = new AtomicLong(0);
+    private final AtomicLong recordsProcessed;
     /**
      * Atomic counter to know the number of records that have been returned
      */
-    private final AtomicLong recordsReturned = new AtomicLong(0);
+    private final AtomicLong recordsReturned;
 
     /**
      * Create a serialising response writer instance.
@@ -75,14 +75,18 @@ public class SerialisingResponseWriter implements ResponseWriter {
      * @param stream                       the underlying data stream
      * @param serialiser                   the serialiser for the request
      * @param request                      the context for the request
+     * @param recordsProcessed a counter for the number of records being processed
+     * @param recordsReturned  a counter for the number of records being returned
      */
-    public SerialisingResponseWriter(final InputStream stream, final Serialiser<?> serialiser, final DataReaderRequest request) {
+    public SerialisingResponseWriter(final InputStream stream, final Serialiser<?> serialiser, final DataReaderRequest request, final AtomicLong recordsProcessed, final AtomicLong recordsReturned) {
         requireNonNull(stream, "stream");
         requireNonNull(serialiser, "serialiser");
         requireNonNull(request, "request");
         this.stream = stream;
         this.serialiser = (Serialiser<Object>) serialiser;
         this.request = request;
+        this.recordsProcessed = recordsProcessed;
+        this.recordsReturned = recordsReturned;
     }
 
     @Override

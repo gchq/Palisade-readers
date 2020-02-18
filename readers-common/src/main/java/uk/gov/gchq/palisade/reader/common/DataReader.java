@@ -25,6 +25,8 @@ import uk.gov.gchq.palisade.reader.exception.NoCapacityException;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
 import uk.gov.gchq.palisade.reader.request.DataReaderResponse;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * The core API for the data reader.
  * <p>
@@ -52,11 +54,15 @@ public interface DataReader {
      * @param request {@link DataReaderRequest} containing the resource to be
      *                read, rules to be applied, the user requesting the data
      *                and the purpose for accessing the data.
+     * @param recordsProcessed the number of records processed (for auditing)
+     *                         that will be effected by the data reader
+     * @param recordsReturned the number of records returned (for auditing)
+     *                        that will be effected by the data reader
      * @return a {@link DataReaderRequest} that contains the stream of data
      * @throws NoCapacityException if the data reader is unable to serve this request due to
      *                             workload issues or lack of capacity
      */
-    DataReaderResponse read(final DataReaderRequest request) throws NoCapacityException;
+    DataReaderResponse read(final DataReaderRequest request, AtomicLong recordsProcessed, AtomicLong recordsReturned) throws NoCapacityException;
 
     @JsonGetter("class")
     default String _getClass() {

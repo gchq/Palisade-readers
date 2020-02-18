@@ -31,6 +31,7 @@ import uk.gov.gchq.palisade.resource.LeafResource;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static java.util.Objects.requireNonNull;
 
@@ -89,18 +90,20 @@ public abstract class SerialisedDataReader implements DataReader {
      * @param request          {@link DataReaderRequest} containing the resource to be
      *                         read, rules to be applied, the user requesting the data
      *                         and the purpose for accessing the data.
+     * @param recordsProcessed a counter for the number of records being processed
+     * @param recordsReturned  a counter for the number of records being returned
      * @return a {@link DataReaderResponse} containing the stream of data
      * read to be streamed back to the client
      */
     @Override
-    public DataReaderResponse read(final DataReaderRequest request) {
+    public DataReaderResponse read(final DataReaderRequest request, final AtomicLong recordsProcessed, final AtomicLong recordsReturned) {
         requireNonNull(request, "The request cannot be null.");
 
         final Serialiser<Object> serialiser = getSerialiser(request.getResource());
         //set up the raw input stream from the data source
         final InputStream rawStream = readRaw(request.getResource());
 
-        ResponseWriter serialisedWriter = new SerialisingResponseWriter(rawStream, serialiser, request);
+        ResponseWriter serialisedWriter = new SerialisingResponseWriter(rawStream, serialiser, request, recordsProcessed, recordsReturned);
 
         //set response object to use the writer above
         return new DataReaderResponse().writer(serialisedWriter);
