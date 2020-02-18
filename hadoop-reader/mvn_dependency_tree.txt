@@ -1,4 +1,7 @@
 uk.gov.gchq.palisade:hadoop-reader:jar:0.4.0-SNAPSHOT
++- ch.qos.logback:logback-core:jar:1.2.3:compile
++- ch.qos.logback:logback-classic:jar:1.2.3:compile
+|  \- org.slf4j:slf4j-api:jar:1.7.25:compile
 +- commons-io:commons-io:jar:2.6:compile
 +- com.fasterxml.jackson.core:jackson-annotations:jar:2.10.0:compile
 +- uk.gov.gchq.palisade:readers-common:jar:0.4.0-SNAPSHOT:compile
@@ -18,6 +21,7 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.4.0-SNAPSHOT
 |     |  \- commons-lang:commons-lang:jar:2.6:compile
 |     +- org.apache.hadoop:hadoop-mapreduce-client-core:jar:2.8.5:compile
 |     |  \- org.apache.hadoop:hadoop-yarn-common:jar:2.8.5:compile
+|     |     \- log4j:log4j:jar:1.2.17:compile
 |     \- org.apache.hadoop:hadoop-mapreduce-client-jobclient:jar:2.8.5:compile
 +- org.apache.hadoop:hadoop-common:jar:3.2.0:compile
 |  +- org.apache.hadoop:hadoop-annotations:jar:3.2.0:compile
@@ -57,7 +61,7 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.4.0-SNAPSHOT
 |  +- org.apache.commons:commons-configuration2:jar:2.1.1:compile
 |  +- org.apache.commons:commons-lang3:jar:3.7:compile
 |  +- org.apache.commons:commons-text:jar:1.4:compile
-|  +- org.slf4j:slf4j-api:jar:1.7.25:compile
+|  +- org.slf4j:slf4j-log4j12:jar:1.7.25:compile
 |  +- org.apache.avro:avro:jar:1.7.7:compile
 |  |  +- com.thoughtworks.paranamer:paranamer:jar:2.3:compile
 |  |  \- org.xerial.snappy:snappy-java:jar:1.0.5:compile
@@ -111,6 +115,4 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.4.0-SNAPSHOT
 |  +- net.bytebuddy:byte-buddy:jar:1.9.10:test
 |  +- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
 |  \- org.objenesis:objenesis:jar:2.6:test
-+- org.hamcrest:hamcrest:jar:2.1:test
-+- ch.qos.logback:logback-core:jar:1.2.3:compile
-\- ch.qos.logback:logback-classic:jar:1.2.3:compile
+\- org.hamcrest:hamcrest:jar:2.1:test
