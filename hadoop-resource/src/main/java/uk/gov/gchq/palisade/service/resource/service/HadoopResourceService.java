@@ -34,14 +34,10 @@ import org.slf4j.LoggerFactory;
 import uk.gov.gchq.palisade.ToStringBuilder;
 import uk.gov.gchq.palisade.resource.ChildResource;
 import uk.gov.gchq.palisade.resource.LeafResource;
+import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.resource.impl.DirectoryResource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SystemResource;
-import uk.gov.gchq.palisade.resource.request.AddResourceRequest;
-import uk.gov.gchq.palisade.resource.request.GetResourcesByIdRequest;
-import uk.gov.gchq.palisade.resource.request.GetResourcesByResourceRequest;
-import uk.gov.gchq.palisade.resource.request.GetResourcesBySerialisedFormatRequest;
-import uk.gov.gchq.palisade.resource.request.GetResourcesByTypeRequest;
 import uk.gov.gchq.palisade.service.ConnectionDetail;
 import uk.gov.gchq.palisade.service.ResourceService;
 import uk.gov.gchq.palisade.service.request.ResourceDetails;
@@ -54,7 +50,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -152,81 +147,76 @@ public class HadoopResourceService implements ResourceService {
     }
 
     @Override
-    public CompletableFuture<Map<LeafResource, ConnectionDetail>> getResourcesByResource(final GetResourcesByResourceRequest request) {
-        requireNonNull(request, "request");
-        LOGGER.debug("Invoking getResourcesByResource request: {}", request);
-        GetResourcesByIdRequest getResourcesByIdRequest = new GetResourcesByIdRequest().resourceId(request.getResource().getId());
-        getResourcesByIdRequest.setOriginalRequestId(request.getOriginalRequestId());
-        return getResourcesById(getResourcesByIdRequest);
+    public Map<LeafResource, ConnectionDetail> getResourcesByResource(final Resource resource) {
+        requireNonNull(resource, "resource");
+        LOGGER.debug("Invoking getResourcesByResource for resource: {}", resource);
+        return getResourcesById(resource.getId());
     }
 
     @Override
-    public CompletableFuture<Map<LeafResource, ConnectionDetail>> getResourcesById(final GetResourcesByIdRequest request) {
-        requireNonNull(request, "request");
-        LOGGER.debug("Invoking getResourcesById request: {}", request);
-        final String resourceId = request.getResourceId();
+    public Map<LeafResource, ConnectionDetail> getResourcesById(final String str) {
+        requireNonNull(str, "resourceId");
+        LOGGER.debug("Invoking getResourcesById with value: {}", str);
         final String path = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
-        if (!resourceId.startsWith(path)) {
-            throw new UnsupportedOperationException(java.lang.String.format(ERROR_OUT_SCOPE, resourceId, path));
+        if (!str.startsWith(path)) {
+            throw new UnsupportedOperationException(java.lang.String.format(ERROR_OUT_SCOPE, str, path));
         }
-        return getFutureMappings(resourceId, ignore -> true);
+        return getMappings(str, ignore -> true);
     }
 
     @Override
-    public CompletableFuture<Map<LeafResource, ConnectionDetail>> getResourcesByType(final GetResourcesByTypeRequest request) {
-        requireNonNull(request, "request");
-        LOGGER.debug("Invoking getResourcesByType request: {}", request);
+    public Map<LeafResource, ConnectionDetail> getResourcesByType(final String str) {
+        requireNonNull(str, "resourceType");
+        LOGGER.debug("Invoking getResourcesByType with value: {}", str);
         final String pathString = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
-        final Predicate<ResourceDetails> predicate = detail -> request.getType().equals(detail.getType());
-        return getFutureMappings(pathString, predicate);
+        final Predicate<ResourceDetails> predicate = detail -> str.equals(detail.getType());
+        return getMappings(pathString, predicate);
     }
 
     @Override
-    public CompletableFuture<Map<LeafResource, ConnectionDetail>> getResourcesBySerialisedFormat(final GetResourcesBySerialisedFormatRequest request) {
-        requireNonNull(request, "request");
-        LOGGER.debug("Invoking getResourcesBySerialisedFormat request: {}", request);
+    public Map<LeafResource, ConnectionDetail> getResourcesBySerialisedFormat(final String str) {
+        requireNonNull(str, "resourceFormat");
+        LOGGER.debug("Invoking getResourcesBySerialisedFormat with value: {}", str);
         final String pathString = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
-        final Predicate<ResourceDetails> predicate = detail -> request.getSerialisedFormat().equals(detail.getFormat());
-        return getFutureMappings(pathString, predicate);
+        final Predicate<ResourceDetails> predicate = detail -> str.equals(detail.getFormat());
+        return getMappings(pathString, predicate);
     }
 
     @Override
-    public CompletableFuture<Boolean> addResource(final AddResourceRequest request) {
+    public Resource addResource(final Resource resource) {
         throw new UnsupportedOperationException(ERROR_ADD_RESOURCE);
     }
 
-    private CompletableFuture<Map<LeafResource, ConnectionDetail>> getFutureMappings(final String pathString, final Predicate<ResourceDetails> predicate) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                //pull latest connection details
-                final RemoteIterator<LocatedFileStatus> remoteIterator = this.getFileSystem().listFiles(new Path(pathString), true);
-                return getPaths(remoteIterator)
-                        .stream()
-                        .filter(ResourceDetails::isValidResourceName)
-                        .map(ResourceDetails::getResourceDetailsFromFileName)
-                        .filter(predicate)
-                        .collect(Collectors.toMap(
-                                resourceDetails -> {
-                                    final String fileName = resourceDetails.getFileName();
-                                    final FileResource fileFileResource = new FileResource().id(fileName).type(resourceDetails.getType()).serialisedFormat(resourceDetails.getFormat());
-                                    resolveParents(fileFileResource, getInternalConf());
-                                    return fileFileResource;
-                                },
-                                resourceDetails -> {
-                                    if (this.dataServices.size() < 1) {
-                                        throw new IllegalStateException(ERROR_NO_DATA_SERVICES);
-                                    }
-                                    int service = ThreadLocalRandom.current().nextInt(this.dataServices.size());
-                                    return this.dataServices.get(service);
+    private Map<LeafResource, ConnectionDetail> getMappings(final String pathString, final Predicate<ResourceDetails> predicate) {
+        try {
+            //pull latest connection details
+            final RemoteIterator<LocatedFileStatus> remoteIterator = this.getFileSystem().listFiles(new Path(pathString), true);
+            return getPaths(remoteIterator)
+                    .stream()
+                    .filter(ResourceDetails::isValidResourceName)
+                    .map(ResourceDetails::getResourceDetailsFromFileName)
+                    .filter(predicate)
+                    .collect(Collectors.toMap(
+                            resourceDetails -> {
+                                final String fileName = resourceDetails.getFileName();
+                                final FileResource fileFileResource = new FileResource().id(fileName).type(resourceDetails.getType()).serialisedFormat(resourceDetails.getFormat());
+                                resolveParents(fileFileResource, getInternalConf());
+                                return fileFileResource;
+                            },
+                            resourceDetails -> {
+                                if (this.dataServices.size() < 1) {
+                                    throw new IllegalStateException(ERROR_NO_DATA_SERVICES);
                                 }
-                                )
-                        );
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
+                                int service = ThreadLocalRandom.current().nextInt(this.dataServices.size());
+                                return this.dataServices.get(service);
+                            }
+                            )
+                    );
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

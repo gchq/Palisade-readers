@@ -32,7 +32,6 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.RequestId;
 import uk.gov.gchq.palisade.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.palisade.resource.ChildResource;
 import uk.gov.gchq.palisade.resource.LeafResource;
@@ -41,10 +40,6 @@ import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.resource.impl.DirectoryResource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SystemResource;
-import uk.gov.gchq.palisade.resource.request.GetResourcesByIdRequest;
-import uk.gov.gchq.palisade.resource.request.GetResourcesByResourceRequest;
-import uk.gov.gchq.palisade.resource.request.GetResourcesBySerialisedFormatRequest;
-import uk.gov.gchq.palisade.resource.request.GetResourcesByTypeRequest;
 import uk.gov.gchq.palisade.service.ConnectionDetail;
 import uk.gov.gchq.palisade.service.SimpleConnectionDetail;
 
@@ -56,7 +51,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -123,10 +117,10 @@ public class HadoopResourceServiceTest {
         ), simpleConnection);
 
         //when
-        final CompletableFuture<Map<LeafResource, ConnectionDetail>> resourcesById = resourceService.getResourcesById(new GetResourcesByIdRequest().resourceId(FILE + id));
+        final Map<LeafResource, ConnectionDetail> resourcesById = resourceService.getResourcesById(FILE + id);
 
         //then
-        assertEquals(expected, resourcesById.get());
+        assertEquals(expected, resourcesById);
     }
 
     @Test
@@ -137,7 +131,7 @@ public class HadoopResourceServiceTest {
         //when
         final String found = HDFS + "/unknownDir/" + id;
         try {
-            resourceService.getResourcesById(new GetResourcesByIdRequest().resourceId(found));
+            resourceService.getResourcesById(found);
             fail("exception expected");
         } catch (Exception e) {
             //then
@@ -163,10 +157,10 @@ public class HadoopResourceServiceTest {
         ), simpleConnection);
 
         //when
-        final CompletableFuture<Map<LeafResource, ConnectionDetail>> resourcesById = resourceService.getResourcesById(new GetResourcesByIdRequest().resourceId(FILE + id));
+        final Map<LeafResource, ConnectionDetail> resourcesById = resourceService.getResourcesById(FILE + id);
 
         //then
-        assertEquals(expected, resourcesById.join());
+        assertEquals(expected, resourcesById);
     }
 
     @Test
@@ -188,10 +182,10 @@ public class HadoopResourceServiceTest {
         ), simpleConnection);
 
         //when
-        final CompletableFuture<Map<LeafResource, ConnectionDetail>> resourcesById = resourceService.getResourcesById(new GetResourcesByIdRequest().resourceId(FILE + id));
+        final Map<LeafResource, ConnectionDetail> resourcesById = resourceService.getResourcesById(FILE + id);
 
         //then
-        assertEquals(expected, resourcesById.join());
+        assertEquals(expected, resourcesById);
     }
 
     @Test
@@ -213,12 +207,10 @@ public class HadoopResourceServiceTest {
         ), simpleConnection);
 
         //when
-        GetResourcesByTypeRequest getResourcesByTypeRequest = new GetResourcesByTypeRequest().type(TYPE_VALUE);
-        getResourcesByTypeRequest.setOriginalRequestId(new RequestId().id("test shouldGetResourcesByType"));
-        final CompletableFuture<Map<LeafResource, ConnectionDetail>> resourcesById = resourceService.getResourcesByType(getResourcesByTypeRequest);
+        final Map<LeafResource, ConnectionDetail> resourcesById = resourceService.getResourcesByType(TYPE_VALUE);
 
         //then
-        assertEquals(expected, resourcesById.join());
+        assertEquals(expected, resourcesById);
     }
 
     @Test
@@ -240,12 +232,10 @@ public class HadoopResourceServiceTest {
         ), simpleConnection);
 
         //when
-        GetResourcesBySerialisedFormatRequest getResourcesBySerialisedFormatRequest = new GetResourcesBySerialisedFormatRequest().serialisedFormat(FORMAT_VALUE);
-        getResourcesBySerialisedFormatRequest.setOriginalRequestId(new RequestId().id("test shouldGetResourcesByFormat"));
-        final CompletableFuture<Map<LeafResource, ConnectionDetail>> resourcesById = resourceService.getResourcesBySerialisedFormat(getResourcesBySerialisedFormatRequest);
+        final Map<LeafResource, ConnectionDetail> resourcesById = resourceService.getResourcesBySerialisedFormat(FORMAT_VALUE);
 
         //then
-        assertEquals(expected, resourcesById.join());
+        assertEquals(expected, resourcesById);
     }
 
     @Test
@@ -265,12 +255,10 @@ public class HadoopResourceServiceTest {
                 )
         ), simpleConnection);
         //when
-        GetResourcesByResourceRequest getResourcesByResourceRequest = new GetResourcesByResourceRequest().resource(new DirectoryResource().id(FILE + id));
-        getResourcesByResourceRequest.setOriginalRequestId(new RequestId().id("test shouldGetResourcesByResource"));
-        final CompletableFuture<Map<LeafResource, ConnectionDetail>> resourcesById = resourceService.getResourcesByResource(getResourcesByResourceRequest);
+        final Map<LeafResource, ConnectionDetail> resourcesById = resourceService.getResourcesByResource(new FileResource().id(FILE + id));
 
         //then
-        assertEquals(expected, resourcesById.join());
+        assertEquals(expected, resourcesById);
     }
 
     @Test
@@ -310,7 +298,7 @@ public class HadoopResourceServiceTest {
         assertEquals(service, JSONSerialiser.deserialise(serialise, HadoopResourceService.class));
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void shouldErrorWithNoConnectionDetails() throws Exception {
         //given
         final String id = inputPathString.replace("\\", "/") + "/" + getFileNameFromResourceDetails(FILE_NAME_VALUE_00001, TYPE_VALUE, FORMAT_VALUE);
@@ -319,16 +307,10 @@ public class HadoopResourceServiceTest {
         expected.put(new FileResource().id(id).type(TYPE_VALUE).serialisedFormat(FORMAT_VALUE), simpleConnection);
 
         //when
-        try {
-            //this test needs a local HDFS resource service
-            final CompletableFuture<Map<LeafResource, ConnectionDetail>> resourcesById = new HadoopResourceService(config)
-                    .getResourcesById(new GetResourcesByIdRequest().resourceId(FILE + id));
-            resourcesById.get();
-            fail("exception expected");
-        } catch (ExecutionException e) {
-            //then
-            assertEquals(HadoopResourceService.ERROR_NO_DATA_SERVICES, e.getCause().getMessage());
-        }
+        //this test needs a local HDFS resource service
+        final Map<LeafResource, ConnectionDetail> resourcesById = new HadoopResourceService(config)
+                .getResourcesById(FILE + id);
+        fail("exception expected");
     }
 
     @Test
@@ -344,14 +326,14 @@ public class HadoopResourceServiceTest {
         ), simpleConnection);
 
         //when
-        final CompletableFuture<Map<LeafResource, ConnectionDetail>> resourcesById = resourceService.getResourcesById(new GetResourcesByIdRequest().resourceId(FILE + id));
+        final Map<LeafResource, ConnectionDetail> resourcesById = resourceService.getResourcesById(FILE + id);
 
         //then
-        assertEquals(expected, resourcesById.join());
+        assertEquals(expected, resourcesById);
     }
 
     @Test
-    public void shouldResolveParents() throws Exception {
+    public void shouldResolveParents() {
         final String parent = testFolder.getRoot().getAbsolutePath().replace("\\", "/") + "/inputDir" + "/" + "folder1" + "/" + "folder2/";
         final String id = parent + "/" + getFileNameFromResourceDetails(FILE_NAME_VALUE_00001, TYPE_VALUE, FORMAT_VALUE);
         final FileResource fileResource = new FileResource().id(id);
