@@ -21,8 +21,7 @@ import org.apache.hadoop.fs.Path;
 
 import java.io.File;
 
-// PathUtils has been removed (?) from Hadoop at some point
-// It used to be available under hadoop-hdfs, it is now included here
+// PathUtils has been copied from Hadoop-HDFS version 2.6.0
 // This was previously presenting some windows/unix compatibility problems
 public class PathUtils {
     public static Path getTestPath(Class<?> caller) {
