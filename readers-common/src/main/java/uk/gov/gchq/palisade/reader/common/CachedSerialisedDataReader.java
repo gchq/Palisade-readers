@@ -37,12 +37,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * Adds behaviour to the {@link SerialisedDataReader} to keep details of the serialisers in the cache. This means
- * that the serialisers are global across the Palisade deployment. When a call to {@link CachedSerialisedDataReader#read(DataReaderRequest, Class)} (DataReaderRequest)}
+ * that the serialisers are global across the Palisade deployment. When a call to {@link CachedSerialisedDataReader#read(DataReaderRequest, Class, AtomicLong, AtomicLong)} (DataReaderRequest)}
  * is made, then the map of current serialisers is loaded from the cache and merged into the existing map. Therefore,
  * if a serialiser is added, then the {@link DataReader} will find it dynamically and does not need to be restarted.
  */
@@ -85,7 +86,7 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
      * @param service the service to retrieve the serialisers for
      */
     public void retrieveSerialisersFromCache(final Class<? extends Service> service) {
-        Map<DataFlavour, Serialiser<?>> newTypeMap = retrieveFromCache(getCacheService());
+        Map<DataFlavour, Serialiser<?>> newTypeMap = retrieveFromCache(getCacheService(), service);
         addAllSerialisers(newTypeMap);
     }
 
@@ -121,12 +122,11 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
     }
 
     /**
-     * {@inheritDoc} Overridden to update the list of serialisers before attempting the read.
+     * {@inheritDoc} Update the list of serialisers before attempting the read.
      */
-    @Override
-    public DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service, final AuditRequestCompleteReceiver auditRequestCompleteReceiver) {
+    public DataReaderResponse read(final DataReaderRequest request, final Class<? extends Service> service, final AtomicLong recordsProcessed, final AtomicLong recordsReturned) {
         retrieveSerialisersFromCache(service);
-        return super.read(request, service, auditRequestCompleteReceiver);
+        return super.read(request, recordsProcessed, recordsReturned);
     }
 
     /**
@@ -134,13 +134,14 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
      * retrieved from the cache.
      *
      * @param cache the cache service to use
+     * @param service the service to add to the cache request
+     *
      * @return new mappings
      */
-    private static Map<DataFlavour, Serialiser<?>> retrieveFromCache(final CacheService cache) {
+    private static Map<DataFlavour, Serialiser<?>> retrieveFromCache(final CacheService cache, final Class<? extends Service> service) {
         requireNonNull(cache, "cache");
-        GetCacheRequest<MapWrap> request = new GetCacheRequest<>()
-                .service(Service.class)
-                .key(SERIALISER_KEY);
+        GetCacheRequest<MapWrap> request = new GetCacheRequest<>();
+        request.service(service).key(SERIALISER_KEY);
         //go retrieve this from the cache
         Optional<MapWrap> map = cache.get(request).join();
 
@@ -168,16 +169,14 @@ public abstract class CachedSerialisedDataReader extends SerialisedDataReader {
         requireNonNull(serialiser, "serialiser");
 
         //get the current map
-        Map<DataFlavour, Serialiser<?>> typeMap = retrieveFromCache(cache);
+        Map<DataFlavour, Serialiser<?>> typeMap = retrieveFromCache(cache, Service.class);
 
         //add the new flavour to it
         typeMap.put(flavour, serialiser);
 
         //now record this back into the cache
-        AddCacheRequest<MapWrap> cacheRequest = new AddCacheRequest<>()
-                .service(Service.class)
-                .key(SERIALISER_KEY)
-                .value(new MapWrap(typeMap));
+        AddCacheRequest<MapWrap> cacheRequest = new AddCacheRequest<>();
+        cacheRequest.service(Service.class).key(SERIALISER_KEY).value(new MapWrap(typeMap));
 
         LOGGER.debug("Adding {} for flavour {} to the cache", serialiser, flavour);
         return cache.add(cacheRequest);
