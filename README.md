@@ -24,3 +24,8 @@ The data service then passes that information to the `DataReader` which is then 
 The data service is also responsible for ensuring the relevant audit logs are generated.
 
 This repository contains implementations of the `DataReader`
+
+#### Configuring for Hadoop on Windows
+
+In order to use the [HadoopResourceService](hadoop-resource/src/main/java/uk/gov/gchq/palisade/service/resource/service/HadoopResourceService.java) and [HadoopDataReader](hadoop-reader/src/main/java/uk/gov/gchq/palisade/reader/HadoopDataReader.java) in a Windows environment, the provided [hadoop binaries](hadoop-resource/src/test/resources/bin/) should be added to the system PATH.
+If using IntelliJ's built-in test runners, these binaries will also need to be added under the project's global libraries.
