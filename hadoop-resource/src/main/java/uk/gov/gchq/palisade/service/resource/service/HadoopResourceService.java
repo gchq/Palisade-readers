@@ -154,31 +154,31 @@ public class HadoopResourceService implements ResourceService {
     }
 
     @Override
-    public Map<LeafResource, ConnectionDetail> getResourcesById(final String str) {
-        requireNonNull(str, "resourceId");
-        LOGGER.debug("Invoking getResourcesById with value: {}", str);
+    public Map<LeafResource, ConnectionDetail> getResourcesById(final String resourceId) {
+        requireNonNull(resourceId, "resourceId");
+        LOGGER.debug("Invoking getResourcesById with value: {}", resourceId);
         final String path = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
-        if (!str.startsWith(path)) {
-            throw new UnsupportedOperationException(java.lang.String.format(ERROR_OUT_SCOPE, str, path));
+        if (!resourceId.startsWith(path)) {
+            throw new UnsupportedOperationException(java.lang.String.format(ERROR_OUT_SCOPE, resourceId, path));
         }
-        return getMappings(str, ignore -> true);
+        return getMappings(resourceId, ignore -> true);
     }
 
     @Override
-    public Map<LeafResource, ConnectionDetail> getResourcesByType(final String str) {
-        requireNonNull(str, "resourceType");
-        LOGGER.debug("Invoking getResourcesByType with value: {}", str);
+    public Map<LeafResource, ConnectionDetail> getResourcesByType(final String resourceType) {
+        requireNonNull(resourceType, "resourceType");
+        LOGGER.debug("Invoking getResourcesByType with value: {}", resourceType);
         final String pathString = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
-        final Predicate<ResourceDetails> predicate = detail -> str.equals(detail.getType());
+        final Predicate<ResourceDetails> predicate = detail -> resourceType.equals(detail.getType());
         return getMappings(pathString, predicate);
     }
 
     @Override
-    public Map<LeafResource, ConnectionDetail> getResourcesBySerialisedFormat(final String str) {
-        requireNonNull(str, "resourceFormat");
-        LOGGER.debug("Invoking getResourcesBySerialisedFormat with value: {}", str);
+    public Map<LeafResource, ConnectionDetail> getResourcesBySerialisedFormat(final String resourceFormat) {
+        requireNonNull(resourceFormat, "resourceFormat");
+        LOGGER.debug("Invoking getResourcesBySerialisedFormat with value: {}", resourceFormat);
         final String pathString = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
-        final Predicate<ResourceDetails> predicate = detail -> str.equals(detail.getFormat());
+        final Predicate<ResourceDetails> predicate = detail -> resourceFormat.equals(detail.getFormat());
         return getMappings(pathString, predicate);
     }
 
