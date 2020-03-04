@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 
+import uk.gov.gchq.palisade.data.serialise.Serialiser;
 import uk.gov.gchq.palisade.reader.exception.NoCapacityException;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
 import uk.gov.gchq.palisade.reader.request.DataReaderResponse;
@@ -63,6 +64,8 @@ public interface DataReader {
      *                             workload issues or lack of capacity
      */
     DataReaderResponse read(final DataReaderRequest request, AtomicLong recordsProcessed, AtomicLong recordsReturned) throws NoCapacityException;
+
+    void addSerialiser(final DataFlavour flavour, final Serialiser<?> serialiser);
 
     @JsonGetter("class")
     default String _getClass() {

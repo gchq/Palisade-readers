@@ -41,7 +41,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The response writer for the {@link SerialisedDataReader} which will apply the record level rules for Palisade.
  */
-public class SerialisingResponseWriter implements ResponseWriter {
+public class SerialisingResponseWriter<T> implements ResponseWriter {
     private static final Logger LOGGER = LoggerFactory.getLogger(SerialisingResponseWriter.class);
     /**
      * The underlying data stream from the underlying data store.
@@ -55,7 +55,7 @@ public class SerialisingResponseWriter implements ResponseWriter {
     /**
      * The serialiser for processing the input stream.
      */
-    private final Serialiser<Object> serialiser;
+    private final Serialiser<T> serialiser;
     /**
      * The user data request.
      */
@@ -78,12 +78,12 @@ public class SerialisingResponseWriter implements ResponseWriter {
      * @param recordsProcessed a counter for the number of records being processed
      * @param recordsReturned  a counter for the number of records being returned
      */
-    public SerialisingResponseWriter(final InputStream stream, final Serialiser<?> serialiser, final DataReaderRequest request, final AtomicLong recordsProcessed, final AtomicLong recordsReturned) {
+    public SerialisingResponseWriter(final InputStream stream, final Serialiser<T> serialiser, final DataReaderRequest request, final AtomicLong recordsProcessed, final AtomicLong recordsReturned) {
         requireNonNull(stream, "stream");
         requireNonNull(serialiser, "serialiser");
         requireNonNull(request, "request");
         this.stream = stream;
-        this.serialiser = (Serialiser<Object>) serialiser;
+        this.serialiser = serialiser;
         this.request = request;
         this.recordsProcessed = recordsProcessed;
         this.recordsReturned = recordsReturned;
@@ -100,7 +100,7 @@ public class SerialisingResponseWriter implements ResponseWriter {
             throw new IOException("response already written");
         }
 
-        final Rules rules = request.getRules();
+        final Rules<T> rules = request.getRules();
 
         //if nothing to do, then just copy the bytes across
         try {
@@ -109,9 +109,11 @@ public class SerialisingResponseWriter implements ResponseWriter {
                 IOUtils.copy(stream, output);
             } else {
                 LOGGER.debug("Applying rules: {}", rules);
+                LOGGER.debug("Using serialiser {}", serialiser.getClass());
+                Stream<T> deserialisedStream = serialiser.deserialise(stream).peek(obj -> LOGGER.info("Deserialised object of type {} :: {}", obj.getClass(), obj));
                 //create stream of filtered objects
-                final Stream<Object> deserialisedData = Util.applyRulesToStream(
-                        serialiser.deserialise(stream),
+                final Stream<T> deserialisedData = Util.applyRulesToStream(
+                        deserialisedStream,
                         request.getUser(),
                         request.getContext(),
                         rules,
