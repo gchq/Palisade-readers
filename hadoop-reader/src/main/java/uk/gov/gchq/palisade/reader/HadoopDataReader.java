@@ -27,7 +27,7 @@ import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.reader.common.CachedSerialisedDataReader;
+import uk.gov.gchq.palisade.reader.common.SerialisedDataReader;
 import uk.gov.gchq.palisade.resource.LeafResource;
 
 import java.io.IOException;
@@ -41,10 +41,10 @@ import java.util.Map.Entry;
 import static java.util.Objects.requireNonNull;
 
 /**
- * An HadoopDataReader is an implementation of {@link CachedSerialisedDataReader} for Hadoop that opens a file and returns
+ * An HadoopDataReader is an implementation of {@link SerialisedDataReader} for Hadoop that opens a file and returns
  * a single {@link InputStream} containing all the records.
  */
-public class HadoopDataReader extends CachedSerialisedDataReader {
+public class HadoopDataReader extends SerialisedDataReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(HadoopDataReader.class);
 
     @JsonIgnore
@@ -90,8 +90,8 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
 
         InputStream inputStream;
         try {
-            //1st attempt: process this as a URI
             try {
+                //1st attempt: process this as a URI
                 inputStream = fs.open(new Path(new URI(resource.getId())));
             } catch (URISyntaxException e) {
                 //2nd attempt: process as a string
@@ -111,7 +111,7 @@ public class HadoopDataReader extends CachedSerialisedDataReader {
     }
 
     @JsonGetter("conf")
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
     Map<String, String> getConfMap() {
         Map<String, String> rtn = new HashMap<>();
         Map<String, String> plainJobConfWithoutResolvingValues = getPlainJobConfWithoutResolvingValues();
