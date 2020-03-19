@@ -26,19 +26,19 @@ import java.io.File;
 // PathUtils has been copied from Hadoop-HDFS version 2.6.0
 // This was previously presenting some windows/unix compatibility problems
 public class PathUtils {
-    public static Path getTestPath(Class<?> caller) {
+    public static Path getTestPath(final Class<?> caller) {
         return getTestPath(caller, true);
     }
 
-    public static Path getTestPath(Class<?> caller, boolean create) {
+    public static Path getTestPath(final Class<?> caller, final boolean create) {
         return new Path(getTestDirName(caller));
     }
 
-    public static File getTestDir(Class<?> caller) {
+    public static File getTestDir(final Class<?> caller) {
         return getTestDir(caller, true);
     }
 
-    public static File getTestDir(Class<?> caller, boolean create) {
+    public static File getTestDir(final Class<?> caller, final boolean create) {
         File dir = new File(System.getProperty("test.build.data", "target/test/data")
                 + "/" + RandomStringUtils.randomAlphanumeric(10),
                 caller.getSimpleName());
@@ -48,11 +48,11 @@ public class PathUtils {
         return dir;
     }
 
-    public static String getTestDirName(Class<?> caller) {
+    public static String getTestDirName(final Class<?> caller) {
         return getTestDirName(caller, true);
     }
 
-    public static String getTestDirName(Class<?> caller, boolean create) {
+    public static String getTestDirName(final Class<?> caller, final boolean create) {
         return getTestDir(caller, create).getAbsolutePath();
     }
 }

@@ -143,7 +143,7 @@ public class HadoopDataReaderTest {
         assertEquals(Arrays.asList("some data", "some more data"), lines.collect(Collectors.toList()));
     }
 
-    private static HadoopDataReader getReader(Configuration conf) throws IOException {
+    private static HadoopDataReader getReader(final Configuration conf) throws IOException {
         return new HadoopDataReader().conf(conf);
     }
 }
