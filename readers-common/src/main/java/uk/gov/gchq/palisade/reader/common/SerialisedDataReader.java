@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.data.serialise.Serialiser;
 import uk.gov.gchq.palisade.data.serialise.SimpleStringSerialiser;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
@@ -118,6 +119,7 @@ public abstract class SerialisedDataReader implements DataReader {
      */
     protected abstract InputStream readRaw(final LeafResource resource);
 
+    @Generated
     public <T> Serialiser<T> getSerialiser(final DataFlavour flavour) {
         requireNonNull(flavour, "The flavour cannot be null.");
         Serialiser<?> serialiser = serialisers.get(flavour);
@@ -128,6 +130,7 @@ public abstract class SerialisedDataReader implements DataReader {
         return (Serialiser<T>) serialiser;
     }
 
+    @Generated
     public <I> Serialiser<I> getSerialiser(final LeafResource resource) {
         return getSerialiser(DataFlavour.of(resource.getType(), resource.getSerialisedFormat()));
     }
@@ -149,11 +152,13 @@ public abstract class SerialisedDataReader implements DataReader {
         serialisers.putAll(mergingSerialisers);
     }
 
+    @Generated
     public void setSerialisers(final Map<DataFlavour, Serialiser<?>> serialisers) {
         requireNonNull(serialisers);
         this.serialisers = serialisers;
     }
 
+    @Generated
     public void setDefaultSerialiser(final Serialiser<?> defaultSerialiser) {
         requireNonNull(defaultSerialiser);
         this.defaultSerialiser = defaultSerialiser;
