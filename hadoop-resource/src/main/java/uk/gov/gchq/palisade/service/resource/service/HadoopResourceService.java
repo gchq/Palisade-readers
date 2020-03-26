@@ -283,6 +283,14 @@ public class HadoopResourceService implements ResourceService {
         this.conf(conf);
     }
 
+    private Map<String, String> getPlainJobConfWithoutResolvingValues() {
+        Map<String, String> plainMapWithoutResolvingValues = new HashMap<>();
+        for (Entry<String, String> entry : new Configuration()) {
+            plainMapWithoutResolvingValues.put(entry.getKey(), entry.getValue());
+        }
+        return plainMapWithoutResolvingValues;
+    }
+
     @Override
     @Generated
     public boolean equals(final Object o) {
@@ -302,14 +310,6 @@ public class HadoopResourceService implements ResourceService {
     @Generated
     public int hashCode() {
         return Objects.hash(config, fileSystem, dataServices);
-    }
-
-    private Map<String, String> getPlainJobConfWithoutResolvingValues() {
-        Map<String, String> plainMapWithoutResolvingValues = new HashMap<>();
-        for (Entry<String, String> entry : new Configuration()) {
-            plainMapWithoutResolvingValues.put(entry.getKey(), entry.getValue());
-        }
-        return plainMapWithoutResolvingValues;
     }
 
     @Override

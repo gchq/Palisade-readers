@@ -141,20 +141,22 @@ public class DataFlavour {
             return false;
         }
         final DataFlavour that = (DataFlavour) o;
-        return Objects.equals(flavour, that.flavour);
+        return Objects.equals(flavour.left, that.flavour.left) &&
+                Objects.equals(flavour.right, that.flavour.right);
     }
 
     @Override
     @Generated
     public int hashCode() {
-        return Objects.hash(flavour);
+        return Objects.hash(flavour.left, flavour.right);
     }
 
     @Override
     @Generated
     public String toString() {
         return new StringJoiner(", ", DataFlavour.class.getSimpleName() + "[", "]")
-                .add("flavour=" + flavour)
+                .add("flavour.left=" + flavour.left)
+                .add("flavour.right=" + flavour.right)
                 .toString();
     }
 }
