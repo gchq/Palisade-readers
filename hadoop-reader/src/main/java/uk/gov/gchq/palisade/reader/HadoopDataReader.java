@@ -27,6 +27,7 @@ import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.reader.common.SerialisedDataReader;
 import uk.gov.gchq.palisade.resource.LeafResource;
 
@@ -70,29 +71,19 @@ public class HadoopDataReader extends SerialisedDataReader {
     }
 
     public HadoopDataReader conf(final Map<String, String> conf) throws IOException {
-        requireNonNull(conf, "The conf cannot be null.");
         return conf(createConfig(conf));
     }
 
     public HadoopDataReader conf(final Configuration conf) throws IOException {
-        requireNonNull(conf, "The conf cannot be null.");
-        return fs(FileSystem.get(conf));
-    }
-
-    public HadoopDataReader fs(final FileSystem fs) {
-        requireNonNull(fs, "The file system cannot be set to null.");
-        this.fs = fs;
+        this.setFs(FileSystem.get(conf));
         return this;
     }
 
-    public FileSystem getFs() {
-        requireNonNull(fs, "The file system has not been set.");
-        return fs;
+    public HadoopDataReader fs(final FileSystem fs) {
+        this.setFs(fs);
+        return this;
     }
 
-    public void setFs(final FileSystem fs) {
-        fs(fs);
-    }
 
     @Override
     protected InputStream readRaw(final LeafResource resource) {
@@ -116,12 +107,25 @@ public class HadoopDataReader extends SerialisedDataReader {
         return inputStream;
     }
 
+    @Generated
+    public FileSystem getFs() {
+        return this.fs;
+    }
+
+    @Generated
+    public void setFs(final FileSystem fs) {
+        requireNonNull(fs);
+        this.fs = fs;
+    }
+
+    @Generated
     public Configuration getConf() {
-        return getFs().getConf();
+        return this.fs.getConf();
     }
 
     @JsonGetter("conf")
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
+    @Generated
     Map<String, String> getConfMap() {
         Map<String, String> rtn = new HashMap<>();
         Map<String, String> plainJobConfWithoutResolvingValues = getPlainJobConfWithoutResolvingValues();
@@ -136,6 +140,7 @@ public class HadoopDataReader extends SerialisedDataReader {
         return rtn;
     }
 
+    @Generated
     private Map<String, String> getPlainJobConfWithoutResolvingValues() {
         Map<String, String> plainMapWithoutResolvingValues = new HashMap<>();
         for (Entry<String, String> entry : new Configuration()) {
