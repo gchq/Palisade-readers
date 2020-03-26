@@ -17,12 +17,10 @@
 package uk.gov.gchq.palisade.reader.common;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.Util;
 import uk.gov.gchq.palisade.data.serialise.Serialiser;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
@@ -31,6 +29,8 @@ import uk.gov.gchq.palisade.rule.Rules;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
@@ -72,9 +72,9 @@ public class SerialisingResponseWriter<T> implements ResponseWriter {
     /**
      * Create a serialising response writer instance.
      *
-     * @param stream                       the underlying data stream
-     * @param serialiser                   the serialiser for the request
-     * @param request                      the context for the request
+     * @param stream           the underlying data stream
+     * @param serialiser       the serialiser for the request
+     * @param request          the context for the request
      * @param recordsProcessed a counter for the number of records being processed
      * @param recordsReturned  a counter for the number of records being returned
      */
@@ -137,51 +137,41 @@ public class SerialisingResponseWriter<T> implements ResponseWriter {
         }
     }
 
-
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        SerialisingResponseWriter that = (SerialisingResponseWriter) o;
-
-        return new EqualsBuilder()
-                .append(stream, that.stream)
-                .append(written, that.written)
-                .append(serialiser, that.serialiser)
-                .append(request, that.request)
-                .append(recordsProcessed, that.recordsProcessed)
-                .append(recordsReturned, that.recordsReturned)
-                .isEquals();
-    }
-
-    @Override
+    @Generated
     public String toString() {
-        return new ToStringBuilder(this)
-                .appendSuper(super.toString())
-                .append("stream", stream)
-                .append("written", written)
-                .append("serialiser", serialiser)
-                .append("request", request)
-                .append("recordsProcessed", recordsProcessed)
-                .append("recordsReturned", recordsReturned)
+        return new StringJoiner(", ", SerialisingResponseWriter.class.getSimpleName() + "[", "]")
+                .add("stream=" + stream)
+                .add("written=" + written)
+                .add("serialiser=" + serialiser)
+                .add("request=" + request)
+                .add("recordsProcessed=" + recordsProcessed)
+                .add("recordsReturned=" + recordsReturned)
                 .toString();
     }
 
     @Override
-    public int hashCode() {
-        return new HashCodeBuilder(19, 37)
-                .append(stream)
-                .append(written)
-                .append(serialiser)
-                .append(request)
-                .append(recordsProcessed)
-                .append(recordsReturned)
-                .toHashCode();
+    @Generated
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SerialisingResponseWriter)) {
+            return false;
+        }
+        final SerialisingResponseWriter<?> that = (SerialisingResponseWriter<?>) o;
+        return Objects.equals(stream, that.stream) &&
+                Objects.equals(written, that.written) &&
+                Objects.equals(serialiser, that.serialiser) &&
+                Objects.equals(request, that.request) &&
+                Objects.equals(recordsProcessed, that.recordsProcessed) &&
+                Objects.equals(recordsReturned, that.recordsReturned);
     }
+
+    @Override
+    @Generated
+    public int hashCode() {
+        return Objects.hash(stream, written, serialiser, request, recordsProcessed, recordsReturned);
+    }
+
 }

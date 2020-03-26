@@ -23,11 +23,13 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.KeyDeserializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
+import uk.gov.gchq.palisade.Generated;
+
 import java.io.IOException;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import static java.util.Objects.requireNonNull;
 
@@ -46,36 +48,6 @@ public class DataFlavour {
      * The internal store of the flavour. The left entry is the data type and the right entry is the serialised format.
      */
     private final ImmutablePair<String, String> flavour;
-
-    /**
-     * Class to ensure {@link DataFlavour}s can be serialised into JSON.
-     */
-    public static final class FlavourSerializer extends StdSerializer<DataFlavour> {
-
-        public FlavourSerializer() {
-            super(DataFlavour.class);
-        }
-
-        @Override
-        public void serialize(final DataFlavour dataFlavour, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException {
-            jsonGenerator.writeFieldName(dataFlavour.getDataType() + DELIMITER + dataFlavour.getSerialisedFormat());
-        }
-    }
-
-    /**
-     * Class to ensure {@link DataFlavour}s can be deserialised from JSON.
-     */
-    public static final class FlavourDeserializer extends KeyDeserializer {
-
-        @Override
-        public Object deserializeKey(final String text, final DeserializationContext deserializationContext) throws IOException {
-            String[] parts = text.split(DELIMITER);
-            if (parts.length != 2) {
-                throw new IllegalStateException("error deserialising " + text + " as a DataFlavour, should be in format \"<data_type>" + DELIMITER + "<seralised_format>\"");
-            }
-            return DataFlavour.of(parts[0], parts[1]);
-        }
-    }
 
     /**
      * Create a flavour.
@@ -127,35 +99,60 @@ public class DataFlavour {
         return flavour.right;
     }
 
+    /**
+     * Class to ensure {@link DataFlavour}s can be serialised into JSON.
+     */
+    public static final class FlavourSerializer extends StdSerializer<DataFlavour> {
+
+        public FlavourSerializer() {
+            super(DataFlavour.class);
+        }
+
+        @Override
+        public void serialize(final DataFlavour dataFlavour, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException {
+            jsonGenerator.writeFieldName(dataFlavour.getDataType() + DELIMITER + dataFlavour.getSerialisedFormat());
+        }
+    }
+
+    /**
+     * Class to ensure {@link DataFlavour}s can be deserialised from JSON.
+     */
+    public static final class FlavourDeserializer extends KeyDeserializer {
+
+        @Override
+        public Object deserializeKey(final String text, final DeserializationContext deserializationContext) throws IOException {
+            String[] parts = text.split(DELIMITER);
+            if (parts.length != 2) {
+                throw new IllegalStateException("error deserialising " + text + " as a DataFlavour, should be in format \"<data_type>" + DELIMITER + "<seralised_format>\"");
+            }
+            return DataFlavour.of(parts[0], parts[1]);
+        }
+    }
+
     @Override
+    @Generated
+    public String toString() {
+        return new StringJoiner(", ", DataFlavour.class.getSimpleName() + "[", "]")
+                .add("flavour=" + flavour)
+                .toString();
+    }
+
+    @Override
+    @Generated
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-
-        if (o == null) {
+        if (!(o instanceof DataFlavour)) {
             return false;
         }
-
-        DataFlavour other = (DataFlavour) o;
-
-        return flavour.equals(other.flavour);
+        final DataFlavour that = (DataFlavour) o;
+        return Objects.equals(flavour, that.flavour);
     }
 
     @Override
+    @Generated
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(flavour.left)
-                .append(flavour.right)
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .appendSuper(super.toString())
-                .append("dataType", flavour.left)
-                .append("serialisedFormat", flavour.right)
-                .toString();
+        return Objects.hash(flavour);
     }
 }

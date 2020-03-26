@@ -16,15 +16,15 @@
 
 package uk.gov.gchq.palisade.reader.request;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import uk.gov.gchq.palisade.Context;
-import uk.gov.gchq.palisade.ToStringBuilder;
+import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.User;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.rule.Rules;
 import uk.gov.gchq.palisade.service.request.Request;
+
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import static java.util.Objects.requireNonNull;
 
@@ -47,8 +47,7 @@ public class DataReaderRequest extends Request {
      * @return the {@link DataReaderRequest}
      */
     public DataReaderRequest resource(final LeafResource resource) {
-        requireNonNull(resource, "The resource cannot be set to null.");
-        this.resource = resource;
+        this.setResource(resource);
         return this;
     }
 
@@ -57,8 +56,7 @@ public class DataReaderRequest extends Request {
      * @return the {@link DataReaderRequest}
      */
     public DataReaderRequest user(final User user) {
-        requireNonNull(user, "The user cannot be set to null.");
-        this.user = user;
+        this.setUser(user);
         return this;
     }
 
@@ -67,8 +65,7 @@ public class DataReaderRequest extends Request {
      * @return the {@link DataReaderRequest}
      */
     public DataReaderRequest context(final Context context) {
-        requireNonNull(context, "The context cannot be set to null.");
-        this.context = context;
+        this.setContext(context);
         return this;
     }
 
@@ -77,88 +74,89 @@ public class DataReaderRequest extends Request {
      * @return the {@link DataReaderRequest}
      */
     public DataReaderRequest rules(final Rules rules) {
-        requireNonNull(rules, "The rules cannot be set to null.");
-        this.rules = rules;
+        this.setRules(rules);
         return this;
     }
 
-    public LeafResource getResource() {
-        requireNonNull(resource, "The resource has not been set.");
-        return resource;
-    }
-
-    public void setResource(final LeafResource resource) {
-        resource(resource);
-    }
-
-    public User getUser() {
-        requireNonNull(user, "The user has not been set.");
-        return user;
-    }
-
-    public void setUser(final User user) {
-        user(user);
-    }
-
+    @Generated
     public Context getContext() {
-        requireNonNull(context, "The context has not been set.");
         return context;
     }
 
+    @Generated
     public void setContext(final Context context) {
-        context(context);
+        requireNonNull(context);
+        this.context = context;
     }
 
-
+    @Generated
     public Rules getRules() {
-        requireNonNull(rules, "The rules have not been set.");
         return rules;
     }
 
+    @Generated
     public void setRules(final Rules rules) {
-        rules(rules);
+        requireNonNull(rules);
+        this.rules = rules;
+    }
+
+    @Generated
+    public LeafResource getResource() {
+        return resource;
+    }
+
+    @Generated
+    public void setResource(final LeafResource resource) {
+        requireNonNull(resource);
+        this.resource = resource;
+    }
+
+    @Generated
+    public User getUser() {
+        return user;
+    }
+
+    @Generated
+    public void setUser(final User user) {
+        requireNonNull(user);
+        this.user = user;
     }
 
     @Override
+    @Generated
+    public String toString() {
+        return new StringJoiner(", ", DataReaderRequest.class.getSimpleName() + "[", "]")
+                .add("resource=" + resource)
+                .add("user=" + user)
+                .add("context=" + context)
+                .add("rules=" + rules)
+                .toString();
+    }
+
+    @Override
+    @Generated
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof DataReaderRequest)) {
             return false;
         }
-
+        if (!super.equals(o)) {
+            return false;
+        }
         final DataReaderRequest that = (DataReaderRequest) o;
-
-        return new EqualsBuilder()
-                .appendSuper(super.equals(o))
-                .append(resource, that.resource)
-                .append(user, that.user)
-                .append(context, that.context)
-                .append(rules, that.rules)
-                .isEquals();
+        return Objects.equals(resource, that.resource) &&
+                Objects.equals(user, that.user) &&
+                Objects.equals(context, that.context) &&
+                Objects.equals(rules, that.rules);
     }
 
     @Override
+    @Generated
     public int hashCode() {
-        return new HashCodeBuilder(17, 73)
-                .appendSuper(super.hashCode())
-                .append(resource)
-                .append(user)
-                .append(context)
-                .append(rules)
-                .toHashCode();
+        return Objects.hash(super.hashCode(), resource, user, context, rules);
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .appendSuper(super.toString())
-                .append("resource", resource)
-                .append("user", user)
-                .append("context", context)
-                .append("rules", rules)
-                .toString();
-    }
+
 }

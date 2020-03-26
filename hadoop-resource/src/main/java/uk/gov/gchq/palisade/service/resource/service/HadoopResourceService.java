@@ -31,7 +31,7 @@ import org.apache.hadoop.fs.RemoteIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.ToStringBuilder;
+import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.resource.ChildResource;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.impl.DirectoryResource;
@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
@@ -270,12 +271,35 @@ public class HadoopResourceService implements ResourceService {
     }
 
     public void setConf(final Map<String, String> conf) throws IOException {
+        requireNonNull(conf);
         setConf(createConfig(conf));
     }
 
     @JsonIgnore
     public void setConf(final Configuration conf) throws IOException {
+        requireNonNull(conf);
         conf(conf);
+    }
+
+    @Override
+    @Generated
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof HadoopResourceService)) {
+            return false;
+        }
+        final HadoopResourceService that = (HadoopResourceService) o;
+        return Objects.equals(config, that.config) &&
+                Objects.equals(fileSystem, that.fileSystem) &&
+                Objects.equals(dataServices, that.dataServices);
+    }
+
+    @Override
+    @Generated
+    public int hashCode() {
+        return Objects.hash(config, fileSystem, dataServices);
     }
 
     private Map<String, String> getPlainJobConfWithoutResolvingValues() {
@@ -287,27 +311,12 @@ public class HadoopResourceService implements ResourceService {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final HadoopResourceService that = (HadoopResourceService) o;
-        return Objects.equals(fileSystem, that.fileSystem);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(fileSystem);
-    }
-
-    @Override
+    @Generated
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("config", config)
-                .append("fileSystem", fileSystem)
+        return new StringJoiner(", ", HadoopResourceService.class.getSimpleName() + "[", "]")
+                .add("config=" + config)
+                .add("fileSystem=" + fileSystem)
+                .add("dataServices=" + dataServices)
                 .toString();
     }
 

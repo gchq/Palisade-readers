@@ -59,6 +59,16 @@ public class HadoopDataReader extends SerialisedDataReader {
         conf(conf);
     }
 
+    private static Configuration createConfig(final Map<String, String> conf) {
+        final Configuration config = new Configuration();
+        if ((conf != null)) {
+            for (final Entry<String, String> entry : conf.entrySet()) {
+                config.set(entry.getKey(), entry.getValue());
+            }
+        }
+        return config;
+    }
+
     public HadoopDataReader conf(final Map<String, String> conf) throws IOException {
         requireNonNull(conf, "The conf cannot be null.");
         return conf(createConfig(conf));
@@ -75,13 +85,13 @@ public class HadoopDataReader extends SerialisedDataReader {
         return this;
     }
 
-    public void setFs(final FileSystem fs) {
-        fs(fs);
-    }
-
     public FileSystem getFs() {
         requireNonNull(fs, "The file system has not been set.");
         return fs;
+    }
+
+    public void setFs(final FileSystem fs) {
+        fs(fs);
     }
 
     @Override
@@ -132,15 +142,5 @@ public class HadoopDataReader extends SerialisedDataReader {
             plainMapWithoutResolvingValues.put(entry.getKey(), entry.getValue());
         }
         return plainMapWithoutResolvingValues;
-    }
-
-    private static Configuration createConfig(final Map<String, String> conf) {
-        final Configuration config = new Configuration();
-        if ((conf != null)) {
-            for (final Entry<String, String> entry : conf.entrySet()) {
-                config.set(entry.getKey(), entry.getValue());
-            }
-        }
-        return config;
     }
 }

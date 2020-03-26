@@ -71,13 +71,13 @@ public abstract class SerialisedDataReader implements DataReader {
      */
     public SerialisedDataReader serialisers(final Map<DataFlavour, Serialiser<?>> serialisers) {
         requireNonNull(serialisers, "The serialisers cannot be set to null.");
-        this.serialisers = serialisers;
+        this.setSerialisers(serialisers);
         return this;
     }
 
     public SerialisedDataReader defaultSerialiser(final Serialiser<?> serialiser) {
         requireNonNull(serialiser, "The default serialiser cannot be set to null.");
-        this.defaultSerialiser = serialiser;
+        this.setDefaultSerialiser(serialiser);
         return this;
     }
 
@@ -129,7 +129,6 @@ public abstract class SerialisedDataReader implements DataReader {
     }
 
     public <I> Serialiser<I> getSerialiser(final LeafResource resource) {
-        requireNonNull(resource, "The resource cannot be null.");
         return getSerialiser(DataFlavour.of(resource.getType(), resource.getSerialisedFormat()));
     }
 
@@ -151,10 +150,12 @@ public abstract class SerialisedDataReader implements DataReader {
     }
 
     public void setSerialisers(final Map<DataFlavour, Serialiser<?>> serialisers) {
-        serialisers(serialisers);
+        requireNonNull(serialisers);
+        this.serialisers = serialisers;
     }
 
     public void setDefaultSerialiser(final Serialiser<?> defaultSerialiser) {
-        defaultSerialiser(defaultSerialiser);
+        requireNonNull(defaultSerialiser);
+        this.defaultSerialiser = defaultSerialiser;
     }
 }
