@@ -245,14 +245,14 @@ public class HadoopResourceService implements ResourceService {
         return this;
     }
 
+    @Generated
     protected Configuration getInternalConf() {
-        requireNonNull(config, "configuration must be set");
-        return config;
+        return this.config;
     }
 
+    @Generated
     protected FileSystem getFileSystem() {
-        requireNonNull(fileSystem, "configuration must be set");
-        return fileSystem;
+        return this.fileSystem;
     }
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
@@ -270,15 +270,17 @@ public class HadoopResourceService implements ResourceService {
         return rtn;
     }
 
+    @Generated
     public void setConf(final Map<String, String> conf) throws IOException {
         requireNonNull(conf);
-        setConf(createConfig(conf));
+        this.conf(createConfig(conf));
     }
 
     @JsonIgnore
+    @Generated
     public void setConf(final Configuration conf) throws IOException {
         requireNonNull(conf);
-        conf(conf);
+        this.conf(conf);
     }
 
     @Override

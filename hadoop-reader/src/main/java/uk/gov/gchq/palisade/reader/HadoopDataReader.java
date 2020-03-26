@@ -140,7 +140,6 @@ public class HadoopDataReader extends SerialisedDataReader {
         return rtn;
     }
 
-    @Generated
     private Map<String, String> getPlainJobConfWithoutResolvingValues() {
         Map<String, String> plainMapWithoutResolvingValues = new HashMap<>();
         for (Entry<String, String> entry : new Configuration()) {
