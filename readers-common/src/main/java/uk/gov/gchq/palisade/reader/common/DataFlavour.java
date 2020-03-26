@@ -50,6 +50,36 @@ public class DataFlavour {
     private final ImmutablePair<String, String> flavour;
 
     /**
+     * Class to ensure {@link DataFlavour}s can be serialised into JSON.
+     */
+    public static final class FlavourSerializer extends StdSerializer<DataFlavour> {
+
+        public FlavourSerializer() {
+            super(DataFlavour.class);
+        }
+
+        @Override
+        public void serialize(final DataFlavour dataFlavour, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException {
+            jsonGenerator.writeFieldName(dataFlavour.getDataType() + DELIMITER + dataFlavour.getSerialisedFormat());
+        }
+    }
+
+    /**
+     * Class to ensure {@link DataFlavour}s can be deserialised from JSON.
+     */
+    public static final class FlavourDeserializer extends KeyDeserializer {
+
+        @Override
+        public Object deserializeKey(final String text, final DeserializationContext deserializationContext) throws IOException {
+            String[] parts = text.split(DELIMITER);
+            if (parts.length != 2) {
+                throw new IllegalStateException("error deserialising " + text + " as a DataFlavour, should be in format \"<data_type>" + DELIMITER + "<seralised_format>\"");
+            }
+            return DataFlavour.of(parts[0], parts[1]);
+        }
+    }
+
+    /**
      * Create a flavour.
      *
      * @param dataType         the type of record or object being described
@@ -86,8 +116,9 @@ public class DataFlavour {
      *
      * @return data type
      */
+    @Generated
     public String getDataType() {
-        return flavour.left;
+        return this.flavour.left;
     }
 
     /**
@@ -95,46 +126,9 @@ public class DataFlavour {
      *
      * @return serialised format
      */
-    public String getSerialisedFormat() {
-        return flavour.right;
-    }
-
-    /**
-     * Class to ensure {@link DataFlavour}s can be serialised into JSON.
-     */
-    public static final class FlavourSerializer extends StdSerializer<DataFlavour> {
-
-        public FlavourSerializer() {
-            super(DataFlavour.class);
-        }
-
-        @Override
-        public void serialize(final DataFlavour dataFlavour, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException {
-            jsonGenerator.writeFieldName(dataFlavour.getDataType() + DELIMITER + dataFlavour.getSerialisedFormat());
-        }
-    }
-
-    /**
-     * Class to ensure {@link DataFlavour}s can be deserialised from JSON.
-     */
-    public static final class FlavourDeserializer extends KeyDeserializer {
-
-        @Override
-        public Object deserializeKey(final String text, final DeserializationContext deserializationContext) throws IOException {
-            String[] parts = text.split(DELIMITER);
-            if (parts.length != 2) {
-                throw new IllegalStateException("error deserialising " + text + " as a DataFlavour, should be in format \"<data_type>" + DELIMITER + "<seralised_format>\"");
-            }
-            return DataFlavour.of(parts[0], parts[1]);
-        }
-    }
-
-    @Override
     @Generated
-    public String toString() {
-        return new StringJoiner(", ", DataFlavour.class.getSimpleName() + "[", "]")
-                .add("flavour=" + flavour)
-                .toString();
+    public String getSerialisedFormat() {
+        return this.flavour.right;
     }
 
     @Override
@@ -154,5 +148,13 @@ public class DataFlavour {
     @Generated
     public int hashCode() {
         return Objects.hash(flavour);
+    }
+
+    @Override
+    @Generated
+    public String toString() {
+        return new StringJoiner(", ", DataFlavour.class.getSimpleName() + "[", "]")
+                .add("flavour=" + flavour)
+                .toString();
     }
 }
