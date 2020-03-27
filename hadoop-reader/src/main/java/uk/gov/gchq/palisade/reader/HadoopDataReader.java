@@ -38,6 +38,8 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import static java.util.Objects.requireNonNull;
 
@@ -148,5 +150,35 @@ public class HadoopDataReader extends SerialisedDataReader {
             plainMapWithoutResolvingValues.put(entry.getKey(), entry.getValue());
         }
         return plainMapWithoutResolvingValues;
+    }
+
+    @Override
+    @Generated
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof HadoopDataReader)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        final HadoopDataReader that = (HadoopDataReader) o;
+        return Objects.equals(fs, that.fs);
+    }
+
+    @Override
+    @Generated
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), fs);
+    }
+
+    @Override
+    @Generated
+    public String toString() {
+        return new StringJoiner(", ", HadoopDataReader.class.getSimpleName() + "[", "]")
+                .add("fs=" + fs)
+                .toString();
     }
 }
