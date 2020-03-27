@@ -230,7 +230,7 @@ public class HadoopResourceService implements ResourceService {
         });
     }
 
-
+    @Generated
     public HadoopResourceService conf(final Configuration conf) throws IOException {
         requireNonNull(conf, "conf");
         this.config = conf;
@@ -238,7 +238,7 @@ public class HadoopResourceService implements ResourceService {
         return this;
     }
 
-
+    @Generated
     public HadoopResourceService addDataService(final ConnectionDetail detail) {
         requireNonNull(detail, "detail");
         dataServices.add(detail);

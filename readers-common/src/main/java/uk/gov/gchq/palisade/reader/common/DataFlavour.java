@@ -107,6 +107,7 @@ public class DataFlavour {
      * @return a new {@link DataFlavour}
      * @throws IllegalArgumentException if either parameter is empty or blank
      */
+    @Generated
     public static DataFlavour of(final String dataType, final String serialisedFormat) {
         return new DataFlavour(dataType, serialisedFormat);
     }

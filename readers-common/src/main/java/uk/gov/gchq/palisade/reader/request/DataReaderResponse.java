@@ -42,6 +42,7 @@ public class DataReaderResponse {
      * @param writer the data writer object
      * @return the {@link DataReaderResponse}
      */
+    @Generated
     public DataReaderResponse writer(final ResponseWriter writer) {
         requireNonNull(writer, "The writer cannot be set to null.");
         this.setWriter(writer);
@@ -52,6 +53,7 @@ public class DataReaderResponse {
      * @param message an error/info message to be returned to the client
      * @return the {@link DataReaderResponse}
      */
+    @Generated
     public DataReaderResponse message(final String message) {
         requireNonNull(message, "The message cannot be set to null.");
         this.setMessage(message);

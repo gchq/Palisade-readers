@@ -70,15 +70,18 @@ public class HadoopDataReader extends SerialisedDataReader {
         return config;
     }
 
+    @Generated
     public HadoopDataReader conf(final Map<String, String> conf) throws IOException {
         return conf(createConfig(conf));
     }
 
+    @Generated
     public HadoopDataReader conf(final Configuration conf) throws IOException {
         this.setFs(FileSystem.get(conf));
         return this;
     }
 
+    @Generated
     public HadoopDataReader fs(final FileSystem fs) {
         this.setFs(fs);
         return this;
@@ -125,7 +128,6 @@ public class HadoopDataReader extends SerialisedDataReader {
 
     @JsonGetter("conf")
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
-    @Generated
     Map<String, String> getConfMap() {
         Map<String, String> rtn = new HashMap<>();
         Map<String, String> plainJobConfWithoutResolvingValues = getPlainJobConfWithoutResolvingValues();

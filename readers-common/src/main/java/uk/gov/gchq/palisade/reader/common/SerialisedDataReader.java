@@ -31,6 +31,8 @@ import uk.gov.gchq.palisade.resource.LeafResource;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -70,12 +72,14 @@ public abstract class SerialisedDataReader implements DataReader {
      * @param serialisers a mapping of data type to serialisers {@link SerialisedDataReader}
      * @return the {@link SerialisedDataReader}
      */
+    @Generated
     public SerialisedDataReader serialisers(final Map<DataFlavour, Serialiser<?>> serialisers) {
         requireNonNull(serialisers, "The serialisers cannot be set to null.");
         this.setSerialisers(serialisers);
         return this;
     }
 
+    @Generated
     public SerialisedDataReader defaultSerialiser(final Serialiser<?> serialiser) {
         requireNonNull(serialiser, "The default serialiser cannot be set to null.");
         this.setDefaultSerialiser(serialiser);
@@ -162,5 +166,34 @@ public abstract class SerialisedDataReader implements DataReader {
     public void setDefaultSerialiser(final Serialiser<?> defaultSerialiser) {
         requireNonNull(defaultSerialiser);
         this.defaultSerialiser = defaultSerialiser;
+    }
+
+    @Override
+    @Generated
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SerialisedDataReader)) {
+            return false;
+        }
+        final SerialisedDataReader that = (SerialisedDataReader) o;
+        return Objects.equals(defaultSerialiser, that.defaultSerialiser) &&
+                Objects.equals(serialisers, that.serialisers);
+    }
+
+    @Override
+    @Generated
+    public int hashCode() {
+        return Objects.hash(defaultSerialiser, serialisers);
+    }
+
+    @Override
+    @Generated
+    public String toString() {
+        return new StringJoiner(", ", SerialisedDataReader.class.getSimpleName() + "[", "]")
+                .add("defaultSerialiser=" + defaultSerialiser)
+                .add("serialisers=" + serialisers)
+                .toString();
     }
 }

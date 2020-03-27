@@ -15,6 +15,7 @@
  */
 package uk.gov.gchq.palisade.reader.exception;
 
+import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.exception.RequestFailedException;
 
 /**

@@ -46,6 +46,7 @@ public class DataReaderRequest extends Request {
      * @param resource the resource to be accessed
      * @return the {@link DataReaderRequest}
      */
+    @Generated
     public DataReaderRequest resource(final LeafResource resource) {
         this.setResource(resource);
         return this;
@@ -55,6 +56,7 @@ public class DataReaderRequest extends Request {
      * @param user the user that requested the data
      * @return the {@link DataReaderRequest}
      */
+    @Generated
     public DataReaderRequest user(final User user) {
         this.setUser(user);
         return this;
@@ -64,6 +66,7 @@ public class DataReaderRequest extends Request {
      * @param context the Context that the user provided for why they want the data
      * @return the {@link DataReaderRequest}
      */
+    @Generated
     public DataReaderRequest context(final Context context) {
         this.setContext(context);
         return this;
@@ -73,6 +76,7 @@ public class DataReaderRequest extends Request {
      * @param rules the list of rules to be applied to the data to ensure policy compliance
      * @return the {@link DataReaderRequest}
      */
+    @Generated
     public DataReaderRequest rules(final Rules rules) {
         this.setRules(rules);
         return this;
