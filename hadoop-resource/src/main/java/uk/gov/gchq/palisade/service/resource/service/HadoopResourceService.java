@@ -31,7 +31,7 @@ import org.apache.hadoop.fs.RemoteIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.ToStringBuilder;
+import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.resource.ChildResource;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.impl.DirectoryResource;
@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
@@ -229,7 +230,7 @@ public class HadoopResourceService implements ResourceService {
         });
     }
 
-
+    @Generated
     public HadoopResourceService conf(final Configuration conf) throws IOException {
         requireNonNull(conf, "conf");
         this.config = conf;
@@ -237,21 +238,21 @@ public class HadoopResourceService implements ResourceService {
         return this;
     }
 
-
+    @Generated
     public HadoopResourceService addDataService(final ConnectionDetail detail) {
         requireNonNull(detail, "detail");
         dataServices.add(detail);
         return this;
     }
 
+    @Generated
     protected Configuration getInternalConf() {
-        requireNonNull(config, "configuration must be set");
-        return config;
+        return this.config;
     }
 
+    @Generated
     protected FileSystem getFileSystem() {
-        requireNonNull(fileSystem, "configuration must be set");
-        return fileSystem;
+        return this.fileSystem;
     }
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
@@ -269,13 +270,17 @@ public class HadoopResourceService implements ResourceService {
         return rtn;
     }
 
+    @Generated
     public void setConf(final Map<String, String> conf) throws IOException {
-        setConf(createConfig(conf));
+        requireNonNull(conf);
+        this.conf(createConfig(conf));
     }
 
     @JsonIgnore
+    @Generated
     public void setConf(final Configuration conf) throws IOException {
-        conf(conf);
+        requireNonNull(conf);
+        this.conf(conf);
     }
 
     private Map<String, String> getPlainJobConfWithoutResolvingValues() {
@@ -287,27 +292,33 @@ public class HadoopResourceService implements ResourceService {
     }
 
     @Override
+    @Generated
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof HadoopResourceService)) {
             return false;
         }
         final HadoopResourceService that = (HadoopResourceService) o;
-        return Objects.equals(fileSystem, that.fileSystem);
+        return Objects.equals(config, that.config) &&
+                Objects.equals(fileSystem, that.fileSystem) &&
+                Objects.equals(dataServices, that.dataServices);
     }
 
     @Override
+    @Generated
     public int hashCode() {
-        return Objects.hash(fileSystem);
+        return Objects.hash(config, fileSystem, dataServices);
     }
 
     @Override
+    @Generated
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("config", config)
-                .append("fileSystem", fileSystem)
+        return new StringJoiner(", ", HadoopResourceService.class.getSimpleName() + "[", "]")
+                .add("config=" + config)
+                .add("fileSystem=" + fileSystem)
+                .add("dataServices=" + dataServices)
                 .toString();
     }
 

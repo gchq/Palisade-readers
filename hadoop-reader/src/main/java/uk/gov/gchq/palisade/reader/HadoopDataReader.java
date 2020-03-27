@@ -27,6 +27,7 @@ import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.reader.common.SerialisedDataReader;
 import uk.gov.gchq.palisade.resource.LeafResource;
 
@@ -37,6 +38,8 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import static java.util.Objects.requireNonNull;
 
@@ -59,30 +62,33 @@ public class HadoopDataReader extends SerialisedDataReader {
         conf(conf);
     }
 
+    private static Configuration createConfig(final Map<String, String> conf) {
+        final Configuration config = new Configuration();
+        if ((conf != null)) {
+            for (final Entry<String, String> entry : conf.entrySet()) {
+                config.set(entry.getKey(), entry.getValue());
+            }
+        }
+        return config;
+    }
+
+    @Generated
     public HadoopDataReader conf(final Map<String, String> conf) throws IOException {
-        requireNonNull(conf, "The conf cannot be null.");
         return conf(createConfig(conf));
     }
 
+    @Generated
     public HadoopDataReader conf(final Configuration conf) throws IOException {
-        requireNonNull(conf, "The conf cannot be null.");
-        return fs(FileSystem.get(conf));
-    }
-
-    public HadoopDataReader fs(final FileSystem fs) {
-        requireNonNull(fs, "The file system cannot be set to null.");
-        this.fs = fs;
+        this.setFs(FileSystem.get(conf));
         return this;
     }
 
-    public void setFs(final FileSystem fs) {
-        fs(fs);
+    @Generated
+    public HadoopDataReader fs(final FileSystem fs) {
+        this.setFs(fs);
+        return this;
     }
 
-    public FileSystem getFs() {
-        requireNonNull(fs, "The file system has not been set.");
-        return fs;
-    }
 
     @Override
     protected InputStream readRaw(final LeafResource resource) {
@@ -106,8 +112,20 @@ public class HadoopDataReader extends SerialisedDataReader {
         return inputStream;
     }
 
+    @Generated
+    public FileSystem getFs() {
+        return this.fs;
+    }
+
+    @Generated
+    public void setFs(final FileSystem fs) {
+        requireNonNull(fs);
+        this.fs = fs;
+    }
+
+    @Generated
     public Configuration getConf() {
-        return getFs().getConf();
+        return this.fs.getConf();
     }
 
     @JsonGetter("conf")
@@ -134,13 +152,33 @@ public class HadoopDataReader extends SerialisedDataReader {
         return plainMapWithoutResolvingValues;
     }
 
-    private static Configuration createConfig(final Map<String, String> conf) {
-        final Configuration config = new Configuration();
-        if ((conf != null)) {
-            for (final Entry<String, String> entry : conf.entrySet()) {
-                config.set(entry.getKey(), entry.getValue());
-            }
+    @Override
+    @Generated
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
         }
-        return config;
+        if (!(o instanceof HadoopDataReader)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        final HadoopDataReader that = (HadoopDataReader) o;
+        return Objects.equals(fs, that.fs);
+    }
+
+    @Override
+    @Generated
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), fs);
+    }
+
+    @Override
+    @Generated
+    public String toString() {
+        return new StringJoiner(", ", HadoopDataReader.class.getSimpleName() + "[", "]")
+                .add("fs=" + fs)
+                .toString();
     }
 }

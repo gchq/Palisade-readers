@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.data.serialise.Serialiser;
 import uk.gov.gchq.palisade.data.serialise.SimpleStringSerialiser;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
@@ -30,6 +31,8 @@ import uk.gov.gchq.palisade.resource.LeafResource;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -69,15 +72,17 @@ public abstract class SerialisedDataReader implements DataReader {
      * @param serialisers a mapping of data type to serialisers {@link SerialisedDataReader}
      * @return the {@link SerialisedDataReader}
      */
+    @Generated
     public SerialisedDataReader serialisers(final Map<DataFlavour, Serialiser<?>> serialisers) {
         requireNonNull(serialisers, "The serialisers cannot be set to null.");
-        this.serialisers = serialisers;
+        this.setSerialisers(serialisers);
         return this;
     }
 
+    @Generated
     public SerialisedDataReader defaultSerialiser(final Serialiser<?> serialiser) {
         requireNonNull(serialiser, "The default serialiser cannot be set to null.");
-        this.defaultSerialiser = serialiser;
+        this.setDefaultSerialiser(serialiser);
         return this;
     }
 
@@ -118,6 +123,7 @@ public abstract class SerialisedDataReader implements DataReader {
      */
     protected abstract InputStream readRaw(final LeafResource resource);
 
+    @Generated
     public <T> Serialiser<T> getSerialiser(final DataFlavour flavour) {
         requireNonNull(flavour, "The flavour cannot be null.");
         Serialiser<?> serialiser = serialisers.get(flavour);
@@ -128,8 +134,8 @@ public abstract class SerialisedDataReader implements DataReader {
         return (Serialiser<T>) serialiser;
     }
 
+    @Generated
     public <I> Serialiser<I> getSerialiser(final LeafResource resource) {
-        requireNonNull(resource, "The resource cannot be null.");
         return getSerialiser(DataFlavour.of(resource.getType(), resource.getSerialisedFormat()));
     }
 
@@ -150,11 +156,44 @@ public abstract class SerialisedDataReader implements DataReader {
         serialisers.putAll(mergingSerialisers);
     }
 
+    @Generated
     public void setSerialisers(final Map<DataFlavour, Serialiser<?>> serialisers) {
-        serialisers(serialisers);
+        requireNonNull(serialisers);
+        this.serialisers = serialisers;
     }
 
+    @Generated
     public void setDefaultSerialiser(final Serialiser<?> defaultSerialiser) {
-        defaultSerialiser(defaultSerialiser);
+        requireNonNull(defaultSerialiser);
+        this.defaultSerialiser = defaultSerialiser;
+    }
+
+    @Override
+    @Generated
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SerialisedDataReader)) {
+            return false;
+        }
+        final SerialisedDataReader that = (SerialisedDataReader) o;
+        return Objects.equals(defaultSerialiser, that.defaultSerialiser) &&
+                Objects.equals(serialisers, that.serialisers);
+    }
+
+    @Override
+    @Generated
+    public int hashCode() {
+        return Objects.hash(defaultSerialiser, serialisers);
+    }
+
+    @Override
+    @Generated
+    public String toString() {
+        return new StringJoiner(", ", SerialisedDataReader.class.getSimpleName() + "[", "]")
+                .add("defaultSerialiser=" + defaultSerialiser)
+                .add("serialisers=" + serialisers)
+                .toString();
     }
 }

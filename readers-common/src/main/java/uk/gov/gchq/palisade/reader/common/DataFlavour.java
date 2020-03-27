@@ -23,11 +23,13 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.KeyDeserializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
+import uk.gov.gchq.palisade.Generated;
+
 import java.io.IOException;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import static java.util.Objects.requireNonNull;
 
@@ -105,6 +107,7 @@ public class DataFlavour {
      * @return a new {@link DataFlavour}
      * @throws IllegalArgumentException if either parameter is empty or blank
      */
+    @Generated
     public static DataFlavour of(final String dataType, final String serialisedFormat) {
         return new DataFlavour(dataType, serialisedFormat);
     }
@@ -114,8 +117,9 @@ public class DataFlavour {
      *
      * @return data type
      */
+    @Generated
     public String getDataType() {
-        return flavour.left;
+        return this.flavour.left;
     }
 
     /**
@@ -123,39 +127,37 @@ public class DataFlavour {
      *
      * @return serialised format
      */
+    @Generated
     public String getSerialisedFormat() {
-        return flavour.right;
+        return this.flavour.right;
     }
 
     @Override
+    @Generated
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-
-        if (o == null) {
+        if (!(o instanceof DataFlavour)) {
             return false;
         }
-
-        DataFlavour other = (DataFlavour) o;
-
-        return flavour.equals(other.flavour);
+        final DataFlavour that = (DataFlavour) o;
+        return Objects.equals(flavour.left, that.flavour.left) &&
+                Objects.equals(flavour.right, that.flavour.right);
     }
 
     @Override
+    @Generated
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(flavour.left)
-                .append(flavour.right)
-                .toHashCode();
+        return Objects.hash(flavour.left, flavour.right);
     }
 
     @Override
+    @Generated
     public String toString() {
-        return new ToStringBuilder(this)
-                .appendSuper(super.toString())
-                .append("dataType", flavour.left)
-                .append("serialisedFormat", flavour.right)
+        return new StringJoiner(", ", DataFlavour.class.getSimpleName() + "[", "]")
+                .add("flavour.left=" + flavour.left)
+                .add("flavour.right=" + flavour.right)
                 .toString();
     }
 }

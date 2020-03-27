@@ -16,11 +16,11 @@
 
 package uk.gov.gchq.palisade.reader.request;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import uk.gov.gchq.palisade.ToStringBuilder;
+import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.reader.common.ResponseWriter;
+
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import static java.util.Objects.requireNonNull;
 
@@ -42,9 +42,10 @@ public class DataReaderResponse {
      * @param writer the data writer object
      * @return the {@link DataReaderResponse}
      */
+    @Generated
     public DataReaderResponse writer(final ResponseWriter writer) {
         requireNonNull(writer, "The writer cannot be set to null.");
-        this.writer = writer;
+        this.setWriter(writer);
         return this;
     }
 
@@ -52,61 +53,61 @@ public class DataReaderResponse {
      * @param message an error/info message to be returned to the client
      * @return the {@link DataReaderResponse}
      */
+    @Generated
     public DataReaderResponse message(final String message) {
         requireNonNull(message, "The message cannot be set to null.");
-        this.message = message;
+        this.setMessage(message);
         return this;
     }
 
+    @Generated
     public ResponseWriter getWriter() {
-        requireNonNull(writer, "The writer has not been set.");
         return writer;
     }
 
+    @Generated
     public void setWriter(final ResponseWriter writer) {
-        writer(writer);
+        requireNonNull(writer);
+        this.writer = writer;
     }
 
+    @Generated
     public String getMessage() {
-        requireNonNull(message, "The message has not been set.");
         return message;
     }
 
+    @Generated
     public void setMessage(final String message) {
-        message(message);
+        requireNonNull(message);
+        this.message = message;
     }
 
     @Override
+    @Generated
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof DataReaderResponse)) {
             return false;
         }
-
         final DataReaderResponse that = (DataReaderResponse) o;
-
-        return new EqualsBuilder()
-                .append(writer, that.writer)
-                .append(message, that.message)
-                .isEquals();
+        return Objects.equals(writer, that.writer) &&
+                Objects.equals(message, that.message);
     }
 
     @Override
+    @Generated
     public int hashCode() {
-        return new HashCodeBuilder(13, 37)
-                .append(writer)
-                .append(message)
-                .toHashCode();
+        return Objects.hash(writer, message);
     }
 
     @Override
+    @Generated
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("data", writer)
-                .append("message", message)
+        return new StringJoiner(", ", DataReaderResponse.class.getSimpleName() + "[", "]")
+                .add("writer=" + writer)
+                .add("message='" + message + "'")
                 .toString();
     }
 }
