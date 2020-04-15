@@ -20,8 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileSystem;
@@ -34,33 +32,27 @@ import org.slf4j.LoggerFactory;
 import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.resource.ChildResource;
 import uk.gov.gchq.palisade.resource.LeafResource;
+import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.resource.impl.DirectoryResource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SystemResource;
-import uk.gov.gchq.palisade.resource.request.AddResourceRequest;
-import uk.gov.gchq.palisade.resource.request.GetResourcesByIdRequest;
-import uk.gov.gchq.palisade.resource.request.GetResourcesByResourceRequest;
-import uk.gov.gchq.palisade.resource.request.GetResourcesBySerialisedFormatRequest;
-import uk.gov.gchq.palisade.resource.request.GetResourcesByTypeRequest;
 import uk.gov.gchq.palisade.service.ConnectionDetail;
 import uk.gov.gchq.palisade.service.ResourceService;
-import uk.gov.gchq.palisade.service.request.ResourceDetails;
+import uk.gov.gchq.palisade.service.resource.util.ResourceDetails;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.StringJoiner;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -132,14 +124,23 @@ public class HadoopResourceService implements ResourceService {
         }
     }
 
-    protected static Collection<String> getPaths(final RemoteIterator<LocatedFileStatus> remoteIterator) throws IOException {
-        final ArrayList<String> paths = Lists.newArrayList();
-        while (remoteIterator.hasNext()) {
-            final LocatedFileStatus next = remoteIterator.next();
-            final String pathWithoutFSName = next.getPath().toUri().toString();
-            paths.add(pathWithoutFSName);
-        }
-        return paths;
+    protected static Stream<String> getPaths(final RemoteIterator<LocatedFileStatus> remoteIterator) {
+        return Stream.generate(() -> null)
+                .takeWhile(x -> {
+                    try {
+                        return remoteIterator.hasNext();
+                    } catch (IOException e) {
+                        return false;
+                    }
+                })
+                .map(n -> {
+                    try {
+                        return remoteIterator.next();
+                    } catch (IOException e) {
+                        return null;
+                    }
+                })
+                .map(locatedFileStatus -> locatedFileStatus.getPath().toUri().toString());
     }
 
     private static Configuration createConfig(final Map<String, String> conf) {
@@ -153,81 +154,74 @@ public class HadoopResourceService implements ResourceService {
     }
 
     @Override
-    public CompletableFuture<Map<LeafResource, ConnectionDetail>> getResourcesByResource(final GetResourcesByResourceRequest request) {
-        requireNonNull(request, "request");
-        LOGGER.debug("Invoking getResourcesByResource request: {}", request);
-        GetResourcesByIdRequest getResourcesByIdRequest = new GetResourcesByIdRequest().resourceId(request.getResource().getId());
-        getResourcesByIdRequest.setOriginalRequestId(request.getOriginalRequestId());
-        return getResourcesById(getResourcesByIdRequest);
+    public Stream<LeafResource> getResourcesByResource(final Resource resource) {
+        requireNonNull(resource, "resource");
+        LOGGER.debug("Invoking getResourcesByResource with request: {}", resource);
+        return getResourcesById(resource.getId());
     }
 
     @Override
-    public CompletableFuture<Map<LeafResource, ConnectionDetail>> getResourcesById(final GetResourcesByIdRequest request) {
-        requireNonNull(request, "request");
-        LOGGER.debug("Invoking getResourcesById request: {}", request);
-        final String resourceId = request.getResourceId();
+    public Stream<LeafResource> getResourcesById(final String resourceId) {
+        requireNonNull(resourceId, "resourceId");
+        LOGGER.debug("Invoking getResourcesById with id: {}", resourceId);
         final String path = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
         if (!resourceId.startsWith(path)) {
             throw new UnsupportedOperationException(java.lang.String.format(ERROR_OUT_SCOPE, resourceId, path));
         }
-        return getFutureMappings(resourceId, ignore -> true);
+        return getMappings(resourceId, ignore -> true);
     }
 
     @Override
-    public CompletableFuture<Map<LeafResource, ConnectionDetail>> getResourcesByType(final GetResourcesByTypeRequest request) {
-        requireNonNull(request, "request");
-        LOGGER.debug("Invoking getResourcesByType request: {}", request);
+    public Stream<LeafResource> getResourcesByType(final String type) {
+        requireNonNull(type, "type");
+        LOGGER.debug("Invoking getResourcesByType with type: {}", type);
         final String pathString = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
-        final Predicate<ResourceDetails> predicate = detail -> request.getType().equals(detail.getType());
-        return getFutureMappings(pathString, predicate);
+        final Predicate<ResourceDetails> predicate = detail -> type.equals(detail.getType());
+        return getMappings(pathString, predicate);
     }
 
     @Override
-    public CompletableFuture<Map<LeafResource, ConnectionDetail>> getResourcesBySerialisedFormat(final GetResourcesBySerialisedFormatRequest request) {
-        requireNonNull(request, "request");
-        LOGGER.debug("Invoking getResourcesBySerialisedFormat request: {}", request);
+    public Stream<LeafResource> getResourcesBySerialisedFormat(final String serialisedFormat) {
+        requireNonNull(serialisedFormat, "serialisedFormat");
+        LOGGER.debug("Invoking getResourcesBySerialisedFormat with serialisedFormat: {}", serialisedFormat);
         final String pathString = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
-        final Predicate<ResourceDetails> predicate = detail -> request.getSerialisedFormat().equals(detail.getFormat());
-        return getFutureMappings(pathString, predicate);
+        final Predicate<ResourceDetails> predicate = detail -> serialisedFormat.equals(detail.getFormat());
+        return getMappings(pathString, predicate);
     }
 
     @Override
-    public CompletableFuture<Boolean> addResource(final AddResourceRequest request) {
-        throw new UnsupportedOperationException(ERROR_ADD_RESOURCE);
+    public Boolean addResource(final LeafResource leafResource) {
+        LOGGER.error(ERROR_ADD_RESOURCE);
+        return false;
     }
 
-    private CompletableFuture<Map<LeafResource, ConnectionDetail>> getFutureMappings(final String pathString, final Predicate<ResourceDetails> predicate) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                //pull latest connection details
-                final RemoteIterator<LocatedFileStatus> remoteIterator = this.getFileSystem().listFiles(new Path(pathString), true);
-                return getPaths(remoteIterator)
-                        .stream()
-                        .filter(ResourceDetails::isValidResourceName)
-                        .map(ResourceDetails::getResourceDetailsFromFileName)
-                        .filter(predicate)
-                        .collect(Collectors.toMap(
-                                resourceDetails -> {
-                                    final String fileName = resourceDetails.getFileName();
-                                    final FileResource fileResource = new FileResource().id(fileName).type(resourceDetails.getType()).serialisedFormat(resourceDetails.getFormat());
-                                    resolveParents(fileResource, getInternalConf());
-                                    return fileResource;
-                                },
-                                resourceDetails -> {
-                                    if (this.dataServices.size() < 1) {
-                                        throw new IllegalStateException(ERROR_NO_DATA_SERVICES);
-                                    }
-                                    int service = ThreadLocalRandom.current().nextInt(this.dataServices.size());
-                                    return this.dataServices.get(service);
-                                }
-                                )
-                        );
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
+    private Stream<LeafResource> getMappings(final String pathString, final Predicate<ResourceDetails> predicate) {
+        //pull latest connection details
+        final RemoteIterator<LocatedFileStatus> remoteIterator;
+        try {
+            remoteIterator = this.getFileSystem().listFiles(new Path(pathString), true);
+
+            return getPaths(remoteIterator)
+                    .filter(ResourceDetails::isValidResourceName)
+                    .map(ResourceDetails::getResourceDetailsFromFileName)
+                    .filter(predicate)
+                    .map(resourceDetails -> {
+                        final String fileName = resourceDetails.getFileName();
+                        final FileResource fileResource = new FileResource().id(fileName).type(resourceDetails.getType()).serialisedFormat(resourceDetails.getFormat());
+                        resolveParents(fileResource, getInternalConf());
+
+                        if (this.dataServices.isEmpty()) {
+                            throw new IllegalStateException(ERROR_NO_DATA_SERVICES);
+                        }
+                        int serviceNum = ThreadLocalRandom.current().nextInt(this.dataServices.size());
+                        ConnectionDetail dataService = this.dataServices.get(serviceNum);
+
+                        return fileResource.connectionDetail(dataService);
+                    });
+        } catch (IOException | IllegalStateException e) {
+            LOGGER.error("Error while listing files: ", e);
+            return Stream.empty();
+        }
     }
 
     @Generated
@@ -257,7 +251,7 @@ public class HadoopResourceService implements ResourceService {
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
     public Map<String, String> getConf() {
-        Map<String, String> rtn = Maps.newHashMap();
+        Map<String, String> rtn = new HashMap<>();
         Map<String, String> plainJobConfWithoutResolvingValues = getPlainJobConfWithoutResolvingValues();
 
         for (Entry<String, String> entry : getInternalConf()) {
@@ -319,6 +313,7 @@ public class HadoopResourceService implements ResourceService {
                 .add("config=" + config)
                 .add("fileSystem=" + fileSystem)
                 .add("dataServices=" + dataServices)
+                .add(super.toString())
                 .toString();
     }
 
