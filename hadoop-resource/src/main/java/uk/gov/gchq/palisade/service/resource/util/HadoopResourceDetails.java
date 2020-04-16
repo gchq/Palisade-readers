@@ -17,6 +17,7 @@
 package uk.gov.gchq.palisade.service.resource.util;
 
 import uk.gov.gchq.palisade.Generated;
+import uk.gov.gchq.palisade.resource.LeafResource;
 
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -25,7 +26,12 @@ import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
 
-public class ResourceDetails {
+/**
+ * Helper class around {@link LeafResource} fields used to validate resource details with what Hadoop
+ * expects. Additionally used for predicates filtering Hadoop resource response streams by type or
+ * serialised format.
+ */
+public class HadoopResourceDetails {
 
     public static final Pattern FILENAME_PATTERN = Pattern.compile("(?<type>.+)_(?<name>.+)\\.(?<format>.+)");
     public static final String FORMAT_STRING = "TYPE_FILENAME.FORMAT";
@@ -33,13 +39,13 @@ public class ResourceDetails {
     private String type;
     private String format;
 
-    public ResourceDetails(final String fileName, final String type, final String format) {
+    public HadoopResourceDetails(final String fileName, final String type, final String format) {
         this.fileName = fileName;
         this.type = type;
         this.format = format;
     }
 
-    public static ResourceDetails getResourceDetailsFromFileName(final String fileName) {
+    public static HadoopResourceDetails getResourceDetailsFromFileName(final String fileName) {
         //get filename component
         final String[] split = fileName.split(Pattern.quote("/"));
         final String fileString = split[split.length - 1];
@@ -49,7 +55,7 @@ public class ResourceDetails {
             throw new IllegalArgumentException("Filename doesn't comply with " + FORMAT_STRING + ": " + fileName);
         }
 
-        return new ResourceDetails(fileName, match.group("type"), match.group("format"));
+        return new HadoopResourceDetails(fileName, match.group("type"), match.group("format"));
     }
 
     public static boolean isValidResourceName(final String fileName) {
@@ -101,10 +107,10 @@ public class ResourceDetails {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ResourceDetails)) {
+        if (!(o instanceof HadoopResourceDetails)) {
             return false;
         }
-        ResourceDetails that = (ResourceDetails) o;
+        HadoopResourceDetails that = (HadoopResourceDetails) o;
         return fileName.equals(that.fileName) &&
                 type.equals(that.type) &&
                 format.equals(that.format);
@@ -119,7 +125,7 @@ public class ResourceDetails {
     @Override
     @Generated
     public String toString() {
-        return new StringJoiner(", ", ResourceDetails.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", HadoopResourceDetails.class.getSimpleName() + "[", "]")
                 .add("fileName='" + fileName + "'")
                 .add("type='" + type + "'")
                 .add("format='" + format + "'")

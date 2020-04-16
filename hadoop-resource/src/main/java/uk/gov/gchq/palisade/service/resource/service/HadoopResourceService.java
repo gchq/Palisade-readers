@@ -38,7 +38,7 @@ import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SystemResource;
 import uk.gov.gchq.palisade.service.ConnectionDetail;
 import uk.gov.gchq.palisade.service.ResourceService;
-import uk.gov.gchq.palisade.service.resource.util.ResourceDetails;
+import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -176,7 +176,7 @@ public class HadoopResourceService implements ResourceService {
         requireNonNull(type, "type");
         LOGGER.debug("Invoking getResourcesByType with type: {}", type);
         final String pathString = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
-        final Predicate<ResourceDetails> predicate = detail -> type.equals(detail.getType());
+        final Predicate<HadoopResourceDetails> predicate = detail -> type.equals(detail.getType());
         return getMappings(pathString, predicate);
     }
 
@@ -185,7 +185,7 @@ public class HadoopResourceService implements ResourceService {
         requireNonNull(serialisedFormat, "serialisedFormat");
         LOGGER.debug("Invoking getResourcesBySerialisedFormat with serialisedFormat: {}", serialisedFormat);
         final String pathString = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
-        final Predicate<ResourceDetails> predicate = detail -> serialisedFormat.equals(detail.getFormat());
+        final Predicate<HadoopResourceDetails> predicate = detail -> serialisedFormat.equals(detail.getFormat());
         return getMappings(pathString, predicate);
     }
 
@@ -195,19 +195,19 @@ public class HadoopResourceService implements ResourceService {
         return false;
     }
 
-    private Stream<LeafResource> getMappings(final String pathString, final Predicate<ResourceDetails> predicate) {
+    private Stream<LeafResource> getMappings(final String pathString, final Predicate<HadoopResourceDetails> predicate) {
         //pull latest connection details
         final RemoteIterator<LocatedFileStatus> remoteIterator;
         try {
             remoteIterator = this.getFileSystem().listFiles(new Path(pathString), true);
 
             return getPaths(remoteIterator)
-                    .filter(ResourceDetails::isValidResourceName)
-                    .map(ResourceDetails::getResourceDetailsFromFileName)
+                    .filter(HadoopResourceDetails::isValidResourceName)
+                    .map(HadoopResourceDetails::getResourceDetailsFromFileName)
                     .filter(predicate)
-                    .map(resourceDetails -> {
-                        final String fileName = resourceDetails.getFileName();
-                        final FileResource fileResource = new FileResource().id(fileName).type(resourceDetails.getType()).serialisedFormat(resourceDetails.getFormat());
+                    .map(hadoopResourceDetails -> {
+                        final String fileName = hadoopResourceDetails.getFileName();
+                        final FileResource fileResource = new FileResource().id(fileName).type(hadoopResourceDetails.getType()).serialisedFormat(hadoopResourceDetails.getFormat());
                         resolveParents(fileResource, getInternalConf());
 
                         if (this.dataServices.isEmpty()) {
