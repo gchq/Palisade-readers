@@ -313,7 +313,6 @@ public class HadoopResourceService implements ResourceService {
                 .add("config=" + config)
                 .add("fileSystem=" + fileSystem)
                 .add("dataServices=" + dataServices)
-                .add(super.toString())
                 .toString();
     }
 
