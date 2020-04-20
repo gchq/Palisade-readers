@@ -31,7 +31,6 @@ import uk.gov.gchq.palisade.reader.request.DataReaderResponse;
 import uk.gov.gchq.palisade.reader.util.PathUtils;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.rule.Rules;
-import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
