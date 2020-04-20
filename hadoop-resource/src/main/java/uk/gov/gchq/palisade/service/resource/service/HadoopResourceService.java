@@ -30,15 +30,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.Generated;
-import uk.gov.gchq.palisade.resource.ChildResource;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.Resource;
-import uk.gov.gchq.palisade.resource.impl.DirectoryResource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
-import uk.gov.gchq.palisade.resource.impl.SystemResource;
 import uk.gov.gchq.palisade.service.ConnectionDetail;
 import uk.gov.gchq.palisade.service.ResourceService;
 import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
+import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,7 +48,6 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -93,35 +90,6 @@ public class HadoopResourceService implements ResourceService {
     }
 
     public HadoopResourceService() {
-    }
-
-    public static void resolveParents(final ChildResource resource, final Configuration configuration) {
-        try {
-            final String connectionDetail = resource.getId();
-            final Path path = new Path(connectionDetail);
-            final int fileDepth = path.depth();
-            final int fsDepth = new Path(configuration.get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY)).depth();
-
-            if (fileDepth > fsDepth + 1) {
-                DirectoryResource parent = new DirectoryResource().id(fixURIScheme(path.getParent().toUri().toString()));
-                resource.setParent(parent);
-                resolveParents(parent, configuration);
-            } else {
-                resource.setParent(new SystemResource().id(fixURIScheme(path.getParent().toUri().toString())));
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(ERROR_RESOLVING_PARENTS, e);
-        }
-    }
-
-    private static String fixURIScheme(final String uri) {
-        requireNonNull(uri, "uri");
-        Matcher match = FILE_PAT.matcher(uri);
-        if (match.find()) {
-            return match.replaceFirst("///");
-        } else {
-            return uri;
-        }
     }
 
     protected static Stream<String> getPaths(final RemoteIterator<LocatedFileStatus> remoteIterator) {
@@ -206,9 +174,9 @@ public class HadoopResourceService implements ResourceService {
                     .map(HadoopResourceDetails::getResourceDetailsFromFileName)
                     .filter(predicate)
                     .map(hadoopResourceDetails -> {
-                        final String fileName = hadoopResourceDetails.getFileName();
-                        final FileResource fileResource = new FileResource().id(fileName).type(hadoopResourceDetails.getType()).serialisedFormat(hadoopResourceDetails.getFormat());
-                        resolveParents(fileResource, getInternalConf());
+                        final FileResource fileResource = ResourceBuilder.fileResource(hadoopResourceDetails.getFileName())
+                                .type(hadoopResourceDetails.getType())
+                                .serialisedFormat(hadoopResourceDetails.getFormat());
 
                         if (this.dataServices.isEmpty()) {
                             throw new IllegalStateException(ERROR_NO_DATA_SERVICES);
