@@ -18,7 +18,9 @@ package uk.gov.gchq.palisade.service.resource.util;
 
 import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.resource.LeafResource;
+import uk.gov.gchq.palisade.util.ResourceBuilder;
 
+import java.net.URI;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.regex.Matcher;
@@ -35,19 +37,19 @@ public class HadoopResourceDetails {
 
     public static final Pattern FILENAME_PATTERN = Pattern.compile("(?<type>.+)_(?<name>.+)\\.(?<format>.+)");
     public static final String FORMAT_STRING = "TYPE_FILENAME.FORMAT";
-    private String fileName;
+    private URI fileName;
     private String type;
     private String format;
 
-    public HadoopResourceDetails(final String fileName, final String type, final String format) {
+    public HadoopResourceDetails(final URI fileName, final String type, final String format) {
         this.fileName = fileName;
         this.type = type;
         this.format = format;
     }
 
-    public static HadoopResourceDetails getResourceDetailsFromFileName(final String fileName) {
+    public static HadoopResourceDetails getResourceDetailsFromFileName(final URI fileName) {
         //get filename component
-        final String[] split = fileName.split(Pattern.quote("/"));
+        final String[] split = fileName.toString().split(Pattern.quote("/"));
         final String fileString = split[split.length - 1];
         //check match
         Matcher match = validateNameRegex(fileString);
@@ -58,22 +60,28 @@ public class HadoopResourceDetails {
         return new HadoopResourceDetails(fileName, match.group("type"), match.group("format"));
     }
 
-    public static boolean isValidResourceName(final String fileName) {
+    public static boolean isValidResourceName(final URI fileName) {
         requireNonNull(fileName);
-        return validateNameRegex(fileName).matches();
+        return validateNameRegex(fileName.toString()).matches();
     }
 
     private static Matcher validateNameRegex(final String fileName) {
         return FILENAME_PATTERN.matcher(fileName);
     }
 
+    public LeafResource getResource() {
+        return ((LeafResource) ResourceBuilder.create(fileName))
+                .type(type)
+                .serialisedFormat(format);
+    }
+
     @Generated
-    public String getFileName() {
+    public URI getFileName() {
         return fileName;
     }
 
     @Generated
-    public void setFileName(final String fileName) {
+    public void setFileName(final URI fileName) {
         requireNonNull(fileName);
         this.fileName = fileName;
     }

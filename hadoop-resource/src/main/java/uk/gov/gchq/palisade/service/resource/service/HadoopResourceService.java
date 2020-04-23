@@ -32,13 +32,12 @@ import org.slf4j.LoggerFactory;
 import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.Resource;
-import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.service.ConnectionDetail;
 import uk.gov.gchq.palisade.service.ResourceService;
 import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
-import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +47,6 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
@@ -68,11 +66,6 @@ public class HadoopResourceService implements ResourceService {
     public static final String ERROR_OUT_SCOPE = "resource ID is out of scope of the this resource Service. Found: %s expected: %s";
     public static final String ERROR_NO_DATA_SERVICES = "No Hadoop data services known about in Hadoop resource service";
     private static final Logger LOGGER = LoggerFactory.getLogger(HadoopResourceService.class);
-    /**
-     * A regular expression that matches URIs that have the file:/ scheme with a single slash but not any more slashes.
-     */
-    private static final Pattern FILE_PAT = Pattern.compile("(?i)(?<=^file:)/(?=([^/]|$))");
-    private static final String ERROR_RESOLVING_PARENTS = "Error occurred while resolving resourceParents";
 
     private Configuration config;
     private FileSystem fileSystem;
@@ -92,7 +85,7 @@ public class HadoopResourceService implements ResourceService {
     public HadoopResourceService() {
     }
 
-    protected static Stream<String> getPaths(final RemoteIterator<LocatedFileStatus> remoteIterator) {
+    protected static Stream<URI> getPaths(final RemoteIterator<LocatedFileStatus> remoteIterator) {
         return Stream.generate(() -> null)
                 .takeWhile(x -> {
                     try {
@@ -108,7 +101,7 @@ public class HadoopResourceService implements ResourceService {
                         return null;
                     }
                 })
-                .map(locatedFileStatus -> locatedFileStatus.getPath().toUri().toString());
+                .map(locatedFileStatus -> locatedFileStatus.getPath().toUri());
     }
 
     private static Configuration createConfig(final Map<String, String> conf) {
@@ -174,17 +167,14 @@ public class HadoopResourceService implements ResourceService {
                     .map(HadoopResourceDetails::getResourceDetailsFromFileName)
                     .filter(predicate)
                     .map(hadoopResourceDetails -> {
-                        final FileResource fileResource = ResourceBuilder.fileResource(hadoopResourceDetails.getFileName())
-                                .type(hadoopResourceDetails.getType())
-                                .serialisedFormat(hadoopResourceDetails.getFormat());
-
                         if (this.dataServices.isEmpty()) {
                             throw new IllegalStateException(ERROR_NO_DATA_SERVICES);
                         }
                         int serviceNum = ThreadLocalRandom.current().nextInt(this.dataServices.size());
                         ConnectionDetail dataService = this.dataServices.get(serviceNum);
 
-                        return fileResource.connectionDetail(dataService);
+                        return hadoopResourceDetails.getResource()
+                                .connectionDetail(dataService);
                     });
         } catch (IOException | IllegalStateException e) {
             LOGGER.error("Error while listing files: ", e);
