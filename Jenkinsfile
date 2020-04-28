@@ -13,9 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-podTemplate(containers: [
-        containerTemplate(name: 'maven', image: 'maven:3.6.1-jdk-11', ttyEnabled: true, command: 'cat')
-]) {
+podTemplate(yaml: '''
+apiVersion: v1
+kind: Pod
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: palisade-node-name
+            operator: In
+            values: 
+            - node1
+            - node2
+            - node3
+  containers:
+  - name: docker-cmds
+    image: 779921734503.dkr.ecr.eu-west-1.amazonaws.com/jnlp-did:INFRA
+    imagePullPolicy: IfNotPresent
+    command:
+    - sleep
+    args:
+    - 99d
+    env:
+      - name: DOCKER_HOST
+        value: tcp://localhost:2375
+''') {
 
     node(POD_LABEL) {
         stage('Bootstrap') {
@@ -32,20 +57,20 @@ podTemplate(containers: [
             } else { //just a normal branch
                 git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
             }
-            container('maven') {
+            container('docker-cmds') {
                 configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
                     sh 'mvn -s $MAVEN_SETTINGS install'
                 }
             }
         }
         stage('SonarQube analysis') {
-            container('maven') {
-                withCredentials([string(credentialsId: '3dc8e0fb-23de-471d-8009-ed1d5890333a', variable: 'SONARQUBE_WEBHOOK'),
-                                 string(credentialsId: 'b01b7c11-ccdf-4ac5-b022-28c9b861379a', variable: 'KEYSTORE_PASS'),
-                                 file(credentialsId: '91d1a511-491e-4fac-9da5-a61b7933f4f6', variable: 'KEYSTORE')]) {
+            container('docker-cmds') {
+                withCredentials([string(credentialsId: "${env.SQ_WEB_HOOK}", variable: 'SONARQUBE_WEBHOOK'),
+                                 string(credentialsId:  "${env.SQ_KEY_STORE_PASS}", variable: 'KEYSTORE_PASS'),
+                                 file(credentialsId: "${env.SQ_KEY_STORE}", variable: 'KEYSTORE')]) {
                     configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
                         withSonarQubeEnv(installationName: 'sonar') {
-                            sh 'mvn -s $MAVEN_SETTINGS org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -Dsonar.projectKey="Palisade-Readers/${BRANCH_NAME}" -Dsonar.projectName="Palisade-Readers/${BRANCH_NAME}" -Dsonar.webhooks.project=$SONARQUBE_WEBHOOK -Djavax.net.ssl.trustStore=$KEYSTORE -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASS'
+                            sh 'mvn -s $MAVEN_SETTINGS org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -Dsonar.projectKey="Palisade-Readers-${BRANCH_NAME}" -Dsonar.projectName="Palisade-Readers-${BRANCH_NAME}" -Dsonar.webhooks.project=$SONARQUBE_WEBHOOK -Djavax.net.ssl.trustStore=$KEYSTORE -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASS'
                         }
                     }
                 }
@@ -62,9 +87,9 @@ podTemplate(containers: [
             } else {
                 git branch: "${env.BRANCH_NAME}", url: 'https://github.com/gchq/Palisade-readers.git'
             }
-            container('maven') {
+            container('docker-cmds') {
                 configFileProvider(
-                        [configFile(fileId: '450d38e2-db65-4601-8be0-8621455e93b5', variable: 'MAVEN_SETTINGS')]) {
+                        [configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
                     if (("${env.BRANCH_NAME}" == "develop") ||
                             ("${env.BRANCH_NAME}" == "master")) {
                         //this will upload to ECR
