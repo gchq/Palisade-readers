@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Crown Copyright
+ * Copyright 2020 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@ podTemplate(containers: [
 
         stage('Bootstrap') {
             if (env.CHANGE_BRANCH) {
-                GIT_BRANCH_NAME=CHANGE_BRANCH
+                GIT_BRANCH_NAME=env.CHANGE_BRANCH
             } else {
-                GIT_BRANCH_NAME=BRANCH_NAME
+                GIT_BRANCH_NAME=env.BRANCH_NAME
             }
             echo sh(script: 'env | sort', returnStdout: true)
         }
@@ -63,7 +63,7 @@ podTemplate(containers: [
                                      file(credentialsId: '91d1a511-491e-4fac-9da5-a61b7933f4f6', variable: 'KEYSTORE')]) {
                         configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
                             withSonarQubeEnv(installationName: 'sonar') {
-                                sh 'mvn -s $MAVEN_SETTINGS org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -Dsonar.projectKey="Palisade-Readers/${BRANCH_NAME}" -Dsonar.projectName="Palisade-Readers/${BRANCH_NAME}" -Dsonar.webhooks.project=$SONARQUBE_WEBHOOK -Djavax.net.ssl.trustStore=$KEYSTORE -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASS'
+                                sh 'mvn -s $MAVEN_SETTINGS org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -Dsonar.projectKey="Palisade-Readers-${BRANCH_NAME}" -Dsonar.projectName="Palisade-Readers-${BRANCH_NAME}" -Dsonar.webhooks.project=$SONARQUBE_WEBHOOK -Djavax.net.ssl.trustStore=$KEYSTORE -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASS'
                             }
                         }
                     }
