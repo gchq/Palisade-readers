@@ -25,7 +25,6 @@
     <description>Data Services Readers layer for Palisade</description>
     <packaging>pom</packaging>
 
-
     <developers>
         <developer>
             <name>PalisadeDevelopers</name>
