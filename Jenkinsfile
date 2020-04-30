@@ -72,6 +72,19 @@ podTemplate(containers: [
             }
         }
 
+        stage("SonarQube Quality Gate") {
+            // Wait for SonarQube to prepare the report
+            sleep(time: 30, unit: 'SECONDS')
+            // Just in case something goes wrong, pipeline will be killed after a timeout
+            timeout(time: 5, unit: 'MINUTES') {
+                // Reuse taskId previously collected by withSonarQubeEnv
+                def qg = waitForQualityGate()
+                if (qg.status != 'OK') {
+                    error "Pipeline aborted due to SonarQube quality gate failure: ${qg.status}"
+                }
+            }
+        }
+
         stage('Maven deploy') {
             dir('Palisade-readers') {
                 container('maven') {
@@ -88,17 +101,6 @@ podTemplate(containers: [
                         }
                     }
                 }
-            }
-        }
-    }
-    // No need to occupy a node
-    stage("SonarQube Quality Gate") {
-        timeout(time: 1, unit: 'HOURS') {
-            // Just in case something goes wrong, pipeline will be killed after a timeout
-            def qg = waitForQualityGate()
-            // Reuse taskId previously collected by withSonarQubeEnv
-            if (qg.status != 'OK') {
-                error "Pipeline aborted due to SonarQube quality gate failure: ${qg.status}"
             }
         }
     }
