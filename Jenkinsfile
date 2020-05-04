@@ -79,14 +79,15 @@ spec:
         }
 
         stage('SonarQube analysis') {
-            dir('Palisade-readers')
-            container('docker-cmds') {
-                withCredentials([string(credentialsId: "${env.SQ_WEB_HOOK}", variable: 'SONARQUBE_WEBHOOK'),
-                                 string(credentialsId:  "${env.SQ_KEY_STORE_PASS}", variable: 'KEYSTORE_PASS'),
-                                 file(credentialsId: "${env.SQ_KEY_STORE}", variable: 'KEYSTORE')]) {
-                    configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                        withSonarQubeEnv(installationName: 'sonar') {
-                            sh 'mvn -s $MAVEN_SETTINGS org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -Dsonar.projectKey="Palisade-Readers-${BRANCH_NAME}" -Dsonar.projectName="Palisade-Readers-${BRANCH_NAME}" -Dsonar.webhooks.project=$SONARQUBE_WEBHOOK -Djavax.net.ssl.trustStore=$KEYSTORE -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASS'
+            dir('Palisade-readers') {
+                container('docker-cmds') {
+                    withCredentials([string(credentialsId: "${env.SQ_WEB_HOOK}", variable: 'SONARQUBE_WEBHOOK'),
+                                     string(credentialsId: "${env.SQ_KEY_STORE_PASS}", variable: 'KEYSTORE_PASS'),
+                                     file(credentialsId: "${env.SQ_KEY_STORE}", variable: 'KEYSTORE')]) {
+                        configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
+                            withSonarQubeEnv(installationName: 'sonar') {
+                                sh 'mvn -s $MAVEN_SETTINGS org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -Dsonar.projectKey="Palisade-Readers-${BRANCH_NAME}" -Dsonar.projectName="Palisade-Readers-${BRANCH_NAME}" -Dsonar.webhooks.project=$SONARQUBE_WEBHOOK -Djavax.net.ssl.trustStore=$KEYSTORE -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASS'
+                            }
                         }
                     }
                 }
