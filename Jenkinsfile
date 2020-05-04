@@ -89,11 +89,7 @@ podTemplate(containers: [
                     configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
                         if (("${env.BRANCH_NAME}" == "develop") ||
                                 ("${env.BRANCH_NAME}" == "master")) {
-                            sh 'palisade-login'
-                            //now extract the public IP addresses that this will be open on
-                            sh 'extract-addresses'
-                            sh 'mvn -s $MAVEN_SETTINGS deploy -Dmaven.test.skip=true'
-                            sh 'helm upgrade --install palisade . --set traefik.install=true,dashboard.install=true,global.repository=${ECR_REGISTRY},global.hostname=${EGRESS_ELB},global.localMount.enabled=false,global.localMount.volumeHandle=${VOLUME_HANDLE} --namespace dev'
+                            sh 'mvn -s $MAVEN_SETTINGS deploy -P quick'
                         } else {
                             sh "echo - no deploy"
                         }
