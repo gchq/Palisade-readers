@@ -157,7 +157,6 @@ public class HadoopResourceService implements ResourceService {
     }
 
     private Stream<LeafResource> getMappings(final String pathString, final Predicate<HadoopResourceDetails> predicate) {
-        //pull latest connection details
         final RemoteIterator<LocatedFileStatus> remoteIterator;
         try {
             remoteIterator = this.getFileSystem().listFiles(new Path(pathString), true);
