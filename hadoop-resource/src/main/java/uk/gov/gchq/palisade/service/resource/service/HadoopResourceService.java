@@ -165,20 +165,22 @@ public class HadoopResourceService implements ResourceService {
                     .filter(HadoopResourceDetails::isValidResourceName)
                     .map(HadoopResourceDetails::getResourceDetailsFromFileName)
                     .filter(predicate)
-                    .map(hadoopResourceDetails -> {
-                        if (this.dataServices.isEmpty()) {
-                            throw new IllegalStateException(ERROR_NO_DATA_SERVICES);
-                        }
-                        int serviceNum = ThreadLocalRandom.current().nextInt(this.dataServices.size());
-                        ConnectionDetail dataService = this.dataServices.get(serviceNum);
-
-                        return hadoopResourceDetails.getResource()
-                                .connectionDetail(dataService);
-                    });
+                    .map(this::addConnectionDetail);
         } catch (IOException | IllegalStateException e) {
             LOGGER.error("Error while listing files: ", e);
             return Stream.empty();
         }
+    }
+
+    public LeafResource addConnectionDetail(final HadoopResourceDetails hadoopResourceDetails) {
+        if (this.dataServices.isEmpty()) {
+            throw new IllegalStateException(ERROR_NO_DATA_SERVICES);
+        }
+        int serviceNum = ThreadLocalRandom.current().nextInt(this.dataServices.size());
+        ConnectionDetail dataService = this.dataServices.get(serviceNum);
+
+        return hadoopResourceDetails.getResource()
+                .connectionDetail(dataService);
     }
 
     @Generated
