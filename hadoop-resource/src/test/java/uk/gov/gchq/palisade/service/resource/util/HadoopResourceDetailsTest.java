@@ -28,7 +28,6 @@ import java.net.URISyntaxException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
 public class HadoopResourceDetailsTest {
