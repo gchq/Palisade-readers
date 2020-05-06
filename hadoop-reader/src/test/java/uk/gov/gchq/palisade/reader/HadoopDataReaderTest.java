@@ -17,7 +17,6 @@ package uk.gov.gchq.palisade.reader;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -62,7 +61,7 @@ public class HadoopDataReaderTest {
         final HadoopDataReader reader = getReader(conf);
         reader.addSerialiser(DataFlavour.of("string", "string"), new SimpleStringSerialiser());
 
-        final FileResource resource = new FileResource().type("string").id(tmpFile.getAbsolutePath()).serialisedFormat("string");
+        final FileResource resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
         final Rules<String> rules = new Rules<>();
 
         final DataReaderRequest request = new DataReaderRequest()
@@ -123,7 +122,7 @@ public class HadoopDataReaderTest {
         final HadoopDataReader reader = getReader(conf);
         reader.addSerialiser(DataFlavour.of("string", "string"), new SimpleStringSerialiser());
 
-        final FileResource resource = new FileResource().type("string").id(new Path(tmpFile.getAbsolutePath()).toUri().toString()).serialisedFormat("string");
+        final FileResource resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
         final Rules<String> rules = new Rules<>();
 
         final DataReaderRequest request = new DataReaderRequest()
