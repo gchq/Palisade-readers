@@ -172,7 +172,7 @@ public class HadoopResourceService implements ResourceService {
         }
     }
 
-    public LeafResource addConnectionDetail(final HadoopResourceDetails hadoopResourceDetails) {
+    protected LeafResource addConnectionDetail(final HadoopResourceDetails hadoopResourceDetails) {
         if (this.dataServices.isEmpty()) {
             throw new IllegalStateException(ERROR_NO_DATA_SERVICES);
         }
