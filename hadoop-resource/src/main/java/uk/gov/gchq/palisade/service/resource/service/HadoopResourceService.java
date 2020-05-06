@@ -114,6 +114,16 @@ public class HadoopResourceService implements ResourceService {
         return config;
     }
 
+    /**
+     * Get a list of resources based on a specific resource. This allows for the retrieval of the appropriate {@link
+     * ConnectionDetail}s for a given resource. It may also be used to retrieve the details all the resources that are
+     * notionally children of another resource. For example, in a standard hierarchical filing system the files in a
+     * directory could be considered child resources and calling this method on the directory resource would fetch the
+     * details on the contained files.
+     *
+     * @param resource the resource to request
+     * @return a {@link Stream} of resources, each with an appropriate {@link ConnectionDetail}
+     */
     @Override
     public Stream<LeafResource> getResourcesByResource(final Resource resource) {
         requireNonNull(resource, "resource");
@@ -121,6 +131,13 @@ public class HadoopResourceService implements ResourceService {
         return getResourcesById(resource.getId());
     }
 
+    /**
+     * Retrieve resource and connection details by resource ID. The request object allows the client to specify the
+     * resource ID and obtain the connection details once the returned future has completed.
+     *
+     * @param resourceId the ID to request
+     * @return a {@link Stream} of resources, each with an appropriate {@link ConnectionDetail}
+     */
     @Override
     public Stream<LeafResource> getResourcesById(final String resourceId) {
         requireNonNull(resourceId, "resourceId");
@@ -132,6 +149,15 @@ public class HadoopResourceService implements ResourceService {
         return getMappings(resourceId, ignore -> true);
     }
 
+    /**
+     * Obtain a list of resources that match a specific resource type. This method allows a client to obtain potentially
+     * large collections of resources by requesting all the resources of one particular type. For example, a client may
+     * request all "employee contact card" records. Please note the warning in the class documentation above, that just
+     * because a resource is available does not guarantee that the requesting client has the right to access it.
+     *
+     * @param type the type of resource to retrieve.
+     * @return a {@link Stream} of resources, each with an appropriate {@link ConnectionDetail}
+     */
     @Override
     public Stream<LeafResource> getResourcesByType(final String type) {
         requireNonNull(type, "type");
@@ -141,6 +167,15 @@ public class HadoopResourceService implements ResourceService {
         return getMappings(pathString, predicate);
     }
 
+    /**
+     * Find all resources that match a particular data format. Resources of a particular data format may not share a
+     * type, e.g. not all CSV format records will contain employee contact details. This method allows clients to
+     * retrieve all the resources Palisade knows about that conform to one particular format. Note that this method can
+     * potentially return large ${@code Map}s with many mappings.
+     *
+     * @param serialisedFormat the specific format for retrieval
+     * @return a {@link Stream} of resources, each with an appropriate {@link ConnectionDetail}
+     */
     @Override
     public Stream<LeafResource> getResourcesBySerialisedFormat(final String serialisedFormat) {
         requireNonNull(serialisedFormat, "serialisedFormat");
@@ -150,6 +185,15 @@ public class HadoopResourceService implements ResourceService {
         return getMappings(pathString, predicate);
     }
 
+    /**
+     * Informs Palisade about a specific resource that it may return to users. This lets Palisade clients request access
+     * to that resource and allows Palisade to provide policy controlled access to it via the other methods in this
+     * interface.
+     * This is not permitted by the HadoopResourceService, so will always return failure (false)
+     *
+     * @param leafResource         the resource that Palisade can manage access to
+     * @return whether or not the addResource call completed successfully, always false
+     */
     @Override
     public Boolean addResource(final LeafResource leafResource) {
         LOGGER.error(ERROR_ADD_RESOURCE);
