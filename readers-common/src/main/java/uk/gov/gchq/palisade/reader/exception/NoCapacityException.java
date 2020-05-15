@@ -18,10 +18,9 @@ package uk.gov.gchq.palisade.reader.exception;
 import uk.gov.gchq.palisade.exception.RequestFailedException;
 
 /**
- * An exception thrown when a request is made to a {@link uk.gov.gchq.palisade.data.service.DataService} via a
- * {@link uk.gov.gchq.palisade.data.service.request.ReadRequest} or to a {@link uk.gov.gchq.palisade.data.service.reader.DataReader}
- * via a {@link uk.gov.gchq.palisade.data.service.reader.request.DataReaderRequest} for a resource that cannot currently
- * be served due to a lack of capacity to serve the request.
+ * An exception thrown when a request is made to a data-service via a ReadRequest
+ * or to a {@link uk.gov.gchq.palisade.reader.common.DataReader} via a {@link uk.gov.gchq.palisade.reader.request.DataReaderRequest}
+ * for a resource that cannot currently be served due to a lack of capacity to serve the request.
  */
 public class NoCapacityException extends RequestFailedException {
 
