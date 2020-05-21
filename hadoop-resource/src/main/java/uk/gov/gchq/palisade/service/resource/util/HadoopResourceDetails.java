@@ -40,7 +40,7 @@ public class HadoopResourceDetails {
 
     public static final Pattern FILENAME_PATTERN = Pattern.compile("(?<type>.+)_(?<name>.+)\\.(?<format>.+)");
     public static final String FORMAT_STRING = "TYPE_FILENAME.FORMAT";
-    public static final Map<String, String> SUPPORTED_TYPES = new HashMap<>();
+    protected static final Map<String, String> SUPPORTED_TYPES = new HashMap<>();
     private URI fileName;
     private String type;
     private String format;
