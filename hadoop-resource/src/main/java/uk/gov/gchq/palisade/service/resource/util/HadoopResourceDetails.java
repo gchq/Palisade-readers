@@ -51,6 +51,12 @@ public class HadoopResourceDetails {
         this.format = format;
     }
 
+    /**
+     * Adds a valid type and type class to a {@link Map} of supported types
+     *
+     * @param type          A {@link String} value of the type that will be in the resource file name
+     * @param classString   A {@link String} value of the fully qualified class of the type
+     */
     public static void addTypeSupport(final String type, final String classString) {
         SUPPORTED_TYPES.putIfAbsent(type, classString);
     }
