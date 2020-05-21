@@ -40,7 +40,7 @@ public class HadoopResourceDetails {
 
     public static final Pattern FILENAME_PATTERN = Pattern.compile("(?<type>.+)_(?<name>.+)\\.(?<format>.+)");
     public static final String FORMAT_STRING = "TYPE_FILENAME.FORMAT";
-    public static final Map<String, String> SUPPORTED_TYPES = new HashMap<>();
+    protected static Map<String, String> supportedTypes = new HashMap<>();
     private URI fileName;
     private String type;
     private String format;
@@ -53,7 +53,7 @@ public class HadoopResourceDetails {
 
     public static HadoopResourceDetails getResourceDetailsFromFileName(final URI fileName) {
         //get filename component
-        SUPPORTED_TYPES.put("employee", "uk.gov.gchq.palisade.example.hrdatagenerator.types.Employee");
+        supportedTypes.put("employee", "uk.gov.gchq.palisade.example.hrdatagenerator.types.Employee");
         final String[] split = fileName.toString().split(Pattern.quote("/"));
         final String fileString = split[split.length - 1];
         //check match
@@ -69,7 +69,7 @@ public class HadoopResourceDetails {
             throw new IllegalArgumentException("This type is not supported", ex);
         }
 
-        return new HadoopResourceDetails(fileName, SUPPORTED_TYPES.get(type), match.group("format"));
+        return new HadoopResourceDetails(fileName, supportedTypes.get(type), match.group("format"));
     }
 
     public static boolean isValidResourceName(final URI fileName) {
