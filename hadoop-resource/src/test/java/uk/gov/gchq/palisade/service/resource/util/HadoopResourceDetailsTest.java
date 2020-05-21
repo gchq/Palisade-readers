@@ -36,6 +36,7 @@ public class HadoopResourceDetailsTest {
     public void acceptsSchemelessUri() throws URISyntaxException {
         // Given
         URI uri = new URI("/home/hadoop/resources/type_file.format");
+        HadoopResourceDetails.SUPPORTED_TYPES.put("type", "type");
         HadoopResourceDetails expected = new HadoopResourceDetails(uri, "type", "format");
 
         // When
@@ -49,6 +50,7 @@ public class HadoopResourceDetailsTest {
     public void acceptsAbsolutePath() throws URISyntaxException {
         // Given
         URI absolute = new URI("file:/home/hadoop/resources/type_file.format");
+        HadoopResourceDetails.SUPPORTED_TYPES.put("type", "type");
         HadoopResourceDetails expected = new HadoopResourceDetails(absolute, "type", "format");
 
         // When
@@ -119,7 +121,7 @@ public class HadoopResourceDetailsTest {
     public void formatStringIsConsistent() {
         // Given
         URI uri = new File(".").toURI().resolve(HadoopResourceDetails.FORMAT_STRING);
-        HadoopResourceDetails expected = new HadoopResourceDetails(uri, "TYPE", "FORMAT");
+        HadoopResourceDetails expected = new HadoopResourceDetails(uri, "type", "FORMAT");
 
         // When
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);

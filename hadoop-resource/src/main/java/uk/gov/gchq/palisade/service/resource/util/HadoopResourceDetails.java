@@ -21,6 +21,8 @@ import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.regex.Matcher;
@@ -37,6 +39,7 @@ public class HadoopResourceDetails {
 
     public static final Pattern FILENAME_PATTERN = Pattern.compile("(?<type>.+)_(?<name>.+)\\.(?<format>.+)");
     public static final String FORMAT_STRING = "TYPE_FILENAME.FORMAT";
+    public static final Map<String, String> SUPPORTED_TYPES = new HashMap<>();
     private URI fileName;
     private String type;
     private String format;
@@ -49,15 +52,23 @@ public class HadoopResourceDetails {
 
     public static HadoopResourceDetails getResourceDetailsFromFileName(final URI fileName) {
         //get filename component
+        SUPPORTED_TYPES.put("employee", "uk.gov.gchq.palisade.example.hrdatagenerator.types.Employee");
         final String[] split = fileName.toString().split(Pattern.quote("/"));
         final String fileString = split[split.length - 1];
+        String type;
         //check match
         Matcher match = validateNameRegex(fileString);
         if (!match.matches()) {
             throw new IllegalArgumentException("Filename doesn't comply with " + FORMAT_STRING + ": " + fileName);
         }
 
-        return new HadoopResourceDetails(fileName, match.group("type"), match.group("format"));
+        try {
+            type = match.group("type").toLowerCase();
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("This type is not supported", ex);
+        }
+
+        return new HadoopResourceDetails(fileName, SUPPORTED_TYPES.get(type), match.group("format"));
     }
 
     public static boolean isValidResourceName(final URI fileName) {
