@@ -16,6 +16,7 @@
 
 package uk.gov.gchq.palisade.service.resource.util;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,11 +33,15 @@ import static org.hamcrest.Matchers.equalTo;
 @RunWith(JUnit4.class)
 public class HadoopResourceDetailsTest {
 
+    @Before
+    public void setup() {
+        HadoopResourceDetails.addTypeSupport("type", "type");
+    }
+
     @Test
     public void acceptsSchemelessUri() throws URISyntaxException {
         // Given
         URI uri = new URI("/home/hadoop/resources/type_file.format");
-        HadoopResourceDetails.supportedTypes.put("type", "type");
         HadoopResourceDetails expected = new HadoopResourceDetails(uri, "type", "format");
 
         // When
@@ -50,7 +55,6 @@ public class HadoopResourceDetailsTest {
     public void acceptsAbsolutePath() throws URISyntaxException {
         // Given
         URI absolute = new URI("file:/home/hadoop/resources/type_file.format");
-        HadoopResourceDetails.supportedTypes.put("type", "type");
         HadoopResourceDetails expected = new HadoopResourceDetails(absolute, "type", "format");
 
         // When

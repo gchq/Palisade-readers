@@ -16,6 +16,7 @@
 
 package uk.gov.gchq.palisade.service.resource.service;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -35,6 +36,11 @@ import static org.hamcrest.Matchers.equalTo;
 @RunWith(JUnit4.class)
 public class HadoopResourceServiceTest {
     private final HadoopResourceService service = new HadoopResourceService();
+
+    @Before
+    public void setup() {
+        HadoopResourceDetails.addTypeSupport("type", "type");
+    }
 
     @Test
     public void resourceDetailsGetDataServiceConnection() {
