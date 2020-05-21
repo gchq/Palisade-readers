@@ -22,6 +22,7 @@ import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -55,16 +56,16 @@ public class HadoopResourceDetails {
         SUPPORTED_TYPES.put("employee", "uk.gov.gchq.palisade.example.hrdatagenerator.types.Employee");
         final String[] split = fileName.toString().split(Pattern.quote("/"));
         final String fileString = split[split.length - 1];
-        String type;
         //check match
         Matcher match = validateNameRegex(fileString);
         if (!match.matches()) {
             throw new IllegalArgumentException("Filename doesn't comply with " + FORMAT_STRING + ": " + fileName);
         }
 
+        String type;
         try {
-            type = match.group("type").toLowerCase();
-        } catch (Exception ex) {
+            type = match.group("type").toLowerCase(Locale.getDefault());
+        } catch (IllegalArgumentException | IllegalStateException ex) {
             throw new IllegalArgumentException("This type is not supported", ex);
         }
 
