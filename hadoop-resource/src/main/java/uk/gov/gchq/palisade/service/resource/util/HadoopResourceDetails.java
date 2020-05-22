@@ -16,6 +16,9 @@
 
 package uk.gov.gchq.palisade.service.resource.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.util.ResourceBuilder;
@@ -40,6 +43,7 @@ public class HadoopResourceDetails {
 
     public static final Pattern FILENAME_PATTERN = Pattern.compile("(?<type>.+)_(?<name>.+)\\.(?<format>.+)");
     public static final String FORMAT_STRING = "TYPE_FILENAME.FORMAT";
+    private static final Logger LOGGER = LoggerFactory.getLogger(HadoopResourceDetails.class);
     private static final Map<String, String> SUPPORTED_TYPES = new HashMap<>();
     private URI fileName;
     private String type;
@@ -58,12 +62,14 @@ public class HadoopResourceDetails {
      * @param classString   A {@link String} value of the fully qualified class of the type
      */
     public static void addTypeSupport(final String type, final String classString) {
-        SUPPORTED_TYPES.putIfAbsent(type, classString);
+        if (SUPPORTED_TYPES.containsKey(type)) {
+            LOGGER.warn("Type '{}' with value '{}' will be overwritten with the new value '{}'", type, SUPPORTED_TYPES.get(type), classString);
+        }
+        SUPPORTED_TYPES.put(type, classString);
     }
 
     public static HadoopResourceDetails getResourceDetailsFromFileName(final URI fileName) {
         //get filename component
-        addTypeSupport("employee", "uk.gov.gchq.palisade.example.hrdatagenerator.types.Employee");
         final String[] split = fileName.toString().split(Pattern.quote("/"));
         final String fileString = split[split.length - 1];
         //check match
@@ -73,11 +79,13 @@ public class HadoopResourceDetails {
         }
 
         String type = match.group("type").toLowerCase(Locale.getDefault());
-        if (type.isEmpty()) {
-            throw new IllegalArgumentException("This type is not supported");
+
+        if (SUPPORTED_TYPES.get(type) != null) {
+            return new HadoopResourceDetails(fileName, SUPPORTED_TYPES.get(type), match.group("format"));
+        } else {
+            throw new IllegalArgumentException(String.format("Type '%s' is not supported", type));
         }
 
-        return new HadoopResourceDetails(fileName, SUPPORTED_TYPES.get(type), match.group("format"));
     }
 
     public static boolean isValidResourceName(final URI fileName) {
