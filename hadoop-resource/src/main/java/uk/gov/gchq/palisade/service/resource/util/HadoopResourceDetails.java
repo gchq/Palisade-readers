@@ -72,11 +72,9 @@ public class HadoopResourceDetails {
             throw new IllegalArgumentException("Filename doesn't comply with " + FORMAT_STRING + ": " + fileName);
         }
 
-        String type;
-        try {
-            type = match.group("type").toLowerCase(Locale.getDefault());
-        } catch (IllegalArgumentException | IllegalStateException ex) {
-            throw new IllegalArgumentException("This type is not supported", ex);
+        String type = match.group("type").toLowerCase(Locale.getDefault());
+        if (type.isEmpty()) {
+            throw new IllegalArgumentException("This type is not supported");
         }
 
         return new HadoopResourceDetails(fileName, SUPPORTED_TYPES.get(type), match.group("format"));
