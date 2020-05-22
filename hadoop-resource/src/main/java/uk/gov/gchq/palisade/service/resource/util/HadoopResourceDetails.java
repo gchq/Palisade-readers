@@ -16,11 +16,17 @@
 
 package uk.gov.gchq.palisade.service.resource.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.regex.Matcher;
@@ -37,6 +43,8 @@ public class HadoopResourceDetails {
 
     public static final Pattern FILENAME_PATTERN = Pattern.compile("(?<type>.+)_(?<name>.+)\\.(?<format>.+)");
     public static final String FORMAT_STRING = "TYPE_FILENAME.FORMAT";
+    private static final Logger LOGGER = LoggerFactory.getLogger(HadoopResourceDetails.class);
+    private static final Map<String, String> SUPPORTED_TYPES = new HashMap<>();
     private URI fileName;
     private String type;
     private String format;
@@ -45,6 +53,19 @@ public class HadoopResourceDetails {
         this.fileName = fileName;
         this.type = type;
         this.format = format;
+    }
+
+    /**
+     * Adds a valid type and type class to a {@link Map} of supported types
+     *
+     * @param type          A {@link String} value of the type that will be in the resource file name
+     * @param classString   A {@link String} value of the fully qualified class of the type
+     */
+    public static void addTypeSupport(final String type, final String classString) {
+        if (SUPPORTED_TYPES.containsKey(type)) {
+            LOGGER.warn("Type '{}' with value '{}' will be overwritten with the new value '{}'", type, SUPPORTED_TYPES.get(type), classString);
+        }
+        SUPPORTED_TYPES.put(type, classString);
     }
 
     public static HadoopResourceDetails getResourceDetailsFromFileName(final URI fileName) {
@@ -57,7 +78,14 @@ public class HadoopResourceDetails {
             throw new IllegalArgumentException("Filename doesn't comply with " + FORMAT_STRING + ": " + fileName);
         }
 
-        return new HadoopResourceDetails(fileName, match.group("type"), match.group("format"));
+        String type = match.group("type").toLowerCase(Locale.getDefault());
+
+        if (SUPPORTED_TYPES.get(type) != null) {
+            return new HadoopResourceDetails(fileName, SUPPORTED_TYPES.get(type), match.group("format"));
+        } else {
+            throw new IllegalArgumentException(String.format("Type '%s' is not supported", type));
+        }
+
     }
 
     public static boolean isValidResourceName(final URI fileName) {

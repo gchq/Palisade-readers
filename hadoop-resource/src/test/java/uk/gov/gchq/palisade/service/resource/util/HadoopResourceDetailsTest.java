@@ -16,6 +16,7 @@
 
 package uk.gov.gchq.palisade.service.resource.util;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,11 +33,16 @@ import static org.hamcrest.Matchers.equalTo;
 @RunWith(JUnit4.class)
 public class HadoopResourceDetailsTest {
 
+    @Before
+    public void setup() {
+        HadoopResourceDetails.addTypeSupport("type", "TYPE");
+    }
+
     @Test
     public void acceptsSchemelessUri() throws URISyntaxException {
         // Given
         URI uri = new URI("/home/hadoop/resources/type_file.format");
-        HadoopResourceDetails expected = new HadoopResourceDetails(uri, "type", "format");
+        HadoopResourceDetails expected = new HadoopResourceDetails(uri, "TYPE", "format");
 
         // When
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
@@ -49,7 +55,7 @@ public class HadoopResourceDetailsTest {
     public void acceptsAbsolutePath() throws URISyntaxException {
         // Given
         URI absolute = new URI("file:/home/hadoop/resources/type_file.format");
-        HadoopResourceDetails expected = new HadoopResourceDetails(absolute, "type", "format");
+        HadoopResourceDetails expected = new HadoopResourceDetails(absolute, "TYPE", "format");
 
         // When
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(absolute);
@@ -62,7 +68,7 @@ public class HadoopResourceDetailsTest {
     public void acceptsRelativePath() throws URISyntaxException {
         // Given
         URI relative = new URI("file:./type_file.format");
-        HadoopResourceDetails expected = new HadoopResourceDetails(relative, "type", "format");
+        HadoopResourceDetails expected = new HadoopResourceDetails(relative, "TYPE", "format");
 
         // When
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(relative);
@@ -140,6 +146,15 @@ public class HadoopResourceDetailsTest {
         assertThat(resource.getId(), equalTo(details.getFileName().toString()));
         assertThat(resource.getType(), equalTo(details.getType()));
         assertThat(resource.getSerialisedFormat(), equalTo(details.getFormat()));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void noSupportedTypeTest() {
+        // Given
+        URI uri = new File(".").toURI().resolve("a_file.txt");
+
+        // When
+        HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
     }
 
 }
