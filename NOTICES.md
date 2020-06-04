@@ -22,5 +22,5 @@ List of third-party dependencies grouped by their license type
 * Logback Classic Module ([ch.qos.logback:logback-classic:1.2.3](http://logback.qos.ch/logback-classic))
 * Logback Core Module ([ch.qos.logback:logback-core:1.2.3](http://logback.qos.ch/logback-core))
 
-### [MIT License](./licenses/mit_license.html):
+### [MIT License](./licenses/mit_license.txt):
 * mockito-core ([org.mockito:mockito-core:3.1.0](https://github.com/mockito/mockito))
