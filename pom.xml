@@ -230,6 +230,10 @@
                     <licensesOutputDirectory>${project.basedir}/licenses</licensesOutputDirectory>
                     <includeTransitiveDependencies>false</includeTransitiveDependencies>
                     <cleanLicensesOutputDirectory>true</cleanLicensesOutputDirectory>
+                    <!--
+                     Normalise equivalent license names (see also NOTICES.ftl)
+                     Format is "<preferred license name> :: <file name>|<license name>|<license name>|..."
+                    -->
                     <licenseMerges>
                         <licenseMerge>Apache Software License 2.0 :: apache_software_license_2.0.txt|Apache Software License, Version 2.0|The Apache Software License, Version 2.0|Apache License, Version 2.0|Apache License 2.0|Apache 2|Apache 2.0</licenseMerge>
                         <licenseMerge>MIT License :: mit_license.txt|MIT License|The MIT License|MIT X11 License</licenseMerge>
@@ -241,7 +245,12 @@
                         <licenseMerge>CDDL and GPL License :: cddl+gpl_1.1.html|CDDL+GPL License</licenseMerge>v
                         <licenseMerge>CDDL and GNU GPL 2 w/ Classpath Exception :: cddl_gplv2_ce.html|CDDL/GPLv2+CE</licenseMerge>
                         <licenseMerge>GNU General Public License 2 w/ Classpath Exception :: missing|GPL2 w/ CPE</licenseMerge>
-                    </licenseMerges>NOTICES.ftl
+                    </licenseMerges>
+                    <!--
+                     Normalise equivalent license filenames, unfortunately cannot match or change filetype
+                     Must match the above equivalent <file name> field
+                     Must be a valid URL (ie must not contain spaces, pluses (+), etc...)
+                    -->
                     <licenseUrlFileNameSanitizers>
                         <!-- Normalise equivalent license filenames, cannot change filetype, but stated here for clarity -->
                         <licenseUrlFileNameSanitizer>
