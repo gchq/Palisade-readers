@@ -232,21 +232,31 @@
                         <!-- Normalise equivalent license names, append filename after :: (split in NOTICES.ftl) -->
                         <licenseMerge>Apache Software License 2.0 :: apache_software_license_2.0.txt|Apache Software License, Version 2.0|The Apache Software License, Version 2.0|Apache License, Version 2.0|Apache 2</licenseMerge>
                         <licenseMerge>MIT License :: mit_license.html|MIT License|The MIT License</licenseMerge>
-                        <licenseMerge>Eclipse Public License 1.0 :: eclipse_public_license_1.0.html|Eclipse Public License 1.0|The Eclipse Public License 1.0</licenseMerge>
+                        <licenseMerge>Eclipse Public License 1.0 :: eclipse_public_license_1.0.html|Eclipse Public License 1.0|The Eclipse Public License 1.0|Eclipse Public License - v 1.0</licenseMerge>
+                        <licenseMerge>BSD License 3 :: bsd_license_3.html|BSD Licence 3</licenseMerge>
+                        <licenseMerge>GNU Lesser General Public License 2.1 :: gnu_lgpl_2.1.html|GNU Lesser General Public License</licenseMerge>
                     </licenseMerges>
                     <licenseUrlFileNameSanitizers>
                         <!-- Normalise equivalent license filenames, cannot change filetype, but stated here for clarity -->
                         <licenseUrlFileNameSanitizer>
-                            <regexp>(the )?apache (software )?license, (version )?2(.0)?.*</regexp>
+                            <regexp>.*apache.*license.*2.*</regexp>
                             <replacement>apache_software_license_2.0.txt</replacement>
                         </licenseUrlFileNameSanitizer>
                         <licenseUrlFileNameSanitizer>
-                            <regexp>(the )?mit license.*</regexp>
+                            <regexp>.*mit.*license.*</regexp>
                             <replacement>mit_license.html</replacement>
                         </licenseUrlFileNameSanitizer>
                         <licenseUrlFileNameSanitizer>
-                            <regexp>(the )?eclipse (public )?license 1.0.*</regexp>
+                            <regexp>.*eclipse.*license.*1.0.*</regexp>
                             <replacement>eclipse_public_license_1.0.html</replacement>
+                        </licenseUrlFileNameSanitizer>
+                        <licenseUrlFileNameSanitizer>
+                            <regexp>.*bsd.*license.*3.*</regexp>
+                            <replacement>bsd_license_3.html</replacement>
+                        </licenseUrlFileNameSanitizer>
+                        <licenseUrlFileNameSanitizer>
+                            <regexp>.*gnu.*lesser.*license.*</regexp>
+                            <replacement>gnu_lgpl_2.1.html</replacement>
                         </licenseUrlFileNameSanitizer>
                     </licenseUrlFileNameSanitizers>
                 </configuration>
