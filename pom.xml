@@ -251,7 +251,7 @@
                             <replacement>eclipse_public_license_1.0.html</replacement>
                         </licenseUrlFileNameSanitizer>
                         <licenseUrlFileNameSanitizer>
-                            <regexp>.*bsd.*license.*3.*</regexp>
+                            <regexp>.*bsd.*licence.*3.*</regexp>
                             <replacement>bsd_license_3.html</replacement>
                         </licenseUrlFileNameSanitizer>
                         <licenseUrlFileNameSanitizer>
