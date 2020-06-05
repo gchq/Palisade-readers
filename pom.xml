@@ -53,7 +53,7 @@
         <!-- Plugins -->
         <javadoc.plugin.version>3.2.0</javadoc.plugin.version>
         <checkstyle.plugin.version>3.1.0</checkstyle.plugin.version>
-        <checkstyle.phase>prepare-package</checkstyle.phase>
+        <checkstyle.phase>verify</checkstyle.phase>
         <depends.phase>validate</depends.phase>
         <depends.maven.version>3.1.1</depends.maven.version>
 
