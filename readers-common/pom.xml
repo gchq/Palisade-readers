@@ -28,6 +28,7 @@
 
     <!--  *********** Aritfact ID ***********    -->
     <artifactId>readers-common</artifactId>
+    <url>https://github.com/gchq/Palisade-readers/tree/develop/readers-common</url>
     <!--  *********** Aritfact ID ***********    -->
 
     <dependencies>

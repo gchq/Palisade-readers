@@ -23,6 +23,7 @@
     <version>0.4.0-${revision}</version>
     <name>readers</name>
     <description>Data Services Readers layer for Palisade</description>
+    <url>https://github.com/gchq/Palisade-readers</url>
     <packaging>pom</packaging>
 
     <developers>
