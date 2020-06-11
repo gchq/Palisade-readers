@@ -54,6 +54,9 @@ public class DataFlavour {
      */
     public static final class FlavourSerializer extends StdSerializer<DataFlavour> {
 
+        /**
+         * Constructs a new {@link FlavourDeserializer} object
+         */
         public FlavourSerializer() {
             super(DataFlavour.class);
         }

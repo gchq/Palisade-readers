@@ -50,6 +50,8 @@ public class DataReaderResponse {
     }
 
     /**
+     * Set the message value for this response
+     *
      * @param message an error/info message to be returned to the client
      * @return the {@link DataReaderResponse}
      */

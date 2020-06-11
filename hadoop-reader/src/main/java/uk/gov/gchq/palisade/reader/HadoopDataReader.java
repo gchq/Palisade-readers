@@ -53,10 +53,21 @@ public class HadoopDataReader extends SerialisedDataReader {
     @JsonIgnore
     private FileSystem fs;
 
+    /**
+     * Creates a new {@link HadoopDataReader} object
+     *
+     * @throws IOException  the {@link Exception} thrown when there is an issue
+     */
     public HadoopDataReader() throws IOException {
         conf(new Configuration());
     }
 
+    /**
+     * Creates a new {@link HadoopDataReader} object
+     *
+     * @param conf          A {@link Map} of {@link String}s used as the configuration
+     * @throws IOException  the {@link Exception} thrown when there is an issue
+     */
     @JsonCreator
     public HadoopDataReader(@JsonProperty("conf") final Map<String, String> conf) throws IOException {
         conf(conf);
@@ -72,17 +83,36 @@ public class HadoopDataReader extends SerialisedDataReader {
         return config;
     }
 
+    /**
+     *
+     * @param conf          A {@link Map} of {@link String}s used as the configuration
+     * @return              the current {@link HadoopDataReader} object
+     * @throws IOException  the {@link Exception} thrown when there is an issue
+     */
     @Generated
     public HadoopDataReader conf(final Map<String, String> conf) throws IOException {
         return conf(createConfig(conf));
     }
 
+    /**
+     * Sets the {@link FileSystem} value
+     *
+     * @param conf          A Hadoop {@link Configuration} object
+     * @return              the current {@link HadoopDataReader} object
+     * @throws IOException  the {@link Exception} thrown when there is an issue
+     */
     @Generated
     public HadoopDataReader conf(final Configuration conf) throws IOException {
         this.setFs(FileSystem.get(conf));
         return this;
     }
 
+    /**
+     * Sets the {@link FileSystem} value
+     *
+     * @param fs    the {@link FileSystem} value
+     * @return      the current {@link HadoopDataReader} object
+     */
     @Generated
     public HadoopDataReader fs(final FileSystem fs) {
         this.setFs(fs);
