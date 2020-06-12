@@ -318,10 +318,4 @@ public class HadoopResourceService implements ResourceService {
                 .add("dataServices=" + dataServices)
                 .toString();
     }
-
-    /**
-     * Make Jackson interpret the deserialised list correctly.
-     */
-    private static class ConnectionDetailType extends TypeReference<List<ConnectionDetail>> {
-    }
 }

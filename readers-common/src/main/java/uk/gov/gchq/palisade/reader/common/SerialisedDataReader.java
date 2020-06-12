@@ -54,7 +54,6 @@ import static java.util.Objects.requireNonNull;
  * data type and serialised format.
  */
 public abstract class SerialisedDataReader implements DataReader {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SerialisedDataReader.class);
 
     @JsonProperty("default")
     private Serialiser<?> defaultSerialiser = new SimpleStringSerialiser();
