@@ -45,7 +45,7 @@ public class HadoopResourceServiceTest {
     @Test
     public void resourceDetailsGetDataServiceConnection() {
         // Given
-        ConnectionDetail dataService = new SimpleConnectionDetail().uri("http://data-service");
+        ConnectionDetail dataService = new SimpleConnectionDetail().serviceName("data-service");
         service.addDataService(dataService);
 
         URI uri = new File(".").toURI().resolve("type_file.format");
