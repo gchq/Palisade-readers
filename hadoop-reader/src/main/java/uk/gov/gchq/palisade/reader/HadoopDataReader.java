@@ -100,7 +100,7 @@ public class HadoopDataReader extends SerialisedDataReader {
             //1st attempt: process this as a URI
             inputStream = fs.open(new Path(new URI(resource.getId())));
         } catch (URISyntaxException e) {
-            LOGGER.error("Issue encountered while reading resource {} as a URI: {}", resource.getId(), e.getMessage());
+            LOGGER.debug("Issue encountered while reading resource {} as a URI: {}", resource.getId(), e);
             //2nd attempt: process as a string
             try {
                 inputStream = fs.open(new Path(resource.getId()));
