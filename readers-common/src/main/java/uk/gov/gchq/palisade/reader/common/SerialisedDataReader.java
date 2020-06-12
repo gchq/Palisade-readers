@@ -19,8 +19,6 @@ package uk.gov.gchq.palisade.reader.common;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.data.serialise.Serialiser;
