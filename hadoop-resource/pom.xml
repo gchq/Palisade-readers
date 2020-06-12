@@ -39,6 +39,7 @@
 
     <!--  *********** Aritfact ID ***********    -->
     <artifactId>hadoop-resource</artifactId>
+    <url>https://github.com/gchq/Palisade-readers/tree/develop/hadoop-resource</url>
     <!--  *********** Aritfact ID ***********    -->
 
     <dependencies>
