@@ -96,12 +96,15 @@ public class HadoopDataReader extends SerialisedDataReader {
 
         InputStream inputStream;
         try {
+            //1st attempt: process this as a URI
+            inputStream = fs.open(new Path(new URI(resource.getId())));
+        } catch (URISyntaxException e) {
+            //2nd attempt: process as a string
             try {
-                //1st attempt: process this as a URI
-                inputStream = fs.open(new Path(new URI(resource.getId())));
-            } catch (URISyntaxException e) {
-                //2nd attempt: process as a string
                 inputStream = fs.open(new Path(resource.getId()));
+            } catch (final IOException ex) {
+                LOGGER.error("Error encountered while reading resource {}: {}", resource, ex.getMessage());
+                throw new RuntimeException("Unable to read resource: " + resource.getId(), ex);
             }
         } catch (final IOException e) {
             LOGGER.error("Error encountered while reading resource {}: {}", resource, e.getMessage());
