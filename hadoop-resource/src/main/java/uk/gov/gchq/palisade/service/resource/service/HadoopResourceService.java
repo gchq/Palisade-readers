@@ -87,14 +87,14 @@ public class HadoopResourceService implements ResourceService {
 
     protected static Stream<URI> getPaths(final RemoteIterator<LocatedFileStatus> remoteIterator) {
         return Stream.generate(() -> null)
-                .takeWhile(x -> {
+                .takeWhile((Object x) -> {
                     try {
                         return remoteIterator.hasNext();
                     } catch (IOException e) {
                         return false;
                     }
                 })
-                .map(n -> {
+                .map((Object n) -> {
                     try {
                         return remoteIterator.next();
                     } catch (IOException e) {
