@@ -28,6 +28,7 @@
 
     <!--  *********** Aritfact ID ***********    -->
     <artifactId>hadoop-reader</artifactId>
+    <url>https://github.com/gchq/Palisade-readers/tree/develop/hadoop-reader</url>
     <!--  *********** Aritfact ID ***********    -->
 
     <properties>
