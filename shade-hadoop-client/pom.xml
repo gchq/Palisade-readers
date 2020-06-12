@@ -27,6 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>shade-hadoop-client</artifactId>
+    <url>https://github.com/gchq/Palisade-readers/tree/develop/shade-hadoop-client</url>
 
     <!-- Hadoop includes many older dependencies that conflict with later versions in Palisade, several have to be
     excluded here. Hadoop also uses an older version of Google's Guava that later versions are not backwards
