@@ -105,7 +105,6 @@ public class HadoopDataReader extends SerialisedDataReader {
             try {
                 inputStream = fs.open(new Path(resource.getId()));
             } catch (final IOException ex) {
-                LOGGER.error("Unable to read resource", ex);
                 throw new ReadResourceException("Unable to read resource: " + resource.getId(), ex);
             }
         } catch (final IOException e) {
