@@ -32,8 +32,8 @@ public class DataReaderResponse {
     private ResponseWriter writer;
     private String message;
 
-    // no args constructor required
     public DataReaderResponse() {
+        // no args constructor required
     }
 
     /**
