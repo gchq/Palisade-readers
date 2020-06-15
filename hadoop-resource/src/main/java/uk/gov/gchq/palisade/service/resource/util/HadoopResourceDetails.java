@@ -49,6 +49,14 @@ public class HadoopResourceDetails {
     private String type;
     private String format;
 
+    /**
+     * Constructs a new {@link HadoopResourceDetails} object using a {@link URI} file name value,
+     * a {@link String} type value and a {@link String} format value.
+     *
+     * @param fileName  the {@link URI} value of the file name
+     * @param type      a {@link String} value of the file type
+     * @param format    a {@link String} value of the file format
+     */
     public HadoopResourceDetails(final URI fileName, final String type, final String format) {
         this.fileName = fileName;
         this.type = type;
@@ -68,6 +76,12 @@ public class HadoopResourceDetails {
         SUPPORTED_TYPES.put(type, classString);
     }
 
+    /**
+     * Creates a new {@link HadoopResourceDetails} object using a {@link URI} file name value.
+     *
+     * @param fileName  the {@link URI} value of the file name
+     * @return          a new {@link HadoopResourceDetails} object
+     */
     public static HadoopResourceDetails getResourceDetailsFromFileName(final URI fileName) {
         //get filename component
         final String[] split = fileName.toString().split(Pattern.quote("/"));
@@ -88,6 +102,12 @@ public class HadoopResourceDetails {
 
     }
 
+    /**
+     * Checks that the {@link URI} file name value matches a defined regex expression
+     *
+     * @param fileName  the {@link URI} value of the file name
+     * @return          a {@link Boolean} value
+     */
     public static boolean isValidResourceName(final URI fileName) {
         requireNonNull(fileName);
         return validateNameRegex(fileName.toString()).matches();
