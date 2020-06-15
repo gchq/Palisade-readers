@@ -93,7 +93,7 @@ public class HadoopResourceService implements ResourceService {
                     try {
                         return it.hasNext();
                     } catch (IOException ex) {
-                        throw new IteratorException("RemoteIterator failed while iterating. hasNext is true but next threw an exception", ex);
+                        throw new IteratorException("RemoteIterator failed while iterating. hasNext threw an exception", ex);
                     }
                 },
                 UnaryOperator.identity()
