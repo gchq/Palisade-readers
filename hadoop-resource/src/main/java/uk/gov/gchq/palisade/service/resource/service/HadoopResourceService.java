@@ -19,7 +19,6 @@ package uk.gov.gchq.palisade.service.resource.service;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileSystem;
@@ -103,6 +102,7 @@ public class HadoopResourceService implements ResourceService {
                     try {
                         return remoteIterator.hasNext();
                     } catch (IOException e) {
+                        LOGGER.error("Error getting next value", e);
                         return false;
                     }
                 })
@@ -110,6 +110,7 @@ public class HadoopResourceService implements ResourceService {
                     try {
                         return remoteIterator.next();
                     } catch (IOException e) {
+                        LOGGER.error("Error getting next value", e);
                         return null;
                     }
                 })
@@ -342,11 +343,5 @@ public class HadoopResourceService implements ResourceService {
                 .add("fileSystem=" + fileSystem)
                 .add("dataServices=" + dataServices)
                 .toString();
-    }
-
-    /**
-     * Make Jackson interpret the deserialised list correctly.
-     */
-    private static class ConnectionDetailType extends TypeReference<List<ConnectionDetail>> {
     }
 }

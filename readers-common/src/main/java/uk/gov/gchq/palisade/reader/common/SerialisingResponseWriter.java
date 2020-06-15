@@ -135,7 +135,8 @@ public class SerialisingResponseWriter<T> implements ResponseWriter {
     public void close() {
         try {
             stream.close();
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            LOGGER.debug("Error closing stream", e);
         }
     }
 

@@ -38,8 +38,8 @@ public class DataReaderRequest extends Request {
     private Context context;
     private Rules rules;
 
-    // no-args constructor required
     public DataReaderRequest() {
+        // no args constructor required
     }
 
     /**
