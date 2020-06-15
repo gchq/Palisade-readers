@@ -90,6 +90,7 @@ public class HadoopResourceService implements ResourceService {
                     try {
                         return remoteIterator.hasNext();
                     } catch (IOException e) {
+                        LOGGER.error("Error getting next value", e);
                         return false;
                     }
                 })
@@ -97,6 +98,7 @@ public class HadoopResourceService implements ResourceService {
                     try {
                         return remoteIterator.next();
                     } catch (IOException e) {
+                        LOGGER.error("Error getting next value", e);
                         return null;
                     }
                 })
