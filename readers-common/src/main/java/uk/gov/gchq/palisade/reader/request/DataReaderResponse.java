@@ -37,7 +37,7 @@ public class DataReaderResponse {
     }
 
     /**
-     * Set the writer object for this response.
+     * Set the {@link ResponseWriter} object for this {@link DataReaderResponse} object.
      *
      * @param writer the data writer object
      * @return the {@link DataReaderResponse}
@@ -50,7 +50,7 @@ public class DataReaderResponse {
     }
 
     /**
-     * Set the message value for this response
+     * Set the message value for this {@link DataReaderResponse} object.
      *
      * @param message an error/info message to be returned to the client
      * @return the {@link DataReaderResponse}

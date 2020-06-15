@@ -50,7 +50,8 @@ public class HadoopResourceDetails {
     private String format;
 
     /**
-     * Constructs a new {@link HadoopResourceDetails} object
+     * Constructs a new {@link HadoopResourceDetails} object using a {@link URI} file name value,
+     * a {@link String} type value and a {@link String} format value.
      *
      * @param fileName  the {@link URI} value of the file name
      * @param type      a {@link String} value of the file type
@@ -76,7 +77,7 @@ public class HadoopResourceDetails {
     }
 
     /**
-     * Creates a new {@link HadoopResourceDetails} object using the file name
+     * Creates a new {@link HadoopResourceDetails} object using a {@link URI} file name value.
      *
      * @param fileName  the {@link URI} value of the file name
      * @return          a new {@link HadoopResourceDetails} object
@@ -102,7 +103,7 @@ public class HadoopResourceDetails {
     }
 
     /**
-     * Checks that the file name is valid
+     * Checks that the {@link URI} file name value matches a defined regex expression
      *
      * @param fileName  the {@link URI} value of the file name
      * @return          a {@link Boolean} value

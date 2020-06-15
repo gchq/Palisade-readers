@@ -43,7 +43,7 @@ public class DataReaderRequest extends Request {
     }
 
     /**
-     * Set the resource object for this request
+     * Set the resource object for this {@link DataReaderRequest} object
      *
      * @param resource the resource to be accessed
      * @return the {@link DataReaderRequest}
@@ -55,7 +55,7 @@ public class DataReaderRequest extends Request {
     }
 
     /**
-     * Set the user object for this request
+     * Set the user object for this {@link DataReaderRequest} object
      *
      * @param user the user that requested the data
      * @return the {@link DataReaderRequest}
@@ -67,7 +67,7 @@ public class DataReaderRequest extends Request {
     }
 
     /**
-     * Set the context object for this request
+     * Set the context object for this {@link DataReaderRequest} object
      *
      * @param context the Context that the user provided for why they want the data
      * @return the {@link DataReaderRequest}
@@ -79,7 +79,7 @@ public class DataReaderRequest extends Request {
     }
 
     /**
-     * Set the rules object for this request
+     * Set the rules object for this {@link DataReaderRequest} object
      *
      * @param rules the list of rules to be applied to the data to ensure policy compliance
      * @return the {@link DataReaderRequest}

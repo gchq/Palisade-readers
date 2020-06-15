@@ -30,6 +30,7 @@ import uk.gov.gchq.palisade.Generated;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
 

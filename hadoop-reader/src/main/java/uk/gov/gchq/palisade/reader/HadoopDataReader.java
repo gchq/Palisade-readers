@@ -57,7 +57,7 @@ public class HadoopDataReader extends SerialisedDataReader {
     /**
      * Creates a new {@link HadoopDataReader} object
      *
-     * @throws IOException  the {@link Exception} thrown when there is an issue
+     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     public HadoopDataReader() throws IOException {
         this.fs = FileSystem.get(new Configuration());
@@ -67,7 +67,7 @@ public class HadoopDataReader extends SerialisedDataReader {
      * Creates a new {@link HadoopDataReader} object
      *
      * @param conf          A {@link Map} of {@link String}s used as the configuration
-     * @throws IOException  the {@link Exception} thrown when there is an issue
+     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the created {@link Configuration}
      */
     @JsonCreator
     public HadoopDataReader(@JsonProperty("conf") final Map<String, String> conf) throws IOException {
@@ -85,10 +85,11 @@ public class HadoopDataReader extends SerialisedDataReader {
     }
 
     /**
+     * Creates a {@link Configuration} using the {@link Map} of {@link String}s
      *
      * @param conf          A {@link Map} of {@link String}s used as the configuration
      * @return              the current {@link HadoopDataReader} object
-     * @throws IOException  the {@link Exception} thrown when there is an issue
+     * @throws IOException  the {@link Exception} thrown when there is an issue inside the {@link #conf(Configuration)} method.
      */
     @Generated
     public HadoopDataReader conf(final Map<String, String> conf) throws IOException {
@@ -100,7 +101,7 @@ public class HadoopDataReader extends SerialisedDataReader {
      *
      * @param conf          A Hadoop {@link Configuration} object
      * @return              the current {@link HadoopDataReader} object
-     * @throws IOException  the {@link Exception} thrown when there is an issue
+     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     @Generated
     public HadoopDataReader conf(final Configuration conf) throws IOException {

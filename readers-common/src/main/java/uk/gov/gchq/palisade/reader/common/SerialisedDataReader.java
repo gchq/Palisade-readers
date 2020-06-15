@@ -151,7 +151,7 @@ public abstract class SerialisedDataReader implements DataReader {
      *
      * @param resource  the {@link LeafResource} used to get the {@link Serialiser}
      * @param <I>       the type of {@link Serialiser}
-     * @return          the associatedd {@link Serialiser}
+     * @return          the associated {@link Serialiser}
      */
     @Generated
     public <I> Serialiser<I> getSerialiser(final LeafResource resource) {

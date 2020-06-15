@@ -72,22 +72,22 @@ public class HadoopResourceService implements ResourceService {
     private List<ConnectionDetail> dataServices = new ArrayList<>();
 
     /**
-     * Creates a new {@link HadoopResourceService} object
+     * Creates a new {@link HadoopResourceService} object from a {@link Configuration} object
      *
      * @param config        A Hadoop {@link Configuration} object
-     * @throws IOException  the {@link Exception} thrown when there is an issue
+     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     public HadoopResourceService(final Configuration config) throws IOException {
-        requireNonNull(config, "service");
+        requireNonNull(config, "Hadoop Configuration");
         this.config = config;
         this.fileSystem = FileSystem.get(config);
     }
 
     /**
-     * Creates a new {@link HadoopResourceService} object
+     * Creates a new {@link HadoopResourceService} object from a {@link Map} of {@link String}s
      *
      * @param conf          A {@link Map} of {@link String}s used as the configuration
-     * @throws IOException  the {@link Exception} thrown when there is an issue
+     * @throws IOException  the {@link Exception} thrown when there is an issue creating a {@link HadoopResourceService} using the provided {@link Map} of {@link String}s.
      */
     public HadoopResourceService(@JsonProperty("conf") final Map<String, String> conf) throws IOException {
         this(createConfig(conf));
@@ -245,7 +245,7 @@ public class HadoopResourceService implements ResourceService {
      *
      * @param conf          A Hadoop {@link Configuration} object
      * @return              the current {@link HadoopResourceService} object
-     * @throws IOException  the {@link Exception} thrown when there is an issue
+     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     @Generated
     public HadoopResourceService conf(final Configuration conf) throws IOException {
