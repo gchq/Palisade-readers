@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.reader.common.SerialisedDataReader;
+import uk.gov.gchq.palisade.reader.exception.ReadResourceException;
 import uk.gov.gchq.palisade.resource.LeafResource;
 
 import java.io.IOException;
@@ -54,12 +55,12 @@ public class HadoopDataReader extends SerialisedDataReader {
     private FileSystem fs;
 
     public HadoopDataReader() throws IOException {
-        conf(new Configuration());
+        this.fs = FileSystem.get(new Configuration());
     }
 
     @JsonCreator
     public HadoopDataReader(@JsonProperty("conf") final Map<String, String> conf) throws IOException {
-        conf(conf);
+        this.fs = FileSystem.get(createConfig(conf));
     }
 
     private static Configuration createConfig(final Map<String, String> conf) {
@@ -96,16 +97,18 @@ public class HadoopDataReader extends SerialisedDataReader {
 
         InputStream inputStream;
         try {
+            //1st attempt: process this as a URI
+            inputStream = fs.open(new Path(new URI(resource.getId())));
+        } catch (URISyntaxException e) {
+            LOGGER.debug("Issue encountered while reading resource {} as a URI: {}", resource.getId(), e);
+            //2nd attempt: process as a string
             try {
-                //1st attempt: process this as a URI
-                inputStream = fs.open(new Path(new URI(resource.getId())));
-            } catch (URISyntaxException e) {
-                //2nd attempt: process as a string
                 inputStream = fs.open(new Path(resource.getId()));
+            } catch (final IOException ex) {
+                throw new ReadResourceException("Unable to read resource: " + resource.getId(), ex);
             }
         } catch (final IOException e) {
-            LOGGER.error("Error encountered while reading resource {}: {}", resource, e.getMessage());
-            throw new RuntimeException("Unable to read resource: " + resource.getId(), e);
+            throw new ReadResourceException("Unable to read resource: " + resource.getId(), e);
         }
 
         LOGGER.debug("Successfully created stream to resource {}", resource);

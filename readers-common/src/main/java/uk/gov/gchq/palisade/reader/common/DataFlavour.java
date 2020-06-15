@@ -30,6 +30,7 @@ import uk.gov.gchq.palisade.Generated;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
 
@@ -42,7 +43,8 @@ public class DataFlavour {
     /**
      * The delimiter between data type and serialised format.
      */
-    public static final String DELIMITER = "##";
+    public static final Pattern DELIMITER = Pattern.compile("##");
+    private static final int PARTS = 2;
 
     /**
      * The internal store of the flavour. The left entry is the data type and the right entry is the serialised format.
@@ -53,6 +55,8 @@ public class DataFlavour {
      * Class to ensure {@link DataFlavour}s can be serialised into JSON.
      */
     public static final class FlavourSerializer extends StdSerializer<DataFlavour> {
+
+        private static final long serialVersionUID = 1L;
 
         public FlavourSerializer() {
             super(DataFlavour.class);
@@ -71,8 +75,8 @@ public class DataFlavour {
 
         @Override
         public Object deserializeKey(final String text, final DeserializationContext deserializationContext) throws IOException {
-            String[] parts = text.split(DELIMITER);
-            if (parts.length != 2) {
+            String[] parts = DELIMITER.split(text);
+            if (parts.length != PARTS) {
                 throw new IllegalStateException("error deserialising " + text + " as a DataFlavour, should be in format \"<data_type>" + DELIMITER + "<seralised_format>\"");
             }
             return DataFlavour.of(parts[0], parts[1]);
