@@ -89,11 +89,10 @@ public class HadoopResourceService implements ResourceService {
     protected static Stream<URI> getPaths(final RemoteIterator<LocatedFileStatus> remoteIterator) {
         Stream<RemoteIterator<LocatedFileStatus>> iteratorStream = Stream.iterate(
                 remoteIterator,
-                it -> {
+                (RemoteIterator<LocatedFileStatus> it) -> {
                     try {
                         return it.hasNext();
                     } catch (IOException ex) {
-                        LOGGER.error("Error while getting ::hasNext on iterator", ex);
                         throw new IteratorException("RemoteIterator failed while iterating", ex);
                     }
                 },
@@ -101,11 +100,10 @@ public class HadoopResourceService implements ResourceService {
         );
 
         return iteratorStream
-                .map(it -> {
+                .map((RemoteIterator<LocatedFileStatus> it) -> {
                     try {
                         return it.next();
                     } catch (IOException ex) {
-                        LOGGER.error("Error while getting ::next on iterator", ex);
                         throw new IteratorException("RemoteIterator failed while iterating", ex);
                     }
                 })
