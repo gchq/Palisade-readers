@@ -44,6 +44,7 @@ public class DataFlavour {
      * The delimiter between data type and serialised format.
      */
     public static final Pattern DELIMITER = Pattern.compile("##");
+    private static final int PARTS = 2;
 
     /**
      * The internal store of the flavour. The left entry is the data type and the right entry is the serialised format.
@@ -73,7 +74,7 @@ public class DataFlavour {
         @Override
         public Object deserializeKey(final String text, final DeserializationContext deserializationContext) throws IOException {
             String[] parts = DELIMITER.split(text);
-            if (parts.length != 2) {
+            if (parts.length != PARTS) {
                 throw new IllegalStateException("error deserialising " + text + " as a DataFlavour, should be in format \"<data_type>" + DELIMITER + "<seralised_format>\"");
             }
             return DataFlavour.of(parts[0], parts[1]);
