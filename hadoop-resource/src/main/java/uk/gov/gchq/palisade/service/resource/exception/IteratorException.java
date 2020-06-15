@@ -43,7 +43,7 @@ public class IteratorException extends RuntimeException {
      * Constructs a new {@link IteratorException} with the specified detail message and cause.
      *
      * @param message   a {@link String} value detailing the error
-     * @param cause     a {@link Throwable} that caused the iss
+     * @param cause     a {@link Throwable} that caused the issue
      */
     public IteratorException(final String message, final Throwable cause) {
         super(message, cause);
