@@ -33,6 +33,7 @@ import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.service.ConnectionDetail;
 import uk.gov.gchq.palisade.service.ResourceService;
+import uk.gov.gchq.palisade.service.resource.exception.IteratorException;
 import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
 
 import java.io.IOException;
@@ -46,6 +47,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
@@ -97,24 +99,28 @@ public class HadoopResourceService implements ResourceService {
     }
 
     protected static Stream<URI> getPaths(final RemoteIterator<LocatedFileStatus> remoteIterator) {
-        return Stream.generate(() -> null)
-                .takeWhile(x -> {
+        Stream<RemoteIterator<LocatedFileStatus>> iteratorStream = Stream.iterate(
+                remoteIterator,
+                (RemoteIterator<LocatedFileStatus> it) -> {
                     try {
-                        return remoteIterator.hasNext();
-                    } catch (IOException e) {
-                        LOGGER.error("Error getting next value", e);
-                        return false;
+                        return it.hasNext();
+                    } catch (IOException ex) {
+                        throw new IteratorException("RemoteIterator failed while iterating. hasNext threw an exception", ex);
+                    }
+                },
+                UnaryOperator.identity()
+        );
+
+        return iteratorStream
+                .map((RemoteIterator<LocatedFileStatus> it) -> {
+                    try {
+                        return it.next();
+                    } catch (IOException ex) {
+                        throw new IteratorException("RemoteIterator failed while iterating, hasNext is true but next threw an exception", ex);
                     }
                 })
-                .map(n -> {
-                    try {
-                        return remoteIterator.next();
-                    } catch (IOException e) {
-                        LOGGER.error("Error getting next value", e);
-                        return null;
-                    }
-                })
-                .map(locatedFileStatus -> locatedFileStatus.getPath().toUri());
+                .map(LocatedFileStatus::getPath)
+                .map(Path::toUri);
     }
 
     private static Configuration createConfig(final Map<String, String> conf) {
