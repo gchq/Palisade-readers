@@ -30,6 +30,7 @@ import uk.gov.gchq.palisade.Generated;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
@@ -72,7 +73,7 @@ public class DataFlavour {
 
         @Override
         public Object deserializeKey(final String text, final DeserializationContext deserializationContext) throws IOException {
-            String[] parts = text.split(String.valueOf(DELIMITER));
+            String[] parts = DELIMITER.split(text);
             if (parts.length != 2) {
                 throw new IllegalStateException("error deserialising " + text + " as a DataFlavour, should be in format \"<data_type>" + DELIMITER + "<seralised_format>\"");
             }
