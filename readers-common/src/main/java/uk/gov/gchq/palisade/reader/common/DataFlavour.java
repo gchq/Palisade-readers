@@ -58,6 +58,9 @@ public class DataFlavour {
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * Constructs a {@link FlavourSerializer} for the {@link DataFlavour} class
+         */
         public FlavourSerializer() {
             super(DataFlavour.class);
         }
