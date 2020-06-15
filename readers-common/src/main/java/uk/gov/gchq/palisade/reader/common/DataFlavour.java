@@ -54,7 +54,7 @@ public class DataFlavour {
      */
     public static final class FlavourSerializer extends StdSerializer<DataFlavour> {
 
-        private static final long serialVersionUID = 1;
+        private static final long serialVersionUID = 1L;
 
         public FlavourSerializer() {
             super(DataFlavour.class);
