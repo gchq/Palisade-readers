@@ -38,11 +38,13 @@ public class DataReaderRequest extends Request {
     private Context context;
     private Rules rules;
 
-    // no-args constructor required
     public DataReaderRequest() {
+        // no args constructor required
     }
 
     /**
+     * Set the resource object for this {@link DataReaderRequest} object
+     *
      * @param resource the resource to be accessed
      * @return the {@link DataReaderRequest}
      */
@@ -53,6 +55,8 @@ public class DataReaderRequest extends Request {
     }
 
     /**
+     * Set the user object for this {@link DataReaderRequest} object
+     *
      * @param user the user that requested the data
      * @return the {@link DataReaderRequest}
      */
@@ -63,6 +67,8 @@ public class DataReaderRequest extends Request {
     }
 
     /**
+     * Set the context object for this {@link DataReaderRequest} object
+     *
      * @param context the Context that the user provided for why they want the data
      * @return the {@link DataReaderRequest}
      */
@@ -73,6 +79,8 @@ public class DataReaderRequest extends Request {
     }
 
     /**
+     * Set the rules object for this {@link DataReaderRequest} object
+     *
      * @param rules the list of rules to be applied to the data to ensure policy compliance
      * @return the {@link DataReaderRequest}
      */

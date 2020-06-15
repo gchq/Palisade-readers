@@ -19,7 +19,6 @@ package uk.gov.gchq.palisade.service.resource.service;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileSystem;
@@ -34,6 +33,7 @@ import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.service.ConnectionDetail;
 import uk.gov.gchq.palisade.service.ResourceService;
+import uk.gov.gchq.palisade.service.resource.exception.IteratorException;
 import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
 
 import java.io.IOException;
@@ -47,6 +47,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
@@ -72,12 +73,24 @@ public class HadoopResourceService implements ResourceService {
 
     private List<ConnectionDetail> dataServices = new ArrayList<>();
 
+    /**
+     * Creates a new {@link HadoopResourceService} object from a {@link Configuration} object
+     *
+     * @param config        A Hadoop {@link Configuration} object
+     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
+     */
     public HadoopResourceService(final Configuration config) throws IOException {
-        requireNonNull(config, "service");
+        requireNonNull(config, "Hadoop Configuration");
         this.config = config;
         this.fileSystem = FileSystem.get(config);
     }
 
+    /**
+     * Creates a new {@link HadoopResourceService} object from a {@link Map} of {@link String}s
+     *
+     * @param conf          A {@link Map} of {@link String}s used as the configuration
+     * @throws IOException  the {@link Exception} thrown when there is an issue creating a {@link HadoopResourceService} using the provided {@link Map} of {@link String}s.
+     */
     public HadoopResourceService(@JsonProperty("conf") final Map<String, String> conf) throws IOException {
         this(createConfig(conf));
     }
@@ -86,22 +99,28 @@ public class HadoopResourceService implements ResourceService {
     }
 
     protected static Stream<URI> getPaths(final RemoteIterator<LocatedFileStatus> remoteIterator) {
-        return Stream.generate(() -> null)
-                .takeWhile(x -> {
+        Stream<RemoteIterator<LocatedFileStatus>> iteratorStream = Stream.iterate(
+                remoteIterator,
+                (RemoteIterator<LocatedFileStatus> it) -> {
                     try {
-                        return remoteIterator.hasNext();
-                    } catch (IOException e) {
-                        return false;
+                        return it.hasNext();
+                    } catch (IOException ex) {
+                        throw new IteratorException("RemoteIterator failed while iterating. hasNext threw an exception", ex);
+                    }
+                },
+                UnaryOperator.identity()
+        );
+
+        return iteratorStream
+                .map((RemoteIterator<LocatedFileStatus> it) -> {
+                    try {
+                        return it.next();
+                    } catch (IOException ex) {
+                        throw new IteratorException("RemoteIterator failed while iterating, hasNext is true but next threw an exception", ex);
                     }
                 })
-                .map(n -> {
-                    try {
-                        return remoteIterator.next();
-                    } catch (IOException e) {
-                        return null;
-                    }
-                })
-                .map(locatedFileStatus -> locatedFileStatus.getPath().toUri());
+                .map(LocatedFileStatus::getPath)
+                .map(Path::toUri);
     }
 
     private static Configuration createConfig(final Map<String, String> conf) {
@@ -227,6 +246,13 @@ public class HadoopResourceService implements ResourceService {
                 .connectionDetail(dataService);
     }
 
+    /**
+     * Sets the {@link Configuration} and {@link FileSystem} values
+     *
+     * @param conf          A Hadoop {@link Configuration} object
+     * @return              the current {@link HadoopResourceService} object
+     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
+     */
     @Generated
     public HadoopResourceService conf(final Configuration conf) throws IOException {
         requireNonNull(conf, "conf");
@@ -235,6 +261,12 @@ public class HadoopResourceService implements ResourceService {
         return this;
     }
 
+    /**
+     * Adds a {@link ConnectionDetail} value to the {@link List} of data-services
+     *
+     * @param detail    A {@link ConnectionDetail} object to be added
+     * @return          the current {@link HadoopResourceService} object
+     */
     @Generated
     public HadoopResourceService addDataService(final ConnectionDetail detail) {
         requireNonNull(detail, "detail");
@@ -317,11 +349,5 @@ public class HadoopResourceService implements ResourceService {
                 .add("fileSystem=" + fileSystem)
                 .add("dataServices=" + dataServices)
                 .toString();
-    }
-
-    /**
-     * Make Jackson interpret the deserialised list correctly.
-     */
-    private static class ConnectionDetailType extends TypeReference<List<ConnectionDetail>> {
     }
 }
