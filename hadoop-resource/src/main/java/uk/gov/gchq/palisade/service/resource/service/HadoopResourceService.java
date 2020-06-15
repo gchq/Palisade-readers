@@ -93,7 +93,7 @@ public class HadoopResourceService implements ResourceService {
                     try {
                         return it.hasNext();
                     } catch (IOException ex) {
-                        throw new IteratorException("RemoteIterator failed while iterating", ex);
+                        throw new IteratorException("RemoteIterator failed while iterating. hasNext is true but next threw an exception", ex);
                     }
                 },
                 UnaryOperator.identity()
@@ -104,7 +104,7 @@ public class HadoopResourceService implements ResourceService {
                     try {
                         return it.next();
                     } catch (IOException ex) {
-                        throw new IteratorException("RemoteIterator failed while iterating", ex);
+                        throw new IteratorException("RemoteIterator failed while iterating, has next is true but next threw an exception", ex);
                     }
                 })
                 .map(LocatedFileStatus::getPath)
