@@ -19,7 +19,6 @@ package uk.gov.gchq.palisade.service.resource.service;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileSystem;
@@ -319,11 +318,5 @@ public class HadoopResourceService implements ResourceService {
                 .add("fileSystem=" + fileSystem)
                 .add("dataServices=" + dataServices)
                 .toString();
-    }
-
-    /**
-     * Make Jackson interpret the deserialised list correctly.
-     */
-    private static class ConnectionDetailType extends TypeReference<List<ConnectionDetail>> {
     }
 }
