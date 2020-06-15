@@ -55,12 +55,12 @@ public class HadoopDataReader extends SerialisedDataReader {
     private FileSystem fs;
 
     public HadoopDataReader() throws IOException {
-        conf(new Configuration());
+        this.fs = FileSystem.get(new Configuration());
     }
 
     @JsonCreator
     public HadoopDataReader(@JsonProperty("conf") final Map<String, String> conf) throws IOException {
-        conf(conf);
+        this.fs = FileSystem.get(createConfig(conf));
     }
 
     private static Configuration createConfig(final Map<String, String> conf) {
