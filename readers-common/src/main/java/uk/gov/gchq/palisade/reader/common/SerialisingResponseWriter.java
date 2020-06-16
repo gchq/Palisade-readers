@@ -40,6 +40,8 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * The response writer for the {@link SerialisedDataReader} which will apply the record level rules for Palisade.
+ *
+ * @param <T>   the type of {@link SerialisingResponseWriter}
  */
 public class SerialisingResponseWriter<T> implements ResponseWriter {
     private static final Logger LOGGER = LoggerFactory.getLogger(SerialisingResponseWriter.class);
@@ -133,7 +135,8 @@ public class SerialisingResponseWriter<T> implements ResponseWriter {
     public void close() {
         try {
             stream.close();
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            LOGGER.debug("Error closing stream", e);
         }
     }
 

@@ -19,8 +19,6 @@ package uk.gov.gchq.palisade.reader.common;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.data.serialise.Serialiser;
@@ -54,7 +52,6 @@ import static java.util.Objects.requireNonNull;
  * data type and serialised format.
  */
 public abstract class SerialisedDataReader implements DataReader {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SerialisedDataReader.class);
 
     @JsonProperty("default")
     private Serialiser<?> defaultSerialiser = new SimpleStringSerialiser();
@@ -69,8 +66,10 @@ public abstract class SerialisedDataReader implements DataReader {
     private Map<DataFlavour, Serialiser<?>> serialisers = new ConcurrentHashMap<>();
 
     /**
-     * @param serialisers a mapping of data type to serialisers {@link SerialisedDataReader}
-     * @return the {@link SerialisedDataReader}
+     * Set the serialiser
+     *
+     * @param serialisers   a mapping of data type to serialisers {@link SerialisedDataReader}
+     * @return              the {@link SerialisedDataReader}
      */
     @Generated
     public SerialisedDataReader serialisers(final Map<DataFlavour, Serialiser<?>> serialisers) {
@@ -79,6 +78,12 @@ public abstract class SerialisedDataReader implements DataReader {
         return this;
     }
 
+    /**
+     * Set the default serialiser.
+     *
+     * @param serialiser    the {@link Serialiser} to be set as the default
+     * @return              the {@link SerialisedDataReader} object
+     */
     @Generated
     public SerialisedDataReader defaultSerialiser(final Serialiser<?> serialiser) {
         requireNonNull(serialiser, "The default serialiser cannot be set to null.");
@@ -123,6 +128,13 @@ public abstract class SerialisedDataReader implements DataReader {
      */
     protected abstract InputStream readRaw(final LeafResource resource);
 
+    /**
+     * Gets the associated {@link Serialiser} from the serialiser {@link Map} for a specific {@link DataFlavour}.
+     *
+     * @param flavour   the {@link DataFlavour} value to retrieve a {@link Serialiser}
+     * @param <T>       the type of {@link Serialiser}
+     * @return          the associated {@link Serialiser}
+     */
     @Generated
     public <T> Serialiser<T> getSerialiser(final DataFlavour flavour) {
         requireNonNull(flavour, "The flavour cannot be null.");
@@ -134,6 +146,13 @@ public abstract class SerialisedDataReader implements DataReader {
         return (Serialiser<T>) serialiser;
     }
 
+    /**
+     * Gets the associated {@link Serialiser} from the {@link Map} for a {@link LeafResource}.
+     *
+     * @param resource  the {@link LeafResource} used to get the {@link Serialiser}
+     * @param <I>       the type of {@link Serialiser}
+     * @return          the associated {@link Serialiser}
+     */
     @Generated
     public <I> Serialiser<I> getSerialiser(final LeafResource resource) {
         return getSerialiser(DataFlavour.of(resource.getType(), resource.getSerialisedFormat()));
