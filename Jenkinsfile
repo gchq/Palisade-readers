@@ -13,10 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//node-affinity
+//nodes 1..3 are reserved for Jenkins slave pods.
+//node 0 is used for the Jenkins master
+podTemplate(yaml: '''
+apiVersion: v1
+kind: Pod
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: palisade-node-name
+            operator: In
+            values: 
+            - node1
+            - node2
+            - node3
+  containers:
+  - name: jnlp
+    image: jenkins/jnlp-slave
+    imagePullPolicy: Always
+    args: 
+    - $(JENKINS_SECRET)
+    - $(JENKINS_NAME)
+    resources:
+      requests:
+        ephemeral-storage: "4Gi"
+      limits:
+        ephemeral-storage: "8Gi"
+  
+  - name: docker-cmds
+    image: 779921734503.dkr.ecr.eu-west-1.amazonaws.com/jnlp-did:200608
+    imagePullPolicy: IfNotPresent
+    command:
+    - sleep
+    args:
+    - 99d
+    env:
+      - name: DOCKER_HOST
+        value: tcp://localhost:2375
+''') {
 
-podTemplate(containers: [
-        containerTemplate(name: 'maven', image: 'maven:3.6.1-jdk-11', ttyEnabled: true, command: 'cat')
-]) {
     node(POD_LABEL) {
         def GIT_BRANCH_NAME
 
@@ -33,7 +73,7 @@ podTemplate(containers: [
             dir('Palisade-common') {
                 git url: 'https://github.com/gchq/Palisade-common.git'
                 if (sh(script: "git checkout ${GIT_BRANCH_NAME}", returnStatus: true) == 0) {
-                    container('maven') {
+                    container('docker-cmds') {
                         configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
                             sh 'mvn -s $MAVEN_SETTINGS install -P quick'
                         }
@@ -41,12 +81,11 @@ podTemplate(containers: [
                 }
             }
         }
-
         stage('Install, Unit Tests, Checkstyle') {
             dir('Palisade-readers') {
                 git url: 'https://github.com/gchq/Palisade-readers.git'
                 sh "git checkout ${GIT_BRANCH_NAME}"
-                container('maven') {
+                container('docker-cmds') {
                     configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
                         sh 'mvn -s $MAVEN_SETTINGS install'
                     }
@@ -56,10 +95,10 @@ podTemplate(containers: [
 
         stage('SonarQube analysis') {
             dir('Palisade-readers') {
-                container('maven') {
-                    withCredentials([string(credentialsId: '3dc8e0fb-23de-471d-8009-ed1d5890333a', variable: 'SONARQUBE_WEBHOOK'),
-                                     string(credentialsId: 'b01b7c11-ccdf-4ac5-b022-28c9b861379a', variable: 'KEYSTORE_PASS'),
-                                     file(credentialsId: '91d1a511-491e-4fac-9da5-a61b7933f4f6', variable: 'KEYSTORE')]) {
+                container('docker-cmds') {
+                    withCredentials([string(credentialsId: "${env.SQ_WEB_HOOK}", variable: 'SONARQUBE_WEBHOOK'),
+                                     string(credentialsId: "${env.SQ_KEY_STORE_PASS}", variable: 'KEYSTORE_PASS'),
+                                     file(credentialsId: "${env.SQ_KEY_STORE}", variable: 'KEYSTORE')]) {
                         configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
                             withSonarQubeEnv(installationName: 'sonar') {
                                 sh 'mvn -s $MAVEN_SETTINGS org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -Dsonar.projectKey="Palisade-Readers-${BRANCH_NAME}" -Dsonar.projectName="Palisade-Readers-${BRANCH_NAME}" -Dsonar.webhooks.project=$SONARQUBE_WEBHOOK -Djavax.net.ssl.trustStore=$KEYSTORE -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASS'
@@ -85,7 +124,7 @@ podTemplate(containers: [
 
         stage('Maven deploy') {
             dir('Palisade-readers') {
-                container('maven') {
+                container('docker-cmds') {
                     configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
                         if (("${env.BRANCH_NAME}" == "develop") ||
                                 ("${env.BRANCH_NAME}" == "master")) {
