@@ -27,7 +27,7 @@
     </parent>
 
     <properties>
-        <hadoop.version>3.2.0</hadoop.version>
+        <hadoop.version>3.2.1</hadoop.version>
         <fabric8.version>4.3.0</fabric8.version>
         <protobuf.version>3.5.1</protobuf.version>
         <jetcd.version>0.3.0</jetcd.version>
