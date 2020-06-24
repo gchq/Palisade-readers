@@ -13,31 +13,21 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.4.0-SNAPSHOT
 |  |  +- com.google.errorprone:error_prone_annotations:jar:2.2.0:compile
 |  |  +- com.google.j2objc:j2objc-annotations:jar:1.1:compile
 |  |  \- org.codehaus.mojo:animal-sniffer-annotations:jar:1.17:compile
-|  +- org.apache.hadoop:hadoop-client:jar:3.2.1:compile
-|  |  +- org.apache.hadoop:hadoop-hdfs-client:jar:3.2.1:compile
-|  |  |  \- com.squareup.okhttp:okhttp:jar:2.7.5:compile
-|  |  |     \- com.squareup.okio:okio:jar:1.6.0:compile
-|  |  +- org.apache.hadoop:hadoop-yarn-api:jar:3.2.1:compile
-|  |  |  \- javax.xml.bind:jaxb-api:jar:2.2.11:compile
-|  |  +- org.apache.hadoop:hadoop-yarn-client:jar:3.2.1:compile
-|  |  +- org.apache.hadoop:hadoop-mapreduce-client-core:jar:3.2.1:compile
-|  |  \- org.apache.hadoop:hadoop-mapreduce-client-jobclient:jar:3.2.1:compile
-|  +- org.apache.hadoop:hadoop-hdfs:jar:3.2.1:compile
-|  |  +- org.eclipse.jetty:jetty-util-ajax:jar:9.3.24.v20180605:compile
-|  |  +- commons-daemon:commons-daemon:jar:1.0.13:compile
-|  |  +- log4j:log4j:jar:1.2.17:compile
-|  |  +- io.netty:netty-all:jar:4.0.52.Final:compile
-|  |  \- org.fusesource.leveldbjni:leveldbjni-all:jar:1.8:compile
-|  \- org.apache.hadoop:hadoop-mapreduce-client-common:jar:3.2.1:compile
-|     +- org.apache.hadoop:hadoop-yarn-common:jar:3.2.1:compile
-|     |  +- com.google.inject:guice:jar:4.0:compile
-|     |  |  +- javax.inject:javax.inject:jar:1:compile
-|     |  |  \- aopalliance:aopalliance:jar:1.0:compile
-|     |  +- com.sun.jersey.contribs:jersey-guice:jar:1.19:compile
-|     |  +- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:jar:2.9.8:compile
-|     |  \- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:jar:2.9.8:compile
-|     |     \- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:jar:2.9.8:compile
-|     \- com.google.inject.extensions:guice-servlet:jar:4.0:compile
+|  \- org.apache.hadoop:hadoop-client:jar:3.2.1:compile
+|     +- org.apache.hadoop:hadoop-hdfs-client:jar:3.2.1:compile
+|     |  \- com.squareup.okhttp:okhttp:jar:2.7.5:compile
+|     |     \- com.squareup.okio:okio:jar:1.6.0:compile
+|     +- org.apache.hadoop:hadoop-yarn-api:jar:3.2.1:compile
+|     |  \- javax.xml.bind:jaxb-api:jar:2.2.11:compile
+|     +- org.apache.hadoop:hadoop-yarn-client:jar:3.2.1:compile
+|     +- org.apache.hadoop:hadoop-mapreduce-client-core:jar:3.2.1:compile
+|     |  \- org.apache.hadoop:hadoop-yarn-common:jar:3.2.1:compile
+|     |     +- log4j:log4j:jar:1.2.17:compile
+|     |     +- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:jar:2.9.8:compile
+|     |     \- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:jar:2.9.8:compile
+|     |        \- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:jar:2.9.8:compile
+|     \- org.apache.hadoop:hadoop-mapreduce-client-jobclient:jar:3.2.1:compile
+|        \- org.apache.hadoop:hadoop-mapreduce-client-common:jar:3.2.1:compile
 +- org.apache.hadoop:hadoop-common:jar:3.2.1:compile
 |  +- org.apache.hadoop:hadoop-annotations:jar:3.2.1:compile
 |  +- commons-cli:commons-cli:jar:1.2:compile
