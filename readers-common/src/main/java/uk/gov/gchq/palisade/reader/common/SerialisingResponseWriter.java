@@ -112,7 +112,7 @@ public class SerialisingResponseWriter<T> implements ResponseWriter {
             } else {
                 LOGGER.debug("Applying rules: {}", rules);
                 LOGGER.debug("Using serialiser {}", serialiser.getClass());
-                Stream<T> deserialisedStream = serialiser.deserialise(stream).peek(obj -> LOGGER.info("Deserialised object of type {} :: {}", obj.getClass(), obj));
+                Stream<T> deserialisedStream = serialiser.deserialise(stream);
                 //create stream of filtered objects
                 final Stream<T> deserialisedData = Util.applyRulesToStream(
                         deserialisedStream,
