@@ -93,7 +93,7 @@ public class HadoopDataReaderTest {
 
         final FileResource resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
         // Redact any records containing the word 'more'
-        final Rules<String> rules = new Rules<String>().predicateRule("1", (r, u, j) -> !r.contains("more"));
+        final Rules<String> rules = new Rules<String>().addPredicateRule("1", (r, u, j) -> !r.contains("more"));
 
         final DataReaderRequest request = new DataReaderRequest()
                 .resource(resource)
