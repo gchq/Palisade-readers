@@ -16,7 +16,6 @@
 
 package uk.gov.gchq.palisade.reader.common;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +107,7 @@ public class SerialisingResponseWriter<T> implements ResponseWriter {
         try {
             if (isNull(rules) || isNull(rules.getRules()) || rules.getRules().isEmpty()) {
                 LOGGER.debug("No rules to apply");
-                IOUtils.copy(stream, output);
+                stream.transferTo(output);
             } else {
                 LOGGER.debug("Applying rules: {}", rules);
                 LOGGER.debug("Using serialiser {}", serialiser.getClass());
