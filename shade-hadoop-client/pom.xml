@@ -20,14 +20,14 @@
     <parent>
         <groupId>uk.gov.gchq.palisade</groupId>
         <artifactId>readers</artifactId>
-        <version>0.4.0-${revision}</version>
+        <version>0.4.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>shade-hadoop-client</artifactId>
-    <url>https://github.com/gchq/Palisade-readers/tree/develop/shade-hadoop-client</url>
+    <url>https://github.com/gchq/Palisade-readers/tree/main/shade-hadoop-client</url>
 
     <!-- Hadoop includes many older dependencies that conflict with later versions in Palisade, several have to be
     excluded here. Hadoop also uses an older version of Google's Guava that later versions are not backwards

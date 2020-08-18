@@ -21,14 +21,14 @@
     <parent>
         <groupId>uk.gov.gchq.palisade</groupId>
         <artifactId>readers</artifactId>
-        <version>0.4.0-${revision}</version>
+        <version>0.4.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
 
     <!--  *********** Aritfact ID ***********    -->
     <artifactId>readers-common</artifactId>
-    <url>https://github.com/gchq/Palisade-readers/tree/develop/readers-common</url>
+    <url>https://github.com/gchq/Palisade-readers/tree/main/readers-common</url>
     <!--  *********** Aritfact ID ***********    -->
 
     <dependencies>

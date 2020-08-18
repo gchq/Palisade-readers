@@ -22,13 +22,13 @@
     <parent>
         <groupId>uk.gov.gchq.palisade</groupId>
         <artifactId>readers</artifactId>
-        <version>0.4.0-${revision}</version>
+        <version>0.4.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <!--  *********** Aritfact ID ***********    -->
     <artifactId>hadoop-reader</artifactId>
-    <url>https://github.com/gchq/Palisade-readers/tree/develop/hadoop-reader</url>
+    <url>https://github.com/gchq/Palisade-readers/tree/main/hadoop-reader</url>
     <!--  *********** Aritfact ID ***********    -->
 
     <properties>
