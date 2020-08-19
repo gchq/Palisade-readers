@@ -88,7 +88,6 @@ public class HadoopResourceDetails {
         final String fileString = split[split.length - 1];
         //check match
         Matcher match = validateNameRegex(fileString);
-        LOGGER.warn("getResourceDetailsFromFileName validateNameRegex matches: {}", match.matches());
         if (!match.matches()) {
             throw new IllegalArgumentException("Filename doesn't comply with " + FORMAT_STRING + ": " + fileName);
         }
@@ -106,15 +105,14 @@ public class HadoopResourceDetails {
     /**
      * Checks that the {@link URI} file name value matches a defined regex expression
      *
-     * @param fileName  the {@link URI} value of the file name
+     * @param fileURI  the {@link URI} value of the file
      * @return          a {@link Boolean} value
      */
-    public static boolean isValidResourceName(final URI fileName) {
-        requireNonNull(fileName);
-        LOGGER.warn("isValidResourceName called on {}", fileName);
-        boolean result = validateNameRegex(fileName.toString()).matches();
-        LOGGER.warn("isValidResourceName result is {}", result);
-        return result;
+    public static boolean isValidResourceName(final URI fileURI) {
+        requireNonNull(fileURI);
+        String filePath = fileURI.toString();
+        String fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
+        return validateNameRegex(fileName).matches();
     }
 
     private static Matcher validateNameRegex(final String fileName) {
