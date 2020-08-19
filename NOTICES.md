@@ -3,7 +3,6 @@ List of third-party dependencies grouped by their license type
 ### [Apache Software License 2.0](./licenses/apache_software_license_2.0.txt):
 * Jackson-annotations ([com.fasterxml.jackson.core:jackson-annotations:2.10.0](http://github.com/FasterXML/jackson))
 * Guava: Google Core Libraries for Java ([com.google.guava:guava:27.0.1-jre](https://github.com/google/guava/guava))
-* Apache Commons IO ([commons-io:commons-io:2.6](http://commons.apache.org/proper/commons-io/))
 * Apache Hadoop Client Aggregator ([org.apache.hadoop:hadoop-client:3.2.1](no url defined))
 * Apache Hadoop Common ([org.apache.hadoop:hadoop-common:3.2.1](no url defined))
 * common ([uk.gov.gchq.palisade:common:0.4.0](https://github.com/gchq/Palisade-common))
