@@ -20,7 +20,7 @@
 
     <groupId>uk.gov.gchq.palisade</groupId>
     <artifactId>readers</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0-${revision}</version>
     <name>readers</name>
     <description>Data Services Readers layer for Palisade</description>
     <url>https://github.com/gchq/Palisade-readers</url>
@@ -44,7 +44,7 @@
     <properties>
         <!-- Versions -->
         <java.version>11</java.version>
-        <revision>RELEASE</revision>
+        <revision>SNAPSHOT</revision>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <encoding>UTF-8</encoding>
