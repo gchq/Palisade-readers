@@ -1,0 +1,1 @@
+uk.gov.gchq.palisade:readers:pom:0.4.0
