@@ -1,10 +1,10 @@
-uk.gov.gchq.palisade:hadoop-reader:jar:0.4.0
+uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
 +- ch.qos.logback:logback-core:jar:1.2.3:compile
 +- ch.qos.logback:logback-classic:jar:1.2.3:compile
 |  \- org.slf4j:slf4j-api:jar:1.7.25:compile
 +- com.fasterxml.jackson.core:jackson-annotations:jar:2.10.0:compile
-+- uk.gov.gchq.palisade:readers-common:jar:0.4.0:compile
-+- uk.gov.gchq.palisade:shade-hadoop-client:jar:0.4.0:compile
++- uk.gov.gchq.palisade:readers-common:jar:0.5.0-SNAPSHOT:compile
++- uk.gov.gchq.palisade:shade-hadoop-client:jar:0.5.0-SNAPSHOT:compile
 |  +- com.google.guava:guava:jar:27.0.1-jre:compile
 |  |  +- com.google.guava:failureaccess:jar:1.0.1:compile
 |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
@@ -106,7 +106,7 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.4.0
 |  +- org.codehaus.woodstox:stax2-api:jar:3.1.4:compile
 |  +- com.fasterxml.woodstox:woodstox-core:jar:5.0.3:compile
 |  \- dnsjava:dnsjava:jar:2.1.7:compile
-+- uk.gov.gchq.palisade:common:jar:0.4.0:compile
++- uk.gov.gchq.palisade:common:jar:0.5.0-SNAPSHOT:compile
 |  +- com.fasterxml.jackson.core:jackson-core:jar:2.10.0:compile
 |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.10.0:compile
 |  \- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.10.0:compile

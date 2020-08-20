@@ -1,4 +1,4 @@
-uk.gov.gchq.palisade:hadoop-resource:jar:0.4.0
+uk.gov.gchq.palisade:hadoop-resource:jar:0.5.0-SNAPSHOT
 +- org.apache.hadoop:hadoop-common:jar:3.2.1:compile
 |  +- org.apache.hadoop:hadoop-annotations:jar:3.2.1:compile
 |  +- com.google.guava:guava:jar:27.0-jre:compile
@@ -88,7 +88,7 @@ uk.gov.gchq.palisade:hadoop-resource:jar:0.4.0
 |  +- org.codehaus.woodstox:stax2-api:jar:3.1.4:compile
 |  +- com.fasterxml.woodstox:woodstox-core:jar:5.0.3:compile
 |  \- dnsjava:dnsjava:jar:2.1.7:compile
-+- uk.gov.gchq.palisade:common:jar:0.4.0:compile
++- uk.gov.gchq.palisade:common:jar:0.5.0-SNAPSHOT:compile
 |  +- com.fasterxml.jackson.core:jackson-core:jar:2.10.0:compile
 |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.10.0:compile
 |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.10.0:compile

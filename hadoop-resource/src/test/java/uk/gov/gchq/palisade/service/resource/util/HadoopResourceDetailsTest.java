@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(JUnit4.class)
 public class HadoopResourceDetailsTest {
@@ -157,4 +158,14 @@ public class HadoopResourceDetailsTest {
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
     }
 
+    @Test
+    public void isValidResourceNameUsingInvalidFileNameButValidPath() {
+        // Given
+        URI uri = URI.create("file:///edge_case/that-matches/if.using/fullPath");
+
+        // When
+        boolean details = HadoopResourceDetails.isValidResourceName(uri);
+
+        assertFalse("This should be false as the filename fullPath doesn't follow the pattern", details);
+    }
 }

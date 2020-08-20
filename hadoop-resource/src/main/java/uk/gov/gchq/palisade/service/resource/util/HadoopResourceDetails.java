@@ -83,11 +83,8 @@ public class HadoopResourceDetails {
      * @return          a new {@link HadoopResourceDetails} object
      */
     public static HadoopResourceDetails getResourceDetailsFromFileName(final URI fileName) {
-        //get filename component
-        final String[] split = fileName.toString().split(Pattern.quote("/"));
-        final String fileString = split[split.length - 1];
-        //check match
-        Matcher match = validateNameRegex(fileString);
+
+        Matcher match = validateNameRegex(fileName);
         if (!match.matches()) {
             throw new IllegalArgumentException("Filename doesn't comply with " + FORMAT_STRING + ": " + fileName);
         }
@@ -99,7 +96,6 @@ public class HadoopResourceDetails {
         } else {
             throw new IllegalArgumentException(String.format("Type '%s' is not supported", type));
         }
-
     }
 
     /**
@@ -110,12 +106,14 @@ public class HadoopResourceDetails {
      */
     public static boolean isValidResourceName(final URI fileURI) {
         requireNonNull(fileURI);
-        String filePath = fileURI.toString();
-        String fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
-        return validateNameRegex(fileName).matches();
+        Matcher match = validateNameRegex(fileURI);
+        return match.matches();
     }
 
-    private static Matcher validateNameRegex(final String fileName) {
+    private static Matcher validateNameRegex(final URI fileURI) {
+        //get filename component
+        final String[] split = fileURI.toString().split(Pattern.quote("/"));
+        final String fileName = split[split.length - 1];
         return FILENAME_PATTERN.matcher(fileName);
     }
 
