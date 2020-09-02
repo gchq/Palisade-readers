@@ -62,6 +62,7 @@ timestamps {
 
         node(POD_LABEL) {
             def GIT_BRANCH_NAME
+            def GIT_BRANCH_NAME_LOWER
             def COMMON_REVISION
             def READERS_REVISION
 
@@ -71,7 +72,7 @@ timestamps {
                 } else {
                     GIT_BRANCH_NAME=env.BRANCH_NAME
                 }
-                def GIT_BRANCH_NAME_LOWER = GIT_BRANCH_NAME.toLowerCase().take(7)
+                GIT_BRANCH_NAME_LOWER = GIT_BRANCH_NAME.toLowerCase().take(7)
                 READERS_REVISION = "${GIT_BRANCH_NAME_LOWER}-BRANCH-SNAPSHOT"
                 if ("${env.BRANCH_NAME}" == "develop") {
                     COMMON_REVISION = "SNAPSHOT"
@@ -97,6 +98,7 @@ timestamps {
                     }
                 }
             }
+
             stage('Install, Unit Tests, Checkstyle') {
                 dir('Palisade-readers') {
                     git branch: GIT_BRANCH_NAME, url: 'https://github.com/gchq/Palisade-readers.git'
