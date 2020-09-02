@@ -92,7 +92,7 @@ timestamps {
                         COMMON_REVISION = "${GIT_BRANCH_NAME_LOWER}-BRANCH-SNAPSHOT"
                         container('docker-cmds') {
                             configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                                sh "mvn -s ${MAVEN_SETTINGS} install -P quick -D revision=${COMMON_REVISION}"
+                                sh "mvn -s ${MAVEN_SETTINGS} -P quick -D revision=${COMMON_REVISION} install"
                             }
                         }
                     }
@@ -104,7 +104,7 @@ timestamps {
                     git branch: GIT_BRANCH_NAME, url: 'https://github.com/gchq/Palisade-readers.git'
                     container('docker-cmds') {
                         configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                            sh "mvn -s ${MAVEN_SETTINGS} install -D revision=${READERS_REVISION} -D common.revision=${COMMON_REVISION}"
+                            sh "mvn -s ${MAVEN_SETTINGS} -D revision=${READERS_REVISION} -D common.revision=${COMMON_REVISION} install"
                         }
                     }
                 }
@@ -143,12 +143,11 @@ timestamps {
                 dir('Palisade-readers') {
                     container('docker-cmds') {
                         configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                            sh "mvn -s ${MAVEN_SETTINGS} deploy -P quick -D revision=${READERS_REVISION} -D common.revision=${COMMON_REVISION}"
+                            sh "mvn -s ${MAVEN_SETTINGS} -P quick -D revision=${READERS_REVISION} -D common.revision=${COMMON_REVISION} deploy"
                         }
                     }
                 }
             }
         }
     }
-
 }
