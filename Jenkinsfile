@@ -62,12 +62,25 @@ timestamps {
 
         node(POD_LABEL) {
             def GIT_BRANCH_NAME
+            def GIT_BRANCH_NAME
+            def COMMON_REVISION
+            def READERS_REVISION
 
             stage('Bootstrap') {
                 if (env.CHANGE_BRANCH) {
                     GIT_BRANCH_NAME=env.CHANGE_BRANCH
                 } else {
                     GIT_BRANCH_NAME=env.BRANCH_NAME
+                }
+                def GIT_BRANCH_NAME_LOWER = GIT_BRANCH_NAME.toLowerCase().take(7)
+                READERS_REVISION = "${GIT_BRANCH_NAME_LOWER}-BRANCH-SNAPSHOT"
+                if ("${env.BRANCH_NAME}" == "develop") {
+                    COMMON_REVISION = "SNAPSHOT"
+                    READERS_REVISION = "SNAPSHOT"
+                }
+                if ("${env.BRANCH_NAME}" == "main") {
+                    COMMON_REVISION = "RELEASE"
+                    READERS_REVISION = "RELEASE"
                 }
                 echo sh(script: 'env | sort', returnStdout: true)
             }
@@ -76,20 +89,21 @@ timestamps {
                 dir('Palisade-common') {
                     git branch: 'develop', url: 'https://github.com/gchq/Palisade-common.git'
                     if (sh(script: "git checkout ${GIT_BRANCH_NAME}", returnStatus: true) == 0) {
+                        COMMON_REVISION = "${GIT_BRANCH_NAME_LOWER}-BRANCH-SNAPSHOT"
                         container('docker-cmds') {
                             configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                                sh 'mvn -s $MAVEN_SETTINGS install -P quick'
+                                sh "mvn -s ${MAVEN_SETTINGS} install -P quick -D revision=${COMMON_REVISION}"
                             }
                         }
                     }
                 }
             }
-            stage('Integration Tests, Checkstyle') {
+            stage('Install, Unit Tests, Checkstyle') {
                 dir('Palisade-readers') {
                     git branch: GIT_BRANCH_NAME, url: 'https://github.com/gchq/Palisade-readers.git'
                     container('docker-cmds') {
                         configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                            sh 'mvn -s $MAVEN_SETTINGS install'
+                            sh "mvn -s ${MAVEN_SETTINGS} install -D revision=${READERS_REVISION} -D common.revision=${COMMON_REVISION}"
                         }
                     }
                 }
@@ -103,11 +117,7 @@ timestamps {
                                          file(credentialsId: "${env.SQ_KEY_STORE}", variable: 'KEYSTORE')]) {
                             configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
                                 withSonarQubeEnv(installationName: 'sonar') {
-                                    if (env.CHANGE_BRANCH) {
-                                        sh 'mvn -s $MAVEN_SETTINGS org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -Dsonar.projectKey="Palisade-Readers-${CHANGE_BRANCH}" -Dsonar.projectName="Palisade-Readers-${CHANGE_BRANCH}" -Dsonar.webhooks.project=$SONARQUBE_WEBHOOK -Djavax.net.ssl.trustStore=$KEYSTORE -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASS'
-                                    } else {
-                                        sh 'mvn -s $MAVEN_SETTINGS org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -Dsonar.projectKey="Palisade-Readers-${BRANCH_NAME}" -Dsonar.projectName="Palisade-Readers-${BRANCH_NAME}" -Dsonar.webhooks.project=$SONARQUBE_WEBHOOK -Djavax.net.ssl.trustStore=$KEYSTORE -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASS'
-                                    }
+                                    sh "mvn -s ${MAVEN_SETTINGS} org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -Dsonar.projectKey=Palisade-Common-${GIT_BRANCH_NAME} -Dsonar.projectName=Palisade-Common-${GIT_BRANCH_NAME} -Dsonar.webhooks.project=$SONARQUBE_WEBHOOK -Djavax.net.ssl.trustStore=$KEYSTORE -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASS"
                                 }
                             }
                         }
@@ -132,12 +142,7 @@ timestamps {
                 dir('Palisade-readers') {
                     container('docker-cmds') {
                         configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                            if (("${env.BRANCH_NAME}" == "develop") ||
-                                    ("${env.BRANCH_NAME}" == "master")) {
-                                sh 'mvn -s $MAVEN_SETTINGS deploy -P quick'
-                            } else {
-                                sh "echo - no deploy"
-                            }
+                            sh "mvn -s ${MAVEN_SETTINGS} deploy -P quick -D revision=${READERS_REVISION} -D common.revision=${COMMON_REVISION}"
                         }
                     }
                 }
