@@ -72,12 +72,16 @@ timestamps {
                 } else {
                     GIT_BRANCH_NAME=env.BRANCH_NAME
                 }
+                // set default values for the variables
                 GIT_BRANCH_NAME_LOWER = GIT_BRANCH_NAME.toLowerCase().take(7)
+                COMMON_REVISION = "SNAPSHOT"
                 READERS_REVISION = "${GIT_BRANCH_NAME_LOWER}-BRANCH-SNAPSHOT"
+                // update values for the variables if this is the develop branch build
                 if ("${env.BRANCH_NAME}" == "develop") {
                     COMMON_REVISION = "SNAPSHOT"
                     READERS_REVISION = "SNAPSHOT"
                 }
+                // update values for the variables if this is the main branch build
                 if ("${env.BRANCH_NAME}" == "main") {
                     COMMON_REVISION = "RELEASE"
                     READERS_REVISION = "RELEASE"
