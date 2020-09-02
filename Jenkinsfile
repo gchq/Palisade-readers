@@ -62,7 +62,6 @@ timestamps {
 
         node(POD_LABEL) {
             def GIT_BRANCH_NAME
-            def GIT_BRANCH_NAME
             def COMMON_REVISION
             def READERS_REVISION
 
