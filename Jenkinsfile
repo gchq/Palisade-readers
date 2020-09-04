@@ -78,7 +78,7 @@ timestamps {
                 // set default values for the variables
                 GIT_BRANCH_NAME_LOWER = GIT_BRANCH_NAME.toLowerCase().take(7)
                 COMMON_REVISION = "SNAPSHOT"
-                READERS_REVISION = "BRANCH-SNAPSHOT-${GIT_BRANCH_NAME_LOWER}"
+                READERS_REVISION = "BRANCH-${GIT_BRANCH_NAME_LOWER}-SNAPSHOT"
                 // update values for the variables if this is the develop branch build
                 if ("${env.BRANCH_NAME}" == "develop") {
                     COMMON_REVISION = "SNAPSHOT"
@@ -96,7 +96,7 @@ timestamps {
                 dir('Palisade-common') {
                     git branch: 'develop', url: 'https://github.com/gchq/Palisade-common.git'
                     if (sh(script: "git checkout ${GIT_BRANCH_NAME}", returnStatus: true) == 0) {
-                        COMMON_REVISION = "BRANCH-SNAPSHOT-${GIT_BRANCH_NAME_LOWER}"
+                        COMMON_REVISION = "BRANCH-${GIT_BRANCH_NAME_LOWER}-SNAPSHOT"
                     }
                 }
             }
