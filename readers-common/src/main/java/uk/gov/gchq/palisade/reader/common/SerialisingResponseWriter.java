@@ -28,6 +28,7 @@ import uk.gov.gchq.palisade.rule.Rules;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -42,7 +43,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <T>   the type of {@link SerialisingResponseWriter}
  */
-public class SerialisingResponseWriter<T> implements ResponseWriter {
+public class SerialisingResponseWriter<T extends Serializable> implements ResponseWriter {
     private static final Logger LOGGER = LoggerFactory.getLogger(SerialisingResponseWriter.class);
     /**
      * The underlying data stream from the underlying data store.
