@@ -93,10 +93,12 @@ timestamps {
             }
 
             stage('Prerequisites') {
-                dir('Palisade-common') {
-                    git branch: 'develop', url: 'https://github.com/gchq/Palisade-common.git'
-                    if (sh(script: "git checkout ${GIT_BRANCH_NAME}", returnStatus: true) == 0) {
-                        COMMON_REVISION = "BRANCH-${GIT_BRANCH_NAME_LOWER}-SNAPSHOT"
+                if (("${GIT_BRANCH_NAME}" != "develop") && ("${GIT_BRANCH_NAME}" != "main")) {
+                    dir('Palisade-common') {
+                        git branch: 'develop', url: 'https://github.com/gchq/Palisade-common.git'
+                        if (sh(script: "git checkout ${GIT_BRANCH_NAME}", returnStatus: true) == 0) {
+                            COMMON_REVISION = "BRANCH-${GIT_BRANCH_NAME_LOWER}-SNAPSHOT"
+                        }
                     }
                 }
             }
