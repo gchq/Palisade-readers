@@ -62,12 +62,32 @@ timestamps {
 
         node(POD_LABEL) {
             def GIT_BRANCH_NAME
+            def GIT_BRANCH_NAME_LOWER
+            def COMMON_REVISION
+            def READERS_REVISION
+            def IS_PR
 
             stage('Bootstrap') {
                 if (env.CHANGE_BRANCH) {
                     GIT_BRANCH_NAME=env.CHANGE_BRANCH
+                    IS_PR="true"
                 } else {
                     GIT_BRANCH_NAME=env.BRANCH_NAME
+                    IS_PR="false"
+                }
+                // set default values for the variables
+                GIT_BRANCH_NAME_LOWER = GIT_BRANCH_NAME.toLowerCase().take(7)
+                COMMON_REVISION = "SNAPSHOT"
+                READERS_REVISION = "BRANCH-${GIT_BRANCH_NAME_LOWER}-SNAPSHOT"
+                // update values for the variables if this is the develop branch build
+                if ("${env.BRANCH_NAME}" == "develop") {
+                    COMMON_REVISION = "SNAPSHOT"
+                    READERS_REVISION = "SNAPSHOT"
+                }
+                // update values for the variables if this is the main branch build
+                if ("${env.BRANCH_NAME}" == "main") {
+                    COMMON_REVISION = "RELEASE"
+                    READERS_REVISION = "RELEASE"
                 }
                 echo sh(script: 'env | sort', returnStdout: true)
             }
@@ -76,20 +96,21 @@ timestamps {
                 dir('Palisade-common') {
                     git branch: 'develop', url: 'https://github.com/gchq/Palisade-common.git'
                     if (sh(script: "git checkout ${GIT_BRANCH_NAME}", returnStatus: true) == 0) {
-                        container('docker-cmds') {
-                            configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                                sh 'mvn -s $MAVEN_SETTINGS install -P quick'
-                            }
-                        }
+                        COMMON_REVISION = "BRANCH-${GIT_BRANCH_NAME_LOWER}-SNAPSHOT"
                     }
                 }
             }
-            stage('Integration Tests, Checkstyle') {
+
+            stage('Install, Unit Tests, Checkstyle') {
                 dir('Palisade-readers') {
                     git branch: GIT_BRANCH_NAME, url: 'https://github.com/gchq/Palisade-readers.git'
                     container('docker-cmds') {
                         configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                            sh 'mvn -s $MAVEN_SETTINGS install'
+                            if (IS_PR == "true") {
+                                sh "mvn -s ${MAVEN_SETTINGS} -D revision=${READERS_REVISION} -D common.revision=${COMMON_REVISION} -P quick deploy"
+                            } else {
+                                sh "mvn -s ${MAVEN_SETTINGS} -D revision=${READERS_REVISION} -D common.revision=${COMMON_REVISION} install"
+                            }
                         }
                     }
                 }
@@ -103,11 +124,7 @@ timestamps {
                                          file(credentialsId: "${env.SQ_KEY_STORE}", variable: 'KEYSTORE')]) {
                             configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
                                 withSonarQubeEnv(installationName: 'sonar') {
-                                    if (env.CHANGE_BRANCH) {
-                                        sh 'mvn -s $MAVEN_SETTINGS org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -Dsonar.projectKey="Palisade-Readers-${CHANGE_BRANCH}" -Dsonar.projectName="Palisade-Readers-${CHANGE_BRANCH}" -Dsonar.webhooks.project=$SONARQUBE_WEBHOOK -Djavax.net.ssl.trustStore=$KEYSTORE -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASS'
-                                    } else {
-                                        sh 'mvn -s $MAVEN_SETTINGS org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -Dsonar.projectKey="Palisade-Readers-${BRANCH_NAME}" -Dsonar.projectName="Palisade-Readers-${BRANCH_NAME}" -Dsonar.webhooks.project=$SONARQUBE_WEBHOOK -Djavax.net.ssl.trustStore=$KEYSTORE -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASS'
-                                    }
+                                    sh "mvn -s ${MAVEN_SETTINGS} org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -Dsonar.projectKey=Palisade-Readers-${GIT_BRANCH_NAME} -Dsonar.projectName=Palisade-Readers-${GIT_BRANCH_NAME} -Dsonar.webhooks.project=$SONARQUBE_WEBHOOK -Djavax.net.ssl.trustStore=$KEYSTORE -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASS"
                                 }
                             }
                         }
@@ -127,22 +144,6 @@ timestamps {
                     }
                 }
             }
-
-            stage('Maven deploy') {
-                dir('Palisade-readers') {
-                    container('docker-cmds') {
-                        configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                            if (("${env.BRANCH_NAME}" == "develop") ||
-                                    ("${env.BRANCH_NAME}" == "master")) {
-                                sh 'mvn -s $MAVEN_SETTINGS deploy -P quick'
-                            } else {
-                                sh "echo - no deploy"
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
-
 }
