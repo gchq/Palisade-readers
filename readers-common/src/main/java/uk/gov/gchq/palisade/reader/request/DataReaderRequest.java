@@ -22,6 +22,7 @@ import uk.gov.gchq.palisade.User;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.rule.Rules;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -29,7 +30,8 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * This class is used to request that the {@link uk.gov.gchq.palisade.reader.common.DataReader}
- * read a resource and apply the necessary rules.
+ * read a resource and apply the necessary rules. The details for this request are persisted by
+ * the attribute-masking-service and retrieved by the data-service.
  */
 public class DataReaderRequest {
     private LeafResource resource;
