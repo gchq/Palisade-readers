@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@Library('jenkinsfile-lib@feature/PAL-398-hide-jenkins-contents')_
+@Library('jenkinsfile-lib')_
 
 timestamps {
     readers()
