@@ -22,7 +22,6 @@ import uk.gov.gchq.palisade.User;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.rule.Rules;
 
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.StringJoiner;
 
