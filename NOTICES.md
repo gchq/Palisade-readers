@@ -15,7 +15,7 @@ List of third-party dependencies grouped by their license type
 ### [Eclipse Public License 1.0](./licenses/eclipse_public_license_1.0.html):
 * Logback Classic Module ([ch.qos.logback:logback-classic:1.2.3](http://logback.qos.ch/logback-classic))
 * Logback Core Module ([ch.qos.logback:logback-core:1.2.3](http://logback.qos.ch/logback-core))
-* JUnit ([junit:junit:4.12](http://junit.org))
+* JUnit ([junit:junit:4.13.1](http://junit.org))
 
 ### [GNU Lesser General Public License 2.1](./licenses/gnu_lgpl_2.1.html):
 * Logback Classic Module ([ch.qos.logback:logback-classic:1.2.3](http://logback.qos.ch/logback-classic))

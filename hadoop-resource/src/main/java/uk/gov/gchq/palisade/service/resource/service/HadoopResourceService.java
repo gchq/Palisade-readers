@@ -24,7 +24,6 @@ import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.RemoteIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,13 +32,14 @@ import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.service.ConnectionDetail;
 import uk.gov.gchq.palisade.service.ResourceService;
-import uk.gov.gchq.palisade.service.resource.exception.IteratorException;
+import uk.gov.gchq.palisade.service.resource.util.FunctionalIterator;
 import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -47,7 +47,6 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
@@ -98,29 +97,8 @@ public class HadoopResourceService implements ResourceService {
     public HadoopResourceService() {
     }
 
-    protected static Stream<URI> getPaths(final RemoteIterator<LocatedFileStatus> remoteIterator) {
-        Stream<RemoteIterator<LocatedFileStatus>> iteratorStream = Stream.iterate(
-                remoteIterator,
-                (RemoteIterator<LocatedFileStatus> it) -> {
-                    try {
-                        return it.hasNext();
-                    } catch (IOException ex) {
-                        throw new IteratorException("RemoteIterator failed while iterating. hasNext threw an exception", ex);
-                    }
-                },
-                UnaryOperator.identity()
-        );
-
-        return iteratorStream
-                .map((RemoteIterator<LocatedFileStatus> it) -> {
-                    try {
-                        return it.next();
-                    } catch (IOException ex) {
-                        throw new IteratorException("RemoteIterator failed while iterating, hasNext is true but next threw an exception", ex);
-                    }
-                })
-                .map(LocatedFileStatus::getPath)
-                .map(Path::toUri);
+    protected static URI getPaths(final LocatedFileStatus fileStatus) {
+        return fileStatus.getPath().toUri();
     }
 
     private static Configuration createConfig(final Map<String, String> conf) {
@@ -144,7 +122,7 @@ public class HadoopResourceService implements ResourceService {
      * @return a {@link Stream} of resources, each with an appropriate {@link ConnectionDetail}
      */
     @Override
-    public Stream<LeafResource> getResourcesByResource(final Resource resource) {
+    public Iterator<LeafResource> getResourcesByResource(final Resource resource) {
         requireNonNull(resource, "resource");
         LOGGER.debug("Invoking getResourcesByResource with request: {}", resource);
         return getResourcesById(resource.getId());
@@ -158,7 +136,7 @@ public class HadoopResourceService implements ResourceService {
      * @return a {@link Stream} of resources, each with an appropriate {@link ConnectionDetail}
      */
     @Override
-    public Stream<LeafResource> getResourcesById(final String resourceId) {
+    public Iterator<LeafResource> getResourcesById(final String resourceId) {
         requireNonNull(resourceId, "resourceId");
         LOGGER.debug("Invoking getResourcesById with id: {}", resourceId);
         final String path = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
@@ -178,7 +156,7 @@ public class HadoopResourceService implements ResourceService {
      * @return a {@link Stream} of resources, each with an appropriate {@link ConnectionDetail}
      */
     @Override
-    public Stream<LeafResource> getResourcesByType(final String type) {
+    public Iterator<LeafResource> getResourcesByType(final String type) {
         requireNonNull(type, "type");
         LOGGER.debug("Invoking getResourcesByType with type: {}", type);
         final String pathString = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
@@ -196,7 +174,7 @@ public class HadoopResourceService implements ResourceService {
      * @return a {@link Stream} of resources, each with an appropriate {@link ConnectionDetail}
      */
     @Override
-    public Stream<LeafResource> getResourcesBySerialisedFormat(final String serialisedFormat) {
+    public Iterator<LeafResource> getResourcesBySerialisedFormat(final String serialisedFormat) {
         requireNonNull(serialisedFormat, "serialisedFormat");
         LOGGER.debug("Invoking getResourcesBySerialisedFormat with serialisedFormat: {}", serialisedFormat);
         final String pathString = getInternalConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY);
@@ -219,19 +197,17 @@ public class HadoopResourceService implements ResourceService {
         return false;
     }
 
-    private Stream<LeafResource> getMappings(final String pathString, final Predicate<HadoopResourceDetails> predicate) {
-        final RemoteIterator<LocatedFileStatus> remoteIterator;
+    private FunctionalIterator<LeafResource> getMappings(final String pathString, final Predicate<HadoopResourceDetails> predicate) {
         try {
-            remoteIterator = this.getFileSystem().listFiles(new Path(pathString), true);
-
-            return getPaths(remoteIterator)
+            return FunctionalIterator.fromIterator(this.getFileSystem().listFiles(new Path(pathString), true))
+                    .map(HadoopResourceService::getPaths)
                     .filter(HadoopResourceDetails::isValidResourceName)
                     .map(HadoopResourceDetails::getResourceDetailsFromFileName)
                     .filter(predicate)
                     .map(this::addConnectionDetail);
         } catch (IOException | IllegalStateException e) {
             LOGGER.error("Error while listing files: ", e);
-            return Stream.empty();
+            return null;
         }
     }
 

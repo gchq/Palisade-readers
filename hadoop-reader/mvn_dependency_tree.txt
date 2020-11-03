@@ -4,6 +4,10 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
 |  \- org.slf4j:slf4j-api:jar:1.7.25:compile
 +- com.fasterxml.jackson.core:jackson-annotations:jar:2.10.0:compile
 +- uk.gov.gchq.palisade:readers-common:jar:0.5.0-SNAPSHOT:compile
+|  \- uk.gov.gchq.palisade:common:jar:0.5.0-SNAPSHOT:compile
+|     +- com.fasterxml.jackson.core:jackson-core:jar:2.10.0:compile
+|     +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.10.0:compile
+|     \- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.10.0:compile
 +- uk.gov.gchq.palisade:shade-hadoop-client:jar:0.5.0-SNAPSHOT:compile
 |  +- com.google.guava:guava:jar:27.0.1-jre:compile
 |  |  +- com.google.guava:failureaccess:jar:1.0.1:compile
@@ -106,11 +110,7 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
 |  +- org.codehaus.woodstox:stax2-api:jar:3.1.4:compile
 |  +- com.fasterxml.woodstox:woodstox-core:jar:5.0.3:compile
 |  \- dnsjava:dnsjava:jar:2.1.7:compile
-+- uk.gov.gchq.palisade:common:jar:0.5.0-SNAPSHOT:compile
-|  +- com.fasterxml.jackson.core:jackson-core:jar:2.10.0:compile
-|  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.10.0:compile
-|  \- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.10.0:compile
-+- junit:junit:jar:4.12:test
++- junit:junit:jar:4.13.1:test
 |  \- org.hamcrest:hamcrest-core:jar:1.3:test
 +- org.mockito:mockito-core:jar:3.1.0:test
 |  +- net.bytebuddy:byte-buddy:jar:1.9.10:test
