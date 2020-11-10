@@ -38,6 +38,7 @@ import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -207,7 +208,7 @@ public class HadoopResourceService implements ResourceService {
                     .map(this::addConnectionDetail);
         } catch (IOException | IllegalStateException e) {
             LOGGER.error("Error while listing files: ", e);
-            return null;
+            return FunctionalIterator.fromIterator(Collections.emptyIterator());
         }
     }
 
