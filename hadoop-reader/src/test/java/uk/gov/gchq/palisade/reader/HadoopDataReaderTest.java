@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import uk.gov.gchq.palisade.Context;
-import uk.gov.gchq.palisade.RequestId;
 import uk.gov.gchq.palisade.User;
 import uk.gov.gchq.palisade.data.serialise.SimpleStringSerialiser;
 import uk.gov.gchq.palisade.reader.common.DataFlavour;
@@ -69,7 +68,6 @@ public class HadoopDataReaderTest {
                 .user(new User())
                 .context(new Context())
                 .rules(rules);
-        request.setOriginalRequestId(new RequestId().id("test"));
 
         // When
         final DataReaderResponse response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
@@ -100,7 +98,6 @@ public class HadoopDataReaderTest {
                 .user(new User())
                 .context(new Context())
                 .rules(rules);
-        request.setOriginalRequestId(new RequestId().id("test"));
 
         // When
         final DataReaderResponse response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
@@ -130,7 +127,6 @@ public class HadoopDataReaderTest {
                 .user(new User())
                 .context(new Context())
                 .rules(rules);
-        request.setOriginalRequestId(new RequestId().id("test"));
 
         // When
         final DataReaderResponse response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
