@@ -16,10 +16,8 @@
 
 package uk.gov.gchq.palisade.service.resource.util;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import uk.gov.gchq.palisade.resource.LeafResource;
 
@@ -27,20 +25,19 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@RunWith(JUnit4.class)
-public class HadoopResourceDetailsTest {
+class HadoopResourceDetailsTest {
 
-    @Before
+    @BeforeEach
     public void setup() {
         HadoopResourceDetails.addTypeSupport("type", "TYPE");
     }
 
     @Test
-    public void acceptsSchemelessUri() throws URISyntaxException {
+    void acceptsSchemelessUri() throws URISyntaxException {
         // Given
         URI uri = new URI("/home/hadoop/resources/type_file.format");
         HadoopResourceDetails expected = new HadoopResourceDetails(uri, "TYPE", "format");
@@ -49,11 +46,11 @@ public class HadoopResourceDetailsTest {
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
 
         // Then
-        assertThat(details, equalTo(expected));
+        assertThat(details).isEqualTo(expected);
     }
 
     @Test
-    public void acceptsAbsolutePath() throws URISyntaxException {
+    void acceptsAbsolutePath() throws URISyntaxException {
         // Given
         URI absolute = new URI("file:/home/hadoop/resources/type_file.format");
         HadoopResourceDetails expected = new HadoopResourceDetails(absolute, "TYPE", "format");
@@ -62,11 +59,11 @@ public class HadoopResourceDetailsTest {
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(absolute);
 
         // Then
-        assertThat(details, equalTo(expected));
+        assertThat(details).isEqualTo(expected);
     }
 
     @Test
-    public void acceptsRelativePath() throws URISyntaxException {
+    void acceptsRelativePath() throws URISyntaxException {
         // Given
         URI relative = new URI("file:./type_file.format");
         HadoopResourceDetails expected = new HadoopResourceDetails(relative, "TYPE", "format");
@@ -75,55 +72,59 @@ public class HadoopResourceDetailsTest {
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(relative);
 
         // Then
-        assertThat(details, equalTo(expected));
+        assertThat(details).isEqualTo(expected);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void noTypeThrowsException() {
+    @Test
+    void noTypeThrowsException() {
         // Given
         URI invalidType = new File(".").toURI().resolve("file.format");
 
         // When
-        HadoopResourceDetails.getResourceDetailsFromFileName(invalidType);
-
-        // Then throw
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void emptyTypeThrowsException() {
-        // Given
-        URI invalidType = new File(".").toURI().resolve("_file.format");
-
-        // When
-        HadoopResourceDetails.getResourceDetailsFromFileName(invalidType);
-
-        // Then throw
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void noSerialisedFormatThrowsException() {
-        // Given
-        URI invalidFormat = new File(".").toURI().resolve("type_file");
-
-        // When
-        HadoopResourceDetails.getResourceDetailsFromFileName(invalidFormat);
-
-        // Then throw
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void emptySerialisedFormatThrowsException() {
-        // Given
-        URI invalidFormat = new File(".").toURI().resolve("type_file.");
-
-        // When
-        HadoopResourceDetails.getResourceDetailsFromFileName(invalidFormat);
+        assertThrows(IllegalArgumentException.class,
+                () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidType));
 
         // Then throw
     }
 
     @Test
-    public void formatStringIsConsistent() {
+    void emptyTypeThrowsException() {
+        // Given
+        URI invalidType = new File(".").toURI().resolve("_file.format");
+
+        // When
+        assertThrows(IllegalArgumentException.class,
+                () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidType));
+
+        // Then throw
+    }
+
+    @Test
+    void noSerialisedFormatThrowsException() {
+        // Given
+        URI invalidFormat = new File(".").toURI().resolve("type_file");
+
+        // When
+        assertThrows(IllegalArgumentException.class,
+                () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidFormat));
+
+        // Then throw
+    }
+
+    @Test
+    void emptySerialisedFormatThrowsException() {
+        // Given
+        URI invalidFormat = new File(".").toURI().resolve("type_file.");
+
+        // When
+        assertThrows(IllegalArgumentException.class,
+                () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidFormat));
+
+        // Then throw
+    }
+
+    @Test
+    void formatStringIsConsistent() {
         // Given
         URI uri = new File(".").toURI().resolve(HadoopResourceDetails.FORMAT_STRING);
         HadoopResourceDetails expected = new HadoopResourceDetails(uri, "TYPE", "FORMAT");
@@ -132,11 +133,11 @@ public class HadoopResourceDetailsTest {
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
 
         // Then
-        assertThat(details, equalTo(expected));
+        assertThat(details).isEqualTo(expected);
     }
 
     @Test
-    public void detailsReturnConsistentResource() {
+    void detailsReturnConsistentResource() {
         URI uri = new File(".").toURI().resolve(HadoopResourceDetails.FORMAT_STRING);
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
 
@@ -144,28 +145,29 @@ public class HadoopResourceDetailsTest {
         LeafResource resource = details.getResource();
 
         // Then
-        assertThat(resource.getId(), equalTo(details.getFileName().toString()));
-        assertThat(resource.getType(), equalTo(details.getType()));
-        assertThat(resource.getSerialisedFormat(), equalTo(details.getFormat()));
+        assertThat(resource.getId()).isEqualTo(details.getFileName().toString());
+        assertThat(resource.getType()).isEqualTo(details.getType());
+        assertThat(resource.getSerialisedFormat()).isEqualTo(details.getFormat());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void noSupportedTypeTest() {
+    @Test
+    void noSupportedTypeTest() {
         // Given
         URI uri = new File(".").toURI().resolve("a_file.txt");
 
         // When
-        HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
+        assertThrows(IllegalArgumentException.class,
+                () -> HadoopResourceDetails.getResourceDetailsFromFileName(uri));
     }
 
     @Test
-    public void isValidResourceNameUsingInvalidFileNameButValidPath() {
+    void isValidResourceNameUsingInvalidFileNameButValidPath() {
         // Given
         URI uri = URI.create("file:///edge_case/that-matches/if.using/fullPath");
 
         // When
         boolean details = HadoopResourceDetails.isValidResourceName(uri);
 
-        assertFalse("This should be false as the filename fullPath doesn't follow the pattern", details);
+        assertFalse(details, "This should be false as the filename fullPath doesn't follow the pattern");
     }
 }

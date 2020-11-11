@@ -16,10 +16,8 @@
 
 package uk.gov.gchq.palisade.service.resource.service;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.service.ConnectionDetail;
@@ -30,20 +28,19 @@ import uk.gov.gchq.palisade.util.ResourceBuilder;
 import java.io.File;
 import java.net.URI;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-@RunWith(JUnit4.class)
-public class HadoopResourceServiceTest {
+class HadoopResourceServiceTest {
     private final HadoopResourceService service = new HadoopResourceService();
 
-    @Before
+    @BeforeEach
     public void setup() {
         HadoopResourceDetails.addTypeSupport("type", "type");
     }
 
     @Test
-    public void resourceDetailsGetDataServiceConnection() {
+    void resourceDetailsGetDataServiceConnection() {
         // Given
         ConnectionDetail dataService = new SimpleConnectionDetail().serviceName("data-service");
         service.addDataService(dataService);
@@ -55,18 +52,18 @@ public class HadoopResourceServiceTest {
         LeafResource resource = service.addConnectionDetail(details);
 
         // Then
-        assertThat(resource.getConnectionDetail(), equalTo(dataService));
-        assertThat(resource, equalTo(details.getResource().connectionDetail(dataService)));
+        assertThat(resource.getConnectionDetail()).isEqualTo(dataService);
+        assertThat(resource).isEqualTo(details.getResource().connectionDetail(dataService));
     }
 
     @Test
-    public void cannotAddResourcesAtRuntime() {
+    void cannotAddResourcesAtRuntime() {
         // Given this is a hadoop resource service
 
         // When
         boolean success = service.addResource((LeafResource) ResourceBuilder.create("file:/hadoop/test_resource.avro"));
 
-        assertThat(success, equalTo(false));
+        assertFalse(success);
     }
 
 }

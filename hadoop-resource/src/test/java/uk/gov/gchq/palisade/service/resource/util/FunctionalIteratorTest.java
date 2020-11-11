@@ -16,10 +16,8 @@
 
 package uk.gov.gchq.palisade.service.resource.util;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -28,70 +26,69 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(JUnit4.class)
-public class FunctionalIteratorTest {
+class FunctionalIteratorTest {
     FunctionalIterator<Integer> testIterator;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         testIterator = FunctionalIterator.fromIterator(List.of(0, 1, 2, 3, 4, 5).iterator());
     }
 
     @Test
-    public void testMap() {
+    void testMap() {
         FunctionalIterator<Integer> dslTest = testIterator
                 .map(i -> i + 1);
-        assertEquals(listOf(dslTest), List.of(1, 2, 3, 4, 5, 6));
+        assertThat(listOf(dslTest)).isEqualTo(List.of(1, 2, 3, 4, 5, 6));
     }
 
     @Test
-    public void testFilterFirst() {
+    void testFilterFirst() {
         FunctionalIterator<Integer> dslTest = testIterator
                 .filter(i -> i == 0);
-        assertEquals(listOf(dslTest), List.of(0));
+        assertThat(listOf(dslTest)).isEqualTo(List.of(0));
     }
 
     @Test
-    public void testFilterLast() {
+    void testFilterLast() {
         FunctionalIterator<Integer> dslTest = testIterator
                 .filter(i -> i == 5);
-        assertEquals(listOf(dslTest), List.of(5));
+        assertThat(listOf(dslTest)).isEqualTo(List.of(5));
     }
 
     @Test
-    public void testMapLast() {
+    void testMapLast() {
         FunctionalIterator<Integer> dslTest = testIterator
                 .mapLast(i -> 100);
-        assertEquals(listOf(dslTest), List.of(0, 1, 2, 3, 4, 100));
+        assertThat(listOf(dslTest)).isEqualTo(List.of(0, 1, 2, 3, 4, 100));
     }
 
     @Test
-    public void testTwoFlatMap() {
+    void testTwoFlatMap() {
         FunctionalIterator<Integer> dslTest = testIterator
                 .flatMap(i -> List.of(i, 2 * i).iterator());
-        assertEquals(listOf(dslTest), List.of(0, 0, 1, 2, 2, 4, 3, 6, 4, 8, 5, 10));
+        assertThat(listOf(dslTest)).isEqualTo(List.of(0, 0, 1, 2, 2, 4, 3, 6, 4, 8, 5, 10));
     }
 
     @Test
-    public void testZeroFlatMap() {
+    void testZeroFlatMap() {
         FunctionalIterator<Integer> dslTest = testIterator
                 .flatMap(i -> Collections.emptyIterator());
-        assertEquals(listOf(dslTest), Collections.emptyList());
+        assertThat(listOf(dslTest)).isEqualTo(Collections.emptyList());
     }
 
     @Test
-    public void testPeek() {
+    void testPeek() {
         final AtomicInteger count = new AtomicInteger(0);
         FunctionalIterator<Integer> dslTest = testIterator
                 .peek(i -> count.incrementAndGet());
-        assertEquals(listOf(dslTest), List.of(0, 1, 2, 3, 4, 5));
-        assertEquals(count.intValue(), 6);
+        assertThat(listOf(dslTest)).isEqualTo(List.of(0, 1, 2, 3, 4, 5));
+        assertThat(count.intValue()).isEqualTo(6);
     }
 
     @Test
-    public void testWholeDSLTwice() {
+    void testWholeDSLTwice() {
         AtomicInteger firstSum = new AtomicInteger(0);
         FunctionalIterator<Integer> dslTest = testIterator
                 .map(i -> i + 1) // 1, 2, 3, 4, 5, 6
@@ -104,14 +101,13 @@ public class FunctionalIteratorTest {
                 .filter(i -> i > 0 && i < 8) // 6
                 .flatMap(i -> List.of(i * (i + 1)).iterator()) // 42
                 .peek(System.out::println); // Print 1
-        assertEquals(listOf(dslTest), List.of(42));
+        assertThat(listOf(dslTest)).isEqualTo(List.of(42));
     }
 
     private <T> List<T> listOf(final Iterator<T> iterator) {
         Iterable<T> iterable = () -> iterator;
-        List<T> list = StreamSupport
+        return StreamSupport
                 .stream(iterable.spliterator(), false)
                 .collect(Collectors.toList());
-        return list;
     }
 }
