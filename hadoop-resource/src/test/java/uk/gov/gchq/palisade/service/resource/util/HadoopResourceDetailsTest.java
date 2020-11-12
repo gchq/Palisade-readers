@@ -163,7 +163,7 @@ class HadoopResourceDetailsTest {
                 () -> HadoopResourceDetails.getResourceDetailsFromFileName(uri), "Test should throw an exception");
 
         // Then check the assertion message
-        assertThat(illegalAccessException.getMessage()).contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
+        assertThat(illegalAccessException.getMessage()).contains("Type 'a' is not supported");
     }
 
     @Test
