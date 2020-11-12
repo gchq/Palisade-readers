@@ -26,7 +26,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class HadoopResourceDetailsTest {
@@ -37,7 +36,7 @@ class HadoopResourceDetailsTest {
     }
 
     @Test
-    void acceptsSchemelessUri() throws URISyntaxException {
+    void testAcceptsSchemelessUri() throws URISyntaxException {
         // Given
         URI uri = new URI("/home/hadoop/resources/type_file.format");
         HadoopResourceDetails expected = new HadoopResourceDetails(uri, "TYPE", "format");
@@ -50,7 +49,7 @@ class HadoopResourceDetailsTest {
     }
 
     @Test
-    void acceptsAbsolutePath() throws URISyntaxException {
+    void testAcceptsAbsolutePath() throws URISyntaxException {
         // Given
         URI absolute = new URI("file:/home/hadoop/resources/type_file.format");
         HadoopResourceDetails expected = new HadoopResourceDetails(absolute, "TYPE", "format");
@@ -63,7 +62,7 @@ class HadoopResourceDetailsTest {
     }
 
     @Test
-    void acceptsRelativePath() throws URISyntaxException {
+    void testAcceptsRelativePath() throws URISyntaxException {
         // Given
         URI relative = new URI("file:./type_file.format");
         HadoopResourceDetails expected = new HadoopResourceDetails(relative, "TYPE", "format");
@@ -76,55 +75,59 @@ class HadoopResourceDetailsTest {
     }
 
     @Test
-    void noTypeThrowsException() {
+    void testNoTypeThrowsException() {
         // Given
         URI invalidType = new File(".").toURI().resolve("file.format");
 
-        // When
-        assertThrows(IllegalArgumentException.class,
-                () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidType));
+        // When the resource is retrieved with no type
+        Exception illegalAccessException = assertThrows(IllegalArgumentException.class,
+                () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidType), "Test should throw an exception");
 
-        // Then throw
+        // Then check the assertion message
+        assertThat(illegalAccessException.getMessage()).contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
     }
 
     @Test
-    void emptyTypeThrowsException() {
+    void testEmptyTypeThrowsException() {
         // Given
         URI invalidType = new File(".").toURI().resolve("_file.format");
 
-        // When
-        assertThrows(IllegalArgumentException.class,
-                () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidType));
+        // When the resource is retrieved with an empty type
+        Exception illegalAccessException = assertThrows(IllegalArgumentException.class,
+                () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidType), "Test should throw an exception");
 
-        // Then throw
+        // Then check the assertion message
+        assertThat(illegalAccessException.getMessage()).contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
     }
 
     @Test
-    void noSerialisedFormatThrowsException() {
+    void testNoSerialisedFormatThrowsException() {
         // Given
         URI invalidFormat = new File(".").toURI().resolve("type_file");
 
-        // When
-        assertThrows(IllegalArgumentException.class,
-                () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidFormat));
+        // When the resource is retrieved with no serialised format
+        Exception illegalAccessException = assertThrows(IllegalArgumentException.class,
+                () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidFormat), "Test should throw an exception");
 
-        // Then throw
+        // Then check the assertion message
+        assertThat(illegalAccessException.getMessage()).contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
     }
 
     @Test
-    void emptySerialisedFormatThrowsException() {
+    void testEmptySerialisedFormatThrowsException() {
         // Given
         URI invalidFormat = new File(".").toURI().resolve("type_file.");
 
-        // When
-        assertThrows(IllegalArgumentException.class,
-                () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidFormat));
+        // When the resource is retrieved with an empty serialised format
+        Exception illegalAccessException = assertThrows(IllegalArgumentException.class,
+                () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidFormat), "Test should throw an exception");
 
-        // Then throw
+        // Then check the assertion message
+        assertThat(illegalAccessException.getMessage()).contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
     }
 
     @Test
-    void formatStringIsConsistent() {
+    void testFormatStringIsConsistent() {
         // Given
         URI uri = new File(".").toURI().resolve(HadoopResourceDetails.FORMAT_STRING);
         HadoopResourceDetails expected = new HadoopResourceDetails(uri, "TYPE", "FORMAT");
@@ -137,7 +140,7 @@ class HadoopResourceDetailsTest {
     }
 
     @Test
-    void detailsReturnConsistentResource() {
+    void testDetailsReturnConsistentResource() {
         URI uri = new File(".").toURI().resolve(HadoopResourceDetails.FORMAT_STRING);
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
 
@@ -151,23 +154,26 @@ class HadoopResourceDetailsTest {
     }
 
     @Test
-    void noSupportedTypeTest() {
+    void testNoSupportedTypeTest() {
         // Given
         URI uri = new File(".").toURI().resolve("a_file.txt");
 
         // When
-        assertThrows(IllegalArgumentException.class,
-                () -> HadoopResourceDetails.getResourceDetailsFromFileName(uri));
+        Exception illegalAccessException = assertThrows(IllegalArgumentException.class,
+                () -> HadoopResourceDetails.getResourceDetailsFromFileName(uri), "Test should throw an exception");
+
+        // Then check the assertion message
+        assertThat(illegalAccessException.getMessage()).contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
     }
 
     @Test
-    void isValidResourceNameUsingInvalidFileNameButValidPath() {
+    void testIsValidResourceNameUsingInvalidFileNameButValidPath() {
         // Given
         URI uri = URI.create("file:///edge_case/that-matches/if.using/fullPath");
 
         // When
         boolean details = HadoopResourceDetails.isValidResourceName(uri);
 
-        assertFalse(details, "This should be false as the filename fullPath doesn't follow the pattern");
+        assertThat(details).isFalse();
     }
 }

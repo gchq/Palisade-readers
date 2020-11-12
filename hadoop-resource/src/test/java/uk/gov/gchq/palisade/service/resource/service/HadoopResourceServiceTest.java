@@ -29,7 +29,6 @@ import java.io.File;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class HadoopResourceServiceTest {
     private final HadoopResourceService service = new HadoopResourceService();
@@ -40,7 +39,7 @@ class HadoopResourceServiceTest {
     }
 
     @Test
-    void resourceDetailsGetDataServiceConnection() {
+    void testResourceDetailsGetDataServiceConnection() {
         // Given
         ConnectionDetail dataService = new SimpleConnectionDetail().serviceName("data-service");
         service.addDataService(dataService);
@@ -57,13 +56,14 @@ class HadoopResourceServiceTest {
     }
 
     @Test
-    void cannotAddResourcesAtRuntime() {
+    void testCannotAddResourcesAtRuntime() {
         // Given this is a hadoop resource service
 
         // When
         boolean success = service.addResource((LeafResource) ResourceBuilder.create("file:/hadoop/test_resource.avro"));
 
-        assertFalse(success);
+        // Then
+        assertThat(success).isFalse();
     }
 
 }
