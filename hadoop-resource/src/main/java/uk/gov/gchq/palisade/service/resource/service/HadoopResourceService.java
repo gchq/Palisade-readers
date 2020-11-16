@@ -48,7 +48,6 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -120,7 +119,7 @@ public class HadoopResourceService implements ResourceService {
      * details on the contained files.
      *
      * @param resource the resource to request
-     * @return a {@link Stream} of resources, each with an appropriate {@link ConnectionDetail}
+     * @return an {@link Iterator} of resources, each with an appropriate {@link ConnectionDetail}
      */
     @Override
     public Iterator<LeafResource> getResourcesByResource(final Resource resource) {
@@ -134,7 +133,7 @@ public class HadoopResourceService implements ResourceService {
      * resource ID and obtain the connection details once the returned future has completed.
      *
      * @param resourceId the ID to request
-     * @return a {@link Stream} of resources, each with an appropriate {@link ConnectionDetail}
+     * @return an {@link Iterator} of resources, each with an appropriate {@link ConnectionDetail}
      */
     @Override
     public Iterator<LeafResource> getResourcesById(final String resourceId) {
@@ -154,7 +153,7 @@ public class HadoopResourceService implements ResourceService {
      * because a resource is available does not guarantee that the requesting client has the right to access it.
      *
      * @param type the type of resource to retrieve.
-     * @return a {@link Stream} of resources, each with an appropriate {@link ConnectionDetail}
+     * @return an {@link Iterator} of resources, each with an appropriate {@link ConnectionDetail}
      */
     @Override
     public Iterator<LeafResource> getResourcesByType(final String type) {
@@ -172,7 +171,7 @@ public class HadoopResourceService implements ResourceService {
      * potentially return large ${@code Map}s with many mappings.
      *
      * @param serialisedFormat the specific format for retrieval
-     * @return a {@link Stream} of resources, each with an appropriate {@link ConnectionDetail}
+     * @return an {@link Iterator} of resources, each with an appropriate {@link ConnectionDetail}
      */
     @Override
     public Iterator<LeafResource> getResourcesBySerialisedFormat(final String serialisedFormat) {
