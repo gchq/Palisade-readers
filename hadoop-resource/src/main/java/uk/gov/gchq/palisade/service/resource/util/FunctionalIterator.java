@@ -355,7 +355,7 @@ public interface FunctionalIterator<T> extends Iterator<T> {
                 return this.remoteIterator.next();
             } catch (IOException ex) {
                 LOGGER.error("Error while listing files: ", ex);
-                return null;
+                throw new NoSuchElementException("RemoteIterator threw IOException: " + ex.getMessage());
             }
         }
     }
