@@ -19,10 +19,13 @@ package uk.gov.gchq.palisade.reader.common;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.gchq.palisade.Context;
 import uk.gov.gchq.palisade.Generated;
+import uk.gov.gchq.palisade.User;
 import uk.gov.gchq.palisade.Util;
 import uk.gov.gchq.palisade.data.serialise.Serialiser;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
+import uk.gov.gchq.palisade.rule.Rule;
 import uk.gov.gchq.palisade.rule.Rules;
 
 import java.io.IOException;
@@ -30,12 +33,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -106,7 +109,9 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
 
         //if nothing to do, then just copy the bytes across
         try {
-            if (isNull(rules) || isNull(rules.getRules()) || rules.getRules().isEmpty()) {
+            if (!doApplyRules(rules,
+                    request.getUser(),
+                    request.getContext())) {
                 LOGGER.debug("No rules to apply");
                 stream.transferTo(output);
             } else {
@@ -129,6 +134,13 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
         } finally {
             this.close();
         }
+    }
+
+    private boolean doApplyRules(final Rules<T> rules, final User user, final Context context) {
+        Optional<Rule<T>> applicableRule = rules.getRules().values().stream()
+                .filter(rule -> rule.isApplicable(null, user, context))
+                .findFirst();
+        return applicableRule.isPresent();
     }
 
     @Override
