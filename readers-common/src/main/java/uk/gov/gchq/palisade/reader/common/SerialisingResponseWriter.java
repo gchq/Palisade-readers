@@ -115,6 +115,8 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
                     request.getContext())) {
                 LOGGER.debug("No rules to apply");
                 stream.transferTo(output);
+                recordsProcessed.set(-1l);
+                recordsReturned.set(-1l);
             } else {
                 LOGGER.debug("Applying rules: {}", rules);
                 LOGGER.debug("Using serialiser {}", serialiser.getClass());
