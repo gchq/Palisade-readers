@@ -109,14 +109,11 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
 
         //if nothing to do, then just copy the bytes across
         try {
-            if (!doApplyRules(
-                    rules,
-                    request.getUser(),
-                    request.getContext())) {
+            if (!doApplyRules(rules, request.getUser(), request.getContext())) {
                 LOGGER.debug("No rules to apply");
                 stream.transferTo(output);
-                recordsProcessed.set(-1l);
-                recordsReturned.set(-1l);
+                recordsProcessed.set(-1L);
+                recordsReturned.set(-1L);
             } else {
                 LOGGER.debug("Applying rules: {}", rules);
                 LOGGER.debug("Using serialiser {}", serialiser.getClass());
@@ -140,7 +137,8 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
     }
 
     private boolean doApplyRules(final Rules<T> rules, final User user, final Context context) {
-        Optional<Rule<T>> applicableRule = rules.getRules().values().stream()
+        Optional<Rule<T>> applicableRule = rules.getRules().values()
+                .stream()
                 .filter(rule -> rule.isApplicable(user, context))
                 .findFirst();
         return applicableRule.isPresent();
