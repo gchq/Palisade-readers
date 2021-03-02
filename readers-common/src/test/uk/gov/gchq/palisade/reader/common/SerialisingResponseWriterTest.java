@@ -125,11 +125,19 @@ class SerialisingResponseWriterTest {
 
         SerialisingResponseWriter  serialisingResponseWriter = new SerialisingResponseWriter(inputStream, stringSeraliser, readerRequestWithMixedRules, recordsProcessed, recordsReturned);
         serialisingResponseWriter.write(outputStream);
-
-        assertThat(recordsProcessed.longValue()).isEqualTo((new AtomicLong(3L)).longValue());
-        assertThat(recordsReturned.longValue()).isEqualTo((new AtomicLong(3L)).longValue());
         String outputString = new String(outputStream.toByteArray());
-        assertThat(outputString).isEqualTo(testString);
+
+        assertThat(recordsProcessed.longValue())
+                .as("Expected to show that there are 3 records processed during the deserialising/serialising")
+                .isEqualTo((new AtomicLong(3L)).longValue());
+
+        assertThat(recordsReturned.longValue())
+                .as("Expected to show that there are 3 records processed during the deserialising/serialising")
+                .isEqualTo((new AtomicLong(3L)).longValue());
+
+        assertThat(outputString)
+                .as("Expected to show the output of test records as 'line1\\nline2\\nline3\\n'")
+                .isEqualTo(testString);
     }
 
     /**
@@ -157,10 +165,19 @@ class SerialisingResponseWriterTest {
 
         SerialisingResponseWriter  serialisingResponseWriter = new SerialisingResponseWriter(inputStream, stringSeraliser, readerRequestWithPassThroughRules, recordsProcessed, recordsReturned);
         serialisingResponseWriter.write(outputStream);
-
-        assertThat(recordsProcessed.longValue()).isEqualTo((new AtomicLong(-1L)).longValue());
-        assertThat(recordsReturned.longValue()).isEqualTo((new AtomicLong(-1L)).longValue());
         String outputString = new String(outputStream.toByteArray());
-        assertThat(outputString).isEqualTo(testString);
+
+        assertThat(recordsProcessed.longValue())
+                .as("Expected to show a value of -1 indicating that no deserialising/serialising was done")
+                .isEqualTo((new AtomicLong(-1L)).longValue());
+
+        assertThat(recordsReturned.longValue())
+                .as("Expected to show a value of -1 indicating that no deserialising/serialising was done")
+                .isEqualTo((new AtomicLong(-1L)).longValue());
+
+        assertThat(outputString)
+                .as("Expected to show the output of test records as 'line1\\nline2\\nline3\\n'")
+                .isEqualTo(testString);
+
     }
 }
