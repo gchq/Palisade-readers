@@ -108,7 +108,7 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
         final Rules<T> rules = request.getRules();
 
         try {
-            //if nothing to do, then just copy the bytes across
+            //if no rules that apply, then just copy the bytes across
             if (!doApplyRules(rules, request.getUser(), request.getContext())) {
                 LOGGER.debug("No rules to apply");
                 stream.transferTo(output);

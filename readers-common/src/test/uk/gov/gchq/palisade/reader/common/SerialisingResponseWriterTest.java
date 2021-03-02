@@ -18,6 +18,7 @@ package uk.gov.gchq.palisade.reader.common;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import uk.gov.gchq.palisade.Context;
 import uk.gov.gchq.palisade.User;
 import uk.gov.gchq.palisade.UserId;
@@ -39,29 +40,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class SerialisingResponseWriterTest {
 
-    public static final UserId USER_ID = new UserId().id("test-user-id");
-    public static final User USER = new User().userId(USER_ID);
-    public static final String RESOURCE_ID = "/test/resourceId";
-    public static final String RESOURCE_TYPE = "uk.gov.gchq.palisade.test.TestType";
-    public static final String RESOURCE_FORMAT = "avro";
-    public static final String DATA_SERVICE_NAME = "test-data-service";
-    public static final String RESOURCE_PARENT = "/test";
-    public static final Context CONTEXT = new Context().purpose("test-purpose");
+    private static final UserId USER_ID = new UserId().id("test-user-id");
+    private static final User USER = new User().userId(USER_ID);
+    private static final String RESOURCE_ID = "/test/resourceId";
+    private static final String RESOURCE_TYPE = "uk.gov.gchq.palisade.test.TestType";
+    private static final String RESOURCE_FORMAT = "avro";
+    private static final String DATA_SERVICE_NAME = "test-data-service";
+    private static final String RESOURCE_PARENT = "/test";
+    private static final Context CONTEXT = new Context().purpose("test-purpose");
 
-    public static final LeafResource LEAF_RESOURCE = new FileResource()
+    private static final LeafResource LEAF_RESOURCE = new FileResource()
             .id(RESOURCE_ID)
             .type(RESOURCE_TYPE)
             .serialisedFormat(RESOURCE_FORMAT)
             .connectionDetail(new SimpleConnectionDetail().serviceName(DATA_SERVICE_NAME))
             .parent(new SystemResource().id(RESOURCE_PARENT));
 
-    public static class TestPassThroughRule<T extends Serializable> implements Rule<T> {
+    private static class TestPassThroughRule<T extends Serializable> implements Rule<T> {
 
         @Override
         public T apply(final T record, final User user, final Context context) {
             return record;
         }
-
 
         @Override
         public boolean isApplicable(final User user, final Context context) {
@@ -70,7 +70,7 @@ class SerialisingResponseWriterTest {
 
     }
 
-    public static class TestApplyRule<T extends Serializable> implements Rule<T> {
+    private static class TestApplyRule<T extends Serializable> implements Rule<T> {
 
         @Override
         public T apply(final T record, final User user, final Context context) {
@@ -84,24 +84,21 @@ class SerialisingResponseWriterTest {
 
     }
 
-    SimpleStringSerialiser stringSeraliser = new SimpleStringSerialiser();
-    String testString = "line1\nline2\nline3\n";
-    ByteArrayOutputStream outputStream;
-    ByteArrayInputStream inputStream;
-    AtomicLong recordsProcessed;
-    AtomicLong recordsReturned;
-
+    private  SimpleStringSerialiser stringSeraliser;
+    private final String testString = "line1\nline2\nline3\n";
+    private ByteArrayOutputStream outputStream;
+    private ByteArrayInputStream inputStream;
+    private AtomicLong recordsProcessed;
+    private AtomicLong recordsReturned;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         stringSeraliser = new SimpleStringSerialiser();
         outputStream = new ByteArrayOutputStream();
         inputStream = new ByteArrayInputStream(testString.getBytes());
         recordsProcessed = new AtomicLong();
         recordsReturned = new AtomicLong();
-
     }
-
 
     /**
      * Test for the the writer method with a set of rules with one that requires its rule is enforced.
