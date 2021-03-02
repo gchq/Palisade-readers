@@ -140,7 +140,6 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
     private boolean doApplyRules(final Rules<T> rules, final User user, final Context context) {
         Optional<Rule<T>> applicableRule = rules.getRules().values()
                 .stream()
-                .peek(rule ->LOGGER.info("rule" +rule.toString()) )
                 .filter(rule -> rule.isApplicable(user, context))
                 .findFirst();
         return applicableRule.isPresent();
