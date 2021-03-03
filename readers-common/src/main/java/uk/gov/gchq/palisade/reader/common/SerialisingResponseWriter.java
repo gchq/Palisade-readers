@@ -141,7 +141,10 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
         }
     }
 
-
+    /**
+     * Rules must be applied to the records in a resource if any single rule must be applied.
+     * Otherwise, application of rules and de/serialisation can be skipped.
+     */
     private boolean doApplyRules(final Rules<T> rules, final User user, final Context context) {
         // No need to consider the case where the rules list is empty as this is disallowed by the policy-service
         return rules.getRules().values()
