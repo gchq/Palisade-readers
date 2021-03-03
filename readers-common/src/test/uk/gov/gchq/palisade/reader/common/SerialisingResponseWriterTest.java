@@ -113,7 +113,7 @@ class SerialisingResponseWriterTest {
 
         Rules<Serializable> mixOfRules = new Rules<>()
                 .addRule("first", new TestPassThroughRule<>())
-                .addRule("sec ond", new TestPassThroughRule<>())
+                .addRule("second", new TestPassThroughRule<>())
                 .addRule("third", new TestApplyRule<>())
                 .addRule("fourth", new TestPassThroughRule<>());
 
