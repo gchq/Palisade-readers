@@ -143,11 +143,10 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
 
 
     private boolean doApplyRules(final Rules<T> rules, final User user, final Context context) {
-        Optional<Rule<T>> applicableRule = rules.getRules().values()
+        // No need to consider the case where the rules list is empty as this is disallowed by the policy-service
+        return rules.getRules().values()
                 .stream()
-                .filter(rule -> rule.isApplicable(user, context))
-                .findFirst();
-        return applicableRule.isPresent();
+                .anyMatch(rule -> rule.isApplicable(user, context))
     }
 
     @Override
