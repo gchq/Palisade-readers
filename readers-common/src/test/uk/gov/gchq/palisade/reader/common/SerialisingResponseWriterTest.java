@@ -173,7 +173,7 @@ class SerialisingResponseWriterTest {
 
         assertThat(recordsReturned.longValue())
                 .as("Expected to show a value of -1 indicating that no deserialising/serialising was done")
-                .isEqualTo((new AtomicLong(-1L)).longValue());
+                .isEqualTo(-1L);
 
         assertThat(outputString)
                 .as("Expected to show the output of test records as 'line1\\nline2\\nline3\\n'")
