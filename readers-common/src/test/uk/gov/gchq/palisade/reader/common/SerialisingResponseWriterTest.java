@@ -133,7 +133,7 @@ class SerialisingResponseWriterTest {
 
         assertThat(recordsReturned.longValue())
                 .as("Expected to show that there are 3 records processed during the deserialising/serialising")
-                .isEqualTo((new AtomicLong(3L)).longValue());
+                .isEqualTo(3L);
 
         assertThat(outputString)
                 .as("Expected to show the output of test records as 'line1\\nline2\\nline3\\n'")
