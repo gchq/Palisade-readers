@@ -152,6 +152,12 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
     /**
      * Rules must be applied to the records in a resource if any single rule must be applied.
      * Otherwise, application of rules and de/serialisation can be skipped.
+     * 
+     * @param rules   a collection of rules to check
+     * @param user    the user who made the request, passed to each {@code Rule#isApplicable} method
+     * @param context the context of the request, passed to each {@code Rule#isApplicable} method
+     * @return whether the rules need to be applied to the resource, false if all of them may be skipped
+     * @apiNote if this returns false, the resource will not be de/serialised into records, improving performance
      */
     private boolean doApplyRules(final Rules<T> rules, final User user, final Context context) {
         // No need to consider the case where the rules list is empty as this is disallowed by the policy-service
