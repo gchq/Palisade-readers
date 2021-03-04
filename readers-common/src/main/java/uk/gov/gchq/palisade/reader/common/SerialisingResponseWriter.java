@@ -19,7 +19,9 @@ package uk.gov.gchq.palisade.reader.common;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.gchq.palisade.Context;
 import uk.gov.gchq.palisade.Generated;
+import uk.gov.gchq.palisade.User;
 import uk.gov.gchq.palisade.Util;
 import uk.gov.gchq.palisade.data.serialise.Serialiser;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
@@ -35,16 +37,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
  * The response writer for the {@link SerialisedDataReader} which will apply the record level rules for Palisade.
  *
- * @param <T>   the type of {@link SerialisingResponseWriter}
+ * @param <T> the type of {@link SerialisingResponseWriter}
  */
 public class SerialisingResponseWriter<T extends Serializable> implements ResponseWriter {
     private static final Logger LOGGER = LoggerFactory.getLogger(SerialisingResponseWriter.class);
+
+    /**
+     * Constant used in a convention to indicate the number of records will not be counted
+     */
+    private static final long NOT_COUNTED = -1L;
+
     /**
      * The underlying data stream from the underlying data store.
      */
@@ -54,18 +61,22 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
      * Atomic flag to prevent double reading of the data.
      */
     private final AtomicBoolean written = new AtomicBoolean(false);
+
     /**
      * The serialiser for processing the input stream.
      */
     private final Serialiser<T> serialiser;
+
     /**
      * The user data request.
      */
     private final DataReaderRequest request;
+
     /**
      * Atomic counter to know the number of records that have been processed
      */
     private final AtomicLong recordsProcessed;
+
     /**
      * Atomic counter to know the number of records that have been returned
      */
@@ -104,11 +115,18 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
 
         final Rules<T> rules = request.getRules();
 
-        //if nothing to do, then just copy the bytes across
         try {
-            if (isNull(rules) || isNull(rules.getRules()) || rules.getRules().isEmpty()) {
+
+            /**
+             If no rules that apply, then just copy the bytes across
+             The value -1L is a convention to indicate deserialise/serialise is by-passed and the number of records
+             processed and number of records returned will not be counted
+             */
+            if (!doApplyRules(rules, request.getUser(), request.getContext())) {
                 LOGGER.debug("No rules to apply");
                 stream.transferTo(output);
+                recordsProcessed.set(NOT_COUNTED);
+                recordsReturned.set(NOT_COUNTED);
             } else {
                 LOGGER.debug("Applying rules: {}", rules);
                 LOGGER.debug("Using serialiser {}", serialiser.getClass());
@@ -129,6 +147,23 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
         } finally {
             this.close();
         }
+    }
+
+    /**
+     * Rules must be applied to the records in a resource if any single rule must be applied.
+     * Otherwise, application of rules and de/serialisation can be skipped.
+     *
+     * @param rules   a collection of rules to check
+     * @param user    the user who made the request, passed to each {@code Rule#isApplicable} method
+     * @param context the context of the request, passed to each {@code Rule#isApplicable} method
+     * @return whether the rules need to be applied to the resource, false if all of them may be skipped
+     * @apiNote if this returns false, the resource will not be de/serialised into records, improving performance
+     */
+    private boolean doApplyRules(final Rules<T> rules, final User user, final Context context) {
+        // No need to consider the case where the rules list is empty as this is disallowed by the policy-service
+        return rules.getRules().values()
+                .stream()
+                .anyMatch(rule -> rule.isApplicable(user, context));
     }
 
     @Override
