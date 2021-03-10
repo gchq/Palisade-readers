@@ -25,10 +25,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <properties>
-        <junit.version>5.7.1</junit.version>
-        <assertj.version>3.19.0</assertj.version>
-    </properties>
     <!--  *********** Aritfact ID ***********    -->
     <artifactId>readers-common</artifactId>
     <url>https://github.com/gchq/Palisade-readers/tree/develop/readers-common</url>
@@ -43,18 +39,6 @@
             <groupId>uk.gov.gchq.palisade</groupId>
             <artifactId>common</artifactId>
             <version>0.5.0-${common.revision}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>${assertj.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
