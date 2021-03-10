@@ -26,10 +26,10 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <!--  *********** Aritfact ID ***********    -->
+    <!--  *********** Artifact ID ***********    -->
     <artifactId>hadoop-reader</artifactId>
     <url>https://github.com/gchq/Palisade-readers/tree/develop/hadoop-reader</url>
-    <!--  *********** Aritfact ID ***********    -->
+    <!--  *********** Artifact ID ***********    -->
 
     <properties>
         <hadoop.version>3.2.1</hadoop.version>

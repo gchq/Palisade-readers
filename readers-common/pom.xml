@@ -25,10 +25,10 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <!--  *********** Aritfact ID ***********    -->
+    <!--  *********** Artifact ID ***********    -->
     <artifactId>readers-common</artifactId>
     <url>https://github.com/gchq/Palisade-readers/tree/develop/readers-common</url>
-    <!--  *********** Aritfact ID ***********    -->
+    <!--  *********** Artifact ID ***********    -->
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
