@@ -68,7 +68,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- JUnit 4 test framework -->
+        <!-- Testing Dependency -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
