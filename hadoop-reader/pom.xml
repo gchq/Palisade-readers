@@ -38,7 +38,7 @@
     </properties>
 
     <dependencies>
-        <!-- User, Resource, Context types -->
+        <!-- Readers, Request & Response types -->
         <dependency>
             <groupId>uk.gov.gchq.palisade</groupId>
             <artifactId>readers-common</artifactId>
