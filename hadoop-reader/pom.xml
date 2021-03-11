@@ -32,44 +32,52 @@
     <!--  *********** Artifact ID ***********    -->
 
     <properties>
+        <!-- Dependency versions -->
         <hadoop.version>3.2.1</hadoop.version>
-        <junit.version>4.13.1</junit.version>
         <logback.version>1.2.3</logback.version>
+
+        <!-- Test dependency versions -->
+        <junit.version>4.13.1</junit.version>
     </properties>
 
     <dependencies>
-        <!-- Readers, Request & Response types -->
+        <!--
+       ~ Palisade
+       -->
         <dependency>
+            <!-- Readers, Request & Response types -->
             <groupId>uk.gov.gchq.palisade</groupId>
             <artifactId>readers-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <!-- Logging Dependency -->
         <dependency>
+            <!-- Logging Dependency -->
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
         </dependency>
-        <!-- Jackson Dependency -->
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <!-- Hadoop framework -->
-        <dependency>
+            <!-- Hadoop config classes -->
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
             <version>${hadoop.version}</version>
             <exclusions>
+                <!-- Exclude incompatible Log4J -->
                 <exclusion>
                     <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
-        <!-- Testing Dependency -->
+        <!--
+       ~ Test Dependencies
+       -->
         <dependency>
+            <!-- JUnit -->
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
