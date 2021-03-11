@@ -38,21 +38,25 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
+        <!-- User, Resource, Context types -->
         <dependency>
             <groupId>uk.gov.gchq.palisade</groupId>
             <artifactId>readers-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <!-- Logging Dependency -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <!-- Jackson Dependency -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <!-- Hadoop framework -->
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
@@ -64,6 +68,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- JUnit 4 test framework -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

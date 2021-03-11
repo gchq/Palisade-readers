@@ -305,10 +305,6 @@
         </profile>
     </profiles>
 
-    <dependencies>
-        <!-- Overridden to bind lower version to Hadoop -->
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>
