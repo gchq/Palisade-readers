@@ -93,8 +93,7 @@ public class DataFlavour {
      * @param serialisedFormat the encoding format for storing the data
      * @throws IllegalArgumentException if either parameter is empty or blank
      */
-    @JsonCreator
-    public DataFlavour(@JsonProperty("dataType") final String dataType, @JsonProperty("serialisedFormat") final String serialisedFormat) {
+    public DataFlavour(final String dataType, final String serialisedFormat) {
         requireNonNull(dataType, "dataType");
         requireNonNull(serialisedFormat, "serialisedFormat");
         if (dataType.trim().isEmpty()) {
