@@ -155,18 +155,18 @@ public class HadoopDataReader extends SerialisedDataReader {
         return this.fs.getConf();
     }
 
-      Map<String, String> getConfMap() {
-          Map<String, String> rtn = new HashMap<>();
-          Map<String, String> plainJobConfWithoutResolvingValues = getPlainJobConfWithoutResolvingValues();
+    Map<String, String> getConfMap() {
+        Map<String, String> rtn = new HashMap<>();
+        Map<String, String> plainJobConfWithoutResolvingValues = getPlainJobConfWithoutResolvingValues();
 
-          for (Entry<String, String> entry : getConf()) {
-              final String plainValue = plainJobConfWithoutResolvingValues.get(entry.getKey());
-              final String thisValue = entry.getValue();
-              if (plainValue == null || !plainValue.equals(thisValue)) {
-                  rtn.put(entry.getKey(), entry.getValue());
-              }
-          }
-          return rtn;
+        for (Entry<String, String> entry : getConf()) {
+            final String plainValue = plainJobConfWithoutResolvingValues.get(entry.getKey());
+            final String thisValue = entry.getValue();
+            if (plainValue == null || !plainValue.equals(thisValue)) {
+                rtn.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return rtn;
     }
 
     private Map<String, String> getPlainJobConfWithoutResolvingValues() {
