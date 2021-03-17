@@ -33,9 +33,9 @@ import java.util.regex.Pattern;
 import static java.util.Objects.requireNonNull;
 
 /**
- * In Palisade, to process a resource, e.g. to de-serialise it, we must know its data type (what type of object the resource
- * contains, e.g. employee records) and its serialised format (how it is stored, e.g. Avro). A {@code DataFlavour} is the combination
- * of these two features.
+ * In Palisade, to process a resource, e.g. to deserialise it, we must know its data type (what type of object the resource
+ * contains, e.g. employee records) and its serialised format (how it is stored, e.g. Avro). A {@code DataFlavour} is
+ * the combination of these two features.
  */
 public class DataFlavour {
     /**
@@ -52,14 +52,14 @@ public class DataFlavour {
     /**
      * Class to ensure {@link DataFlavour}s can be serialised into JSON.
      */
-    public static final class FlavourSerializer extends StdSerializer<DataFlavour> {
+    public static final class FlavourSerialiser extends StdSerializer<DataFlavour> {
 
         private static final long serialVersionUID = 1L;
 
         /**
-         * Constructs a {@link FlavourSerializer} for the {@link DataFlavour} class
+         * Constructs a {@link FlavourSerialiser} for the {@link DataFlavour} class
          */
-        public FlavourSerializer() {
+        public FlavourSerialiser() {
             super(DataFlavour.class);
         }
 
@@ -72,13 +72,13 @@ public class DataFlavour {
     /**
      * Class to ensure {@link DataFlavour}s can be deserialised from JSON.
      */
-    public static final class FlavourDeserializer extends KeyDeserializer {
+    public static final class FlavourDeserialiser extends KeyDeserializer {
 
         @Override
-        public Object deserializeKey(final String text, final DeserializationContext deserializationContext) throws IOException {
+        public Object deserializeKey(final String text, final DeserializationContext deserialisationContext) throws IOException {
             String[] parts = DELIMITER.split(text);
             if (parts.length != PARTS) {
-                throw new IllegalStateException("error deserialising " + text + " as a DataFlavour, should be in format \"<data_type>" + DELIMITER + "<seralised_format>\"");
+                throw new IllegalStateException("error deserialising " + text + " as a DataFlavour, should be in format \"<data_type>" + DELIMITER + "<serialised_format>\"");
             }
             return DataFlavour.of(parts[0], parts[1]);
         }
@@ -117,7 +117,8 @@ public class DataFlavour {
     }
 
     /**
-     * The data type. This is the type of entity that is being described by this flavour, e.g. employee record or bank account record
+     * The data type. This is the type of entity that is being described by this flavour, e.g. employee record or bank
+     * account record
      *
      * @return data type
      */
@@ -127,7 +128,8 @@ public class DataFlavour {
     }
 
     /**
-     * The serialised format. This is the method of storing the data type in a machine processable format, e.g. Avro or JSON.
+     * The serialised format. This is the method of storing the data type in a machine processable format, e.g. Avro or
+     * JSON.
      *
      * @return serialised format
      */
