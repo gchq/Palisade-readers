@@ -160,7 +160,7 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
      * @apiNote if this returns false, the resource will not be de/serialised into records, improving performance
      */
     private boolean doApplyRules(final Rules<T> rules, final User user, final Context context) {
-        // No need to consider the case where the rules list is empty as this is disallowed by the policy-service
+        // No need to consider the case where the rules list is empty as this is disallowed by the Policy Service
         return rules.getRules().values()
                 .stream()
                 .anyMatch(rule -> rule.isApplicable(user, context));

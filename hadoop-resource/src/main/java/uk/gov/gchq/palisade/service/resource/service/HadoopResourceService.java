@@ -235,7 +235,7 @@ public class HadoopResourceService implements ResourceService {
     }
 
     /**
-     * Adds a {@link ConnectionDetail} value to the {@link List} of data-services
+     * Adds a {@link ConnectionDetail} value to the {@link List} of Data Service
      *
      * @param detail    A {@link ConnectionDetail} object to be added
      * @return          the current {@link HadoopResourceService} object
