@@ -16,11 +16,6 @@
 
 package uk.gov.gchq.palisade.reader;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -51,7 +46,6 @@ import static java.util.Objects.requireNonNull;
 public class HadoopDataReader extends SerialisedDataReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(HadoopDataReader.class);
 
-    @JsonIgnore
     private FileSystem fs;
 
     /**
@@ -66,11 +60,10 @@ public class HadoopDataReader extends SerialisedDataReader {
     /**
      * Creates a new {@link HadoopDataReader} object
      *
-     * @param conf          A {@link Map} of {@link String}s used as the configuration
-     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the created {@link Configuration}
+     * @param conf A {@link Map} of {@link String}s used as the configuration
+     * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the created {@link Configuration}
      */
-    @JsonCreator
-    public HadoopDataReader(@JsonProperty("conf") final Map<String, String> conf) throws IOException {
+    public HadoopDataReader(final Map<String, String> conf) throws IOException {
         this.fs = FileSystem.get(createConfig(conf));
     }
 
@@ -162,8 +155,6 @@ public class HadoopDataReader extends SerialisedDataReader {
         return this.fs.getConf();
     }
 
-    @JsonGetter("conf")
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
     Map<String, String> getConfMap() {
         Map<String, String> rtn = new HashMap<>();
         Map<String, String> plainJobConfWithoutResolvingValues = getPlainJobConfWithoutResolvingValues();

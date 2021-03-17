@@ -26,29 +26,37 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <properties>
-        <hadoop.version>3.2.1</hadoop.version>
-        <fabric8.version>4.3.0</fabric8.version>
-        <protobuf.version>3.5.1</protobuf.version>
-        <jetcd.version>0.3.0</jetcd.version>
-        <junit.version>5.5.2</junit.version>
-        <assertj.version>3.18.0</assertj.version>
-        <mockito.version>3.1.0</mockito.version>
-        <hamcrest.version>2.1</hamcrest.version>
-        <logback.version>1.2.3</logback.version>
-    </properties>
-
-    <!--  *********** Aritfact ID ***********    -->
+    <!--  *********** Artifact ID ***********    -->
     <artifactId>hadoop-resource</artifactId>
     <url>https://github.com/gchq/Palisade-readers/tree/develop/hadoop-resource</url>
-    <!--  *********** Aritfact ID ***********    -->
+    <!--  *********** Artifact ID ***********    -->
+
+    <properties>
+        <!-- Dependency versions -->
+        <hadoop.version>3.2.1</hadoop.version>
+
+        <!-- Test dependency versions -->
+        <junit.version>5.5.2</junit.version>
+        <assertj.version>3.18.0</assertj.version>
+    </properties>
 
     <dependencies>
+        <!--
+      ~ Palisade
+      -->
         <dependency>
+            <!-- Common types (User, Resource, Context) -->
+            <groupId>uk.gov.gchq.palisade</groupId>
+            <artifactId>common</artifactId>
+            <version>0.5.0-${common.revision}</version>
+        </dependency>
+        <dependency>
+            <!-- Hadoop config classes -->
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
             <version>${hadoop.version}</version>
             <exclusions>
+                <!-- Exclude incompatible Log4J -->
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
@@ -59,44 +67,22 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--
+       ~ Test Dependencies
+       -->
         <dependency>
-            <groupId>uk.gov.gchq.palisade</groupId>
-            <artifactId>common</artifactId>
-            <version>0.5.0-${common.revision}</version>
-        </dependency>
-        <dependency>
+            <!-- JUnit -->
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
+            <!-- AssertJ for test assertions -->
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-            <version>${hamcrest.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
         </dependency>
     </dependencies>
 

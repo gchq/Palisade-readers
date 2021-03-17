@@ -16,8 +16,6 @@
 
 package uk.gov.gchq.palisade.reader.common;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.KeyDeserializer;
@@ -93,8 +91,7 @@ public class DataFlavour {
      * @param serialisedFormat the encoding format for storing the data
      * @throws IllegalArgumentException if either parameter is empty or blank
      */
-    @JsonCreator
-    public DataFlavour(@JsonProperty("dataType") final String dataType, @JsonProperty("serialisedFormat") final String serialisedFormat) {
+    public DataFlavour(final String dataType, final String serialisedFormat) {
         requireNonNull(dataType, "dataType");
         requireNonNull(serialisedFormat, "serialisedFormat");
         if (dataType.trim().isEmpty()) {

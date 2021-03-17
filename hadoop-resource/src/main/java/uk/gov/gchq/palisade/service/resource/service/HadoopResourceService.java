@@ -16,9 +16,6 @@
 
 package uk.gov.gchq.palisade.service.resource.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileSystem;
@@ -87,10 +84,10 @@ public class HadoopResourceService implements ResourceService {
     /**
      * Creates a new {@link HadoopResourceService} object from a {@link Map} of {@link String}s
      *
-     * @param conf          A {@link Map} of {@link String}s used as the configuration
-     * @throws IOException  the {@link Exception} thrown when there is an issue creating a {@link HadoopResourceService} using the provided {@link Map} of {@link String}s.
+     * @param conf A {@link Map} of {@link String}s used as the configuration
+     * @throws IOException the {@link Exception} thrown when there is an issue creating a {@link HadoopResourceService} using the provided {@link Map} of {@link String}s.
      */
-    public HadoopResourceService(@JsonProperty("conf") final Map<String, String> conf) throws IOException {
+    public HadoopResourceService(final Map<String, String> conf) throws IOException {
         this(createConfig(conf));
     }
 
@@ -260,7 +257,6 @@ public class HadoopResourceService implements ResourceService {
         return this.fileSystem;
     }
 
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
     public Map<String, String> getConf() {
         Map<String, String> rtn = new HashMap<>();
         Map<String, String> plainJobConfWithoutResolvingValues = getPlainJobConfWithoutResolvingValues();
@@ -281,7 +277,6 @@ public class HadoopResourceService implements ResourceService {
         this.conf(createConfig(conf));
     }
 
-    @JsonIgnore
     @Generated
     public void setConf(final Configuration conf) throws IOException {
         requireNonNull(conf);

@@ -16,11 +16,6 @@
 
 package uk.gov.gchq.palisade.reader.common;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-
 import uk.gov.gchq.palisade.data.serialise.Serialiser;
 import uk.gov.gchq.palisade.reader.exception.NoCapacityException;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
@@ -39,11 +34,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * that does the part of applying the rules provided your input data is in the
  * format that the rules expect.
  */
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.CLASS,
-        include = As.EXISTING_PROPERTY,
-        property = "class"
-)
 public interface DataReader {
 
     /**
@@ -78,7 +68,6 @@ public interface DataReader {
      *
      * @return  the {@link String} value of the class
      */
-    @JsonGetter("class")
     default String _getClass() {
         return getClass().getName();
     }
@@ -88,7 +77,6 @@ public interface DataReader {
      *
      * @param className the {@link String} value of the class
      */
-    @JsonSetter("class")
     default void _setClass(final String className) {
         // do nothing.
     }

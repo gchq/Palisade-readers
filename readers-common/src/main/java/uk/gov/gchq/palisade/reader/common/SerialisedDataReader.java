@@ -16,10 +16,6 @@
 
 package uk.gov.gchq.palisade.reader.common;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.data.serialise.Serialiser;
 import uk.gov.gchq.palisade.data.serialise.SimpleStringSerialiser;
@@ -53,16 +49,12 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class SerialisedDataReader implements DataReader {
 
-    @JsonProperty("default")
     private Serialiser<?> defaultSerialiser = new SimpleStringSerialiser();
 
     /**
      * Map of the types and formats to the serialising object. The first element of the key is the data type
      * and the second element is the serialised format.
      */
-    @JsonProperty("serialisers")
-    @JsonSerialize(keyUsing = DataFlavour.FlavourSerializer.class)
-    @JsonDeserialize(keyUsing = DataFlavour.FlavourDeserializer.class)
     private Map<DataFlavour, Serialiser<?>> serialisers = new ConcurrentHashMap<>();
 
     /**

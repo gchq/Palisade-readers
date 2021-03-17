@@ -42,10 +42,11 @@
     </licenses>
 
     <properties>
-        <!-- Versions -->
+        <!-- Project properties -->
         <java.version>11</java.version>
         <revision>SNAPSHOT</revision>
         <common.revision>SNAPSHOT</common.revision>
+
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <encoding>UTF-8</encoding>
@@ -56,16 +57,12 @@
         <compiler.plugin.version>3.8.0</compiler.plugin.version>
         <javadoc.plugin.version>3.2.0</javadoc.plugin.version>
         <checkstyle.plugin.version>3.1.0</checkstyle.plugin.version>
-        <depends.maven.version>3.1.1</depends.maven.version>
+        <depends.maven.version>3.1.2</depends.maven.version>
 
-        <!-- Dependencies -->
-        <jackson.version>2.10.0</jackson.version>
-
-        <!-- Testing properties -->
+        <!-- Testing plugins -->
         <surefire.plugin.version>2.22.1</surefire.plugin.version>
-        <failsafe.version>2.22.1</failsafe.version>
 
-        <!-- Sonar -->
+        <!-- JaCoCo/Sonar -->
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.jacoco.xmlReportPaths>${project.basedir}/../target/site/jacoco/jacoco.xml</sonar.jacoco.xmlReportPaths>
@@ -73,8 +70,8 @@
     </properties>
 
     <modules>
+        <!-- Core reader packages -->
         <module>hadoop-resource</module>
-        <module>shade-hadoop-client</module>
         <module>readers-common</module>
         <module>hadoop-reader</module>
     </modules>
@@ -333,11 +330,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${failsafe.version}</version>
             </plugin>
         </plugins>
     </build>
