@@ -16,14 +16,33 @@ limitations under the License.
 
 # <img src="logos/logo.svg" width="180">
 
-### Scalable Data Access Policy Management and Enforcement
+### Readers
 
-The responsibility of the data service is to take the read request from the client, request the trusted details about the request from the Palisade service (what policies to apply, user details, context, etc).
-The data service then passes that information to the `DataReader` which is then responsible for connecting to the resource, deserialising the data. The data service filters the data according to the policies and then serialises the data ready to be sent to the client. 
+The Readers library enables functionality for providing data after it has been
+processed in accordance to the relevant data restrictions. It provides the 
+services needed to locate the references to the requested records, uses this
+to retrieve the data and then to extract each record where it can be filtered
+in using the restrictions defined by the user, context and rules in 
+place for the data.
 
-The data service is also responsible for ensuring the relevant audit logs are generated.
+A good starting point to understand this library is to look at the two core 
+Interfaces: `DataReader`; and `ResponseWriter`, their implementations in the 
+class `SerialisingResponseWriter`, abstract class `SerialisedDataReader` and 
+its the extended class `HadoopDataReader`. These provide the core 
+functionality used to process the data.  In `SerialisingResponseWriter`'s 
+`write` method involves using these classes to first retrieve the data from 
+an input stream. It is then deserialised it into records where the rules are 
+applied to filter the data. The return is the filtered data re-serialised 
+back into an output stream.
 
-This repository contains implementations of the `DataReader`
+The Data Service depends on this library to process client requests for records 
+that has been registered with the Palisade Services. The client sends a request 
+with a unique identifier for the request.  This is used to identify the records 
+that are contained in request and with this the information about the user, the 
+context of the request and the rules that are to be implemented for this request.
+This information is then passed onto the classes in this library that will return
+an output stream that is given to the client.
+
 
 #### Configuring for Hadoop on Windows
 
