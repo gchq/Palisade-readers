@@ -118,9 +118,9 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
         try {
 
             /**
-             If no rules that apply, then just copy the bytes across
+             If no rules that apply, then just copy the bytes across.
              The value -1L is a convention to indicate deserialise/serialise is by-passed and the number of records
-             processed and number of records returned will not be counted
+             processed and number of records returned will not be counted.
              */
             if (!doApplyRules(rules, request.getUser(), request.getContext())) {
                 LOGGER.debug("No rules to apply");

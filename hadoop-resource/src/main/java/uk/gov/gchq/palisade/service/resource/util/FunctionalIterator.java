@@ -191,7 +191,7 @@ public interface FunctionalIterator<T> extends Iterator<T> {
     }
 
     /**
-     * A {@link FunctionalIterator} implementation that allows an iterator to filter out elements
+     * A {@link FunctionalIterator} implementation that allows an iterator to filter out elements.
      *
      * @param <T> the type of the iterator
      */
@@ -254,7 +254,7 @@ public interface FunctionalIterator<T> extends Iterator<T> {
     }
 
     /**
-     * A {@link FunctionalIterator} implementation that allows an iterator to flat map the elements
+     * A {@link FunctionalIterator} implementation that allows an iterator to flat map the elements.
      *
      * @param <T> the original type of the iterator
      * @param <R> the returned type of the iterator
@@ -300,7 +300,7 @@ public interface FunctionalIterator<T> extends Iterator<T> {
     }
 
     /**
-     * A {@link FunctionalIterator} implementation that allows an iterator to peek into the elements
+     * A {@link FunctionalIterator} implementation that allows an iterator to peek into the elements.
      *
      * @param <T> the type of the iterator
      */
@@ -327,7 +327,7 @@ public interface FunctionalIterator<T> extends Iterator<T> {
     }
 
     /**
-     * A {@link FunctionalIterator} implementation that deals with Hadoop's {@link RemoteIterator}
+     * A {@link FunctionalIterator} implementation that deals with Hadoop's {@link RemoteIterator}.
      *
      * @param <T> the type of the iterator
      */

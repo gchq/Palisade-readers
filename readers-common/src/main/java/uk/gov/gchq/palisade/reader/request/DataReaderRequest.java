@@ -55,7 +55,7 @@ public class DataReaderRequest {
     }
 
     /**
-     * Set the user object for this {@link DataReaderRequest} object
+     * Set the user object for this {@link DataReaderRequest} object.
      *
      * @param user the user that requested the data
      * @return the {@link DataReaderRequest}
@@ -67,7 +67,7 @@ public class DataReaderRequest {
     }
 
     /**
-     * Set the context object for this {@link DataReaderRequest} object
+     * Set the context object for this {@link DataReaderRequest} object.
      *
      * @param context the Context that the user provided for why they want the data
      * @return the {@link DataReaderRequest}
@@ -79,7 +79,7 @@ public class DataReaderRequest {
     }
 
     /**
-     * Set the rules object for this {@link DataReaderRequest} object
+     * Set the rules object for this {@link DataReaderRequest} object.
      *
      * @param rules the list of rules to be applied to the data to ensure policy compliance
      * @return the {@link DataReaderRequest}

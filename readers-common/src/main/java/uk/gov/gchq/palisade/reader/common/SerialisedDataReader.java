@@ -33,12 +33,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This class is an abstract implementation of the {@link DataReader} which uses
- * serialisers to serialise the data into the for that the rules need to be able
- * to apply those rules and then de-serialise to how the client is expecting the
- * data to be returned.
+ * This class is an abstract implementation of the {@link DataReader} which
+ * serialises the data into the format needed for applying the rules
+ * and then de-serialise the data to the format the client is expecting.
  * <p>
- * This class means that the only places where the structure of the data needs
+ * This means that the only places where the structure of the data needs
  * to be known is in the serialisers, rules and client code. Therefore you only
  * need to implement a DataService for
  * each data storage technology and data format combination, rather than also

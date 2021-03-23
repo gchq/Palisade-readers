@@ -56,7 +56,7 @@ public interface DataReader {
     DataReaderResponse read(final DataReaderRequest request, AtomicLong recordsProcessed, AtomicLong recordsReturned) throws NoCapacityException;
 
     /**
-     * Adds a serialiser with the {@link DataFlavour} and {@link Serialiser} values
+     * Adds a serialiser with the {@link DataFlavour} and {@link Serialiser} values.
      *
      * @param flavour       the {@link DataFlavour} value to be added
      * @param serialiser    the {@link Serialiser} value to be added
@@ -64,7 +64,7 @@ public interface DataReader {
     void addSerialiser(final DataFlavour flavour, final Serialiser<?> serialiser);
 
     /**
-     * Gets the class name
+     * Gets the class name.
      *
      * @return  the {@link String} value of the class
      */
@@ -73,7 +73,7 @@ public interface DataReader {
     }
 
     /**
-     * Sets the class name
+     * Sets the class name.
      *
      * @param className the {@link String} value of the class
      */

@@ -70,7 +70,7 @@ public class HadoopResourceService implements ResourceService {
     private List<ConnectionDetail> dataServices = new ArrayList<>();
 
     /**
-     * Creates a new {@link HadoopResourceService} object from a {@link Configuration} object
+     * Creates a new {@link HadoopResourceService} object from a {@link Configuration} object.
      *
      * @param config        A Hadoop {@link Configuration} object
      * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
@@ -82,7 +82,7 @@ public class HadoopResourceService implements ResourceService {
     }
 
     /**
-     * Creates a new {@link HadoopResourceService} object from a {@link Map} of {@link String}s
+     * Creates a new {@link HadoopResourceService} object from a {@link Map} of {@link String}s.
      *
      * @param conf A {@link Map} of {@link String}s used as the configuration
      * @throws IOException the {@link Exception} thrown when there is an issue creating a {@link HadoopResourceService} using the provided {@link Map} of {@link String}s.
@@ -111,7 +111,7 @@ public class HadoopResourceService implements ResourceService {
     /**
      * Get a list of resources based on a specific resource. This allows for the retrieval of the appropriate {@link
      * ConnectionDetail}s for a given resource. It may also be used to retrieve the details all the resources that are
-     * notionally children of another resource. For example, in a standard hierarchical filing system the files in a
+     * notionally children of another resource. For example, in a standard hierarchical filing system, the files in a
      * directory could be considered child resources and calling this method on the directory resource would fetch the
      * details on the contained files.
      *
@@ -183,7 +183,7 @@ public class HadoopResourceService implements ResourceService {
      * Informs Palisade about a specific resource that it may return to users. This lets Palisade clients request access
      * to that resource and allows Palisade to provide policy controlled access to it via the other methods in this
      * interface.
-     * This is not permitted by the HadoopResourceService, so will always return failure (false)
+     * This is not permitted by the HadoopResourceService, so will always return failure (false).
      *
      * @param leafResource         the resource that Palisade can manage access to
      * @return whether or not the addResource call completed successfully, always false
@@ -220,7 +220,7 @@ public class HadoopResourceService implements ResourceService {
     }
 
     /**
-     * Sets the {@link Configuration} and {@link FileSystem} values
+     * Sets the {@link Configuration} and {@link FileSystem} values.
      *
      * @param conf          A Hadoop {@link Configuration} object
      * @return              the current {@link HadoopResourceService} object
@@ -235,7 +235,7 @@ public class HadoopResourceService implements ResourceService {
     }
 
     /**
-     * Adds a {@link ConnectionDetail} value to the {@link List} of Data Service
+     * Adds a {@link ConnectionDetail} value to the {@link List} of data-services.
      *
      * @param detail    A {@link ConnectionDetail} object to be added
      * @return          the current {@link HadoopResourceService} object

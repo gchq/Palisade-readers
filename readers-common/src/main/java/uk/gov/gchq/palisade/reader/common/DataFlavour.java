@@ -57,7 +57,7 @@ public class DataFlavour {
         private static final long serialVersionUID = 1L;
 
         /**
-         * Constructs a {@link FlavourSerialiser} for the {@link DataFlavour} class
+         * Constructs a {@link FlavourSerialiser} for the {@link DataFlavour} class.
          */
         public FlavourSerialiser() {
             super(DataFlavour.class);
@@ -118,7 +118,7 @@ public class DataFlavour {
 
     /**
      * The data type. This is the type of entity that is being described by this flavour, e.g. employee record or bank
-     * account record
+     * account record.
      *
      * @return data type
      */
