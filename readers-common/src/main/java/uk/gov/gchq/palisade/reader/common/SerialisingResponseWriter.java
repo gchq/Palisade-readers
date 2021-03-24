@@ -118,7 +118,7 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
         try {
 
             /**
-             If no rules that apply, then just copy the bytes across.
+             If none of the rules apply, then just copy the bytes across.
              The value -1L is a convention to indicate deserialise/serialise is by-passed and the number of records
              processed and number of records returned will not be counted.
              */
@@ -150,7 +150,8 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
     }
 
     /**
-     * Rules must be applied to the records in a resource if any single rule must be applied.
+     * Check to see if there is at least one rule that is applicable.  Rules
+     * must be applied to the records in a resource if any single rule is applicable.
      * Otherwise, application of rules and de/serialisation can be skipped.
      *
      * @param rules   a collection of rules to check

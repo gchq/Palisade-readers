@@ -25,7 +25,7 @@ import java.util.StringJoiner;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This class is used to pass back to the data service the stream of data in the
+ * This class is used to pass back to the Data Service the stream of data in the
  * format expected by the client, along with any error/info messages for the client.
  */
 public class DataReaderResponse {

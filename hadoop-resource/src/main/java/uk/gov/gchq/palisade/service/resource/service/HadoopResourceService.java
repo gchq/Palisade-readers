@@ -54,7 +54,7 @@ import static java.util.Objects.requireNonNull;
  * An implementation of the ResourceService.
  * <p>
  * This service is for the retrieval of Resources only. Resources cannot be added via this service, they should be added
- * through the actual real filing system.
+ * through the filing system.
  */
 
 public class HadoopResourceService implements ResourceService {
@@ -181,9 +181,8 @@ public class HadoopResourceService implements ResourceService {
 
     /**
      * Informs Palisade about a specific resource that it may return to users. This lets Palisade clients request access
-     * to that resource and allows Palisade to provide policy controlled access to it via the other methods in this
-     * interface.
-     * This is not permitted by the HadoopResourceService, so will always return failure (false).
+     * a resource and allows Palisade to provide policy controlled access to it via the other methods in this interface.
+     * This is not permitted by the HadoopResourceService, so it will always return failure (false).
      *
      * @param leafResource         the resource that Palisade can manage access to
      * @return whether or not the addResource call completed successfully, always false
@@ -235,7 +234,7 @@ public class HadoopResourceService implements ResourceService {
     }
 
     /**
-     * Adds a {@link ConnectionDetail} value to the {@link List} of data-services.
+     * Adds a {@link ConnectionDetail} value to the {@link List} of Data Services.
      *
      * @param detail    A {@link ConnectionDetail} object to be added
      * @return          the current {@link HadoopResourceService} object
