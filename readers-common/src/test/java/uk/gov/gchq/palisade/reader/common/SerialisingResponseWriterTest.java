@@ -125,7 +125,7 @@ class SerialisingResponseWriterTest {
 
         SerialisingResponseWriter  serialisingResponseWriter = new SerialisingResponseWriter(inputStream, stringSeraliser, readerRequestWithMixedRules, recordsProcessed, recordsReturned);
         serialisingResponseWriter.write(outputStream);
-        String outputString = new String(outputStream.toByteArray());
+        String outputString = outputStream.toString();
 
         assertThat(recordsProcessed.longValue())
                 .as("Expected to show that there are 3 records processed during the deserialising/serialising")
@@ -165,7 +165,7 @@ class SerialisingResponseWriterTest {
 
         SerialisingResponseWriter  serialisingResponseWriter = new SerialisingResponseWriter(inputStream, stringSeraliser, readerRequestWithPassThroughRules, recordsProcessed, recordsReturned);
         serialisingResponseWriter.write(outputStream);
-        String outputString = new String(outputStream.toByteArray());
+        String outputString = outputStream.toString();
 
         assertThat(recordsProcessed.longValue())
                 .as("Expected to show a value of -1 indicating that no deserialising/serialising was done")

@@ -100,7 +100,7 @@ public interface FunctionalIterator<T> extends Iterator<T> {
     }
 
     /**
-     * A method that peeks into the elemets of the iterator.
+     * A method that peeks into the elements of the iterator.
      *
      * @param peek the consumer used to peek into the iterator elements
      * @return     a {@link FunctionalIterator} of type {@link T}

@@ -67,7 +67,7 @@ public class HadoopResourceService implements ResourceService {
     private Configuration config;
     private FileSystem fileSystem;
 
-    private List<ConnectionDetail> dataServices = new ArrayList<>();
+    private final List<ConnectionDetail> dataServices = new ArrayList<>();
 
     /**
      * Creates a new {@link HadoopResourceService} object from a {@link Configuration} object.
