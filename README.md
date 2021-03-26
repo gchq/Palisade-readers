@@ -69,9 +69,3 @@ The process will retrieve the data as an input stream. It will then be
 deserialised into records where the rules are applied to filter the records.
 This is then re-serialised into an output stream.  This output stream will be
 the data ready for the Data Service to provide to the client.
-
-
-#### Note Configuring for Hadoop on Windows
-
-In order to use the [HadoopResourceService](hadoop-resource/src/main/java/uk/gov/gchq/palisade/service/resource/service/HadoopResourceService.java) and [HadoopDataReader](hadoop-reader/src/main/java/uk/gov/gchq/palisade/reader/HadoopDataReader.java) in a Windows environment, the provided [hadoop binaries](hadoop-resource/src/test/resources/bin/) should be added to the system PATH.
-If using IntelliJ's built-in test runners, these binaries will also need to be added under the project's global libraries.
