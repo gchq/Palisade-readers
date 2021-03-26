@@ -62,8 +62,9 @@ implementation in the abstract class `SerialisedDataReader` provide the
 implementation for the data retrieval. The class `HadoopDataReader`
 is the reader implementation for Hadoop. In the
 `SerialisingResponseWriter#write` method, these classes are used to
-first retrieve the references to the data plus the rules that will be use for
-filtering.  This is used to set up a processing stream for the client's request.
+first retrieve the references to the data plus the rules that will be used for
+filtering. This is used to set up a processing stream for the client's request.
+
 The process will retrieve the data as an input stream. It will then be
 deserialised into records where the rules are applied to filter the records.
 This is then re-serialised into an output stream.  This output stream will be
