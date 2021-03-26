@@ -181,7 +181,7 @@ public class HadoopResourceService implements ResourceService {
 
     /**
      * Informs Palisade about a specific resource that it may return to users. This lets Palisade clients request access
-     * a resource and allows Palisade to provide policy controlled access to it via the other methods in this interface.
+     * to a resource and allows Palisade to provide policy controlled access to it via the other methods in this interface.
      * This is not permitted by the HadoopResourceService, so it will always return failure (false).
      *
      * @param leafResource         the resource that Palisade can manage access to
