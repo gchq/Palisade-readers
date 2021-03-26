@@ -33,8 +33,9 @@ the data. The Reader library provides the functionality for the Data Service to
 retrieve the data plus the rules that need to be applied. This information is
 then used to return an output stream of the filtered data to the client.
 
-In terms of code, there are two interface that are core to this library:
-`ResponseWriter`; and `DataReader`. These provide the basis of the solution
+In terms of code, there are two interface that are core to this library, the
+`ResponseWriter` and the `DataReader`. These provide the basis of the solution
+
 for retrieving the data, filtering according to the rules for the query and
 provides a stream of data to be made available to the client.
 
