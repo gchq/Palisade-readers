@@ -16,7 +16,7 @@ limitations under the License.
 
 # <img src="logos/logo.svg" width="180">
 
-### Readers
+### Palisade Readers
 
 The `Readers` library enables functionality for providing data with the relevant
 data restrictions applied. It provides the services needed to locate the
