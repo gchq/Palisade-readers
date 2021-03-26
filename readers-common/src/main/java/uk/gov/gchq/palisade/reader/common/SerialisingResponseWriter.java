@@ -150,7 +150,7 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
     }
 
     /**
-     * Check to see if there is at least one rule that is applicable.  Rules
+     * Check to see if there is at least one rule that is applicable. Rules
      * must be applied to the records in a resource if any single rule is applicable.
      * Otherwise, application of rules and de/serialisation can be skipped.
      *
