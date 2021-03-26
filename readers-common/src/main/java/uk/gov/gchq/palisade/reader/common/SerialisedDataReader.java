@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * This class is an abstract implementation of the {@link DataReader} which
  * serialises the data into the format needed for applying the rules
- * and then de-serialises the data to the format the client is expecting.
+ * and then deserialises the data to the format the client is expecting.
  * <p>
  * This means that the only places where the structure of the data needs
  * to be known is in the serialisers, rules and client code. Therefore you only
