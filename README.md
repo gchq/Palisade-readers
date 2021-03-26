@@ -27,8 +27,9 @@ defined by the rules in place for the data.
 A good starting point to understanding this library is with the Data Service.
 The client will have sent the initial request to access data with
 the Palisade Service and received a response with a unique identifier for the
-request.  This is then used to send a request to the Data Service to retrieve
-data.  The Reader library provides the functionality for the Data Service to
+request. This is then used to send a request to the Data Service to retrieve
+the data. The Reader library provides the functionality for the Data Service to
+
 retrieve the data plus the rules that need to be applied. This information is
 then used to return an output stream of the filtered data to the client.
 
@@ -72,4 +73,3 @@ the data ready for the Data Service to provide to the client.
 
 In order to use the [HadoopResourceService](hadoop-resource/src/main/java/uk/gov/gchq/palisade/service/resource/service/HadoopResourceService.java) and [HadoopDataReader](hadoop-reader/src/main/java/uk/gov/gchq/palisade/reader/HadoopDataReader.java) in a Windows environment, the provided [hadoop binaries](hadoop-resource/src/test/resources/bin/) should be added to the system PATH.
 If using IntelliJ's built-in test runners, these binaries will also need to be added under the project's global libraries.
-
