@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
  * <p>
  * This means that the only places where the structure of the data needs
  * to be known is in the serialisers, rules and client code. Therefore you only
- * need to implement a DataService for
+ * need to implement a DataReader for
  * each data storage technology and data format combination, rather than also
  * having to add the data structure into the mix.
  * <p>
