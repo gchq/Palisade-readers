@@ -18,25 +18,17 @@ limitations under the License.
 
 ### Palisade Readers
 
-The `Readers` library enables functionality for providing data with the relevant
-data restrictions applied. It provides the services needed to locate the
-references to the requested records, uses this to retrieve the data and then
-to extract each record where it can be filtered in using the restrictions
-defined by the rules in place for the data.
+The `Readers` library enables functionality for providing data with the relevant data restrictions applied.
+It provides the services needed to locate the references to the requested records, uses this to retrieve the data and then to extract each record where it can be filtered in using the restrictions defined by the rules in place for the data.
 
 A good starting point to understanding this library is with the Data Service.
-The client will have sent the initial request to access data with
-the Palisade Service and received a response with a unique identifier for the
-request. This is then used to send a request to the Data Service to retrieve
-the data. The Reader library provides the functionality for the Data Service to
-retrieve the data plus the rules that need to be applied. This information is
-then used to return an output stream of the filtered data to the client.
+The client will have sent the initial request to access data with the Palisade Service and received a response with a unique identifier for the request.
+This is then used to send a request to the Data Service to retrieve the data.
+The Reader library provides the functionality for the Data Service to retrieve the data plus the rules that need to be applied.
+This information is then used to return an output stream of the filtered data to the client.
 
-In terms of code, there are two interfaces that are core to this library, the
-`ResponseWriter` and the `DataReader`. These provide the basis of the solution
-for retrieving the data, filtering according to the rules for the query and
-provides a stream of data to be made available to the client.
-
+In terms of code, there are two interfaces that are core to this library, the `ResponseWriter` and the `DataReader`. 
+These provide the basis of the solution for retrieving the data, filtering according to the rules for the query and provides a stream of data to be made available to the client.
 
 ```java
 public interface ResponseWriter extends AutoCloseable {
@@ -44,7 +36,6 @@ public interface ResponseWriter extends AutoCloseable {
 
     ResponseWriter write(final OutputStream output) throws IOException;
 }
-
 
 public interface DataReader {
 
@@ -55,10 +46,8 @@ public interface DataReader {
 }
 
 ```
-The writer in the class `SerialisingResponseWriter` and the reader
-implementation in the abstract class `SerialisedDataReader` provide the
-implementation for the data retrieval. The class `HadoopDataReader`
-is the reader implementation for Hadoop. In the
+The writer in the class `SerialisingResponseWriter` and the reader implementation in the abstract class `SerialisedDataReader` provide the implementation for the data retrieval.
+The class `HadoopDataReader`is the reader implementation for Hadoop. In the
 `SerialisingResponseWriter#write` method, these classes are used to
 first retrieve the references to the data plus the rules that will be used for
 filtering. This is used to set up a processing stream for the client's request.
