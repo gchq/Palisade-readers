@@ -54,7 +54,7 @@ import static java.util.Objects.requireNonNull;
  * An implementation of the ResourceService.
  * <p>
  * This service is for the retrieval of Resources only. Resources cannot be added via this service, they should be added
- * through the filing system.
+ * to the backing hadoop filesystem.
  */
 
 public class HadoopResourceService implements ResourceService {

@@ -27,28 +27,12 @@ This is then used to send a request to the Data Service to retrieve the data.
 The Reader library provides the functionality for the Data Service to retrieve the data plus the rules that need to be applied.
 This information is then used to return an output stream of the filtered data to the client.
 
-In terms of code, there are two interfaces that are core to this library, the `ResponseWriter` and the `DataReader`. 
+In terms of code, there are two interfaces that are core to this library, the [ResponseWriter](readers-common/src/main/java/uk/gov/gchq/palisade/reader/common/ResponseWriter.java) and the [DataReader](readers-common/src/main/java/uk/gov/gchq/palisade/reader/common/DataReader.java). 
 These provide the basis of the solution for retrieving the data, filtering according to the rules for the query and provides a stream of data to be made available to the client.
 
-```java
-public interface ResponseWriter extends AutoCloseable {
-    void close() throws IOException;
-
-    ResponseWriter write(final OutputStream output) throws IOException;
-}
-
-public interface DataReader {
-
-    void addSerialiser(final DataFlavour flavour, final Serialiser<?> serialiser);
-
-    DataReaderResponse read(final DataReaderRequest request, AtomicLong recordsProcessed, AtomicLong recordsReturned) throws NoCapacityException;
-    
-}
-
-```
-The writer in the class `SerialisingResponseWriter` and the reader implementation in the abstract class `SerialisedDataReader` provide the implementation for the data retrieval.
-The class `HadoopDataReader`is the reader implementation for Hadoop. In the
-`SerialisingResponseWriter#write` method, these classes are used to
+The writer in the class [SerialisingResponseWriter](readers-common/src/main/java/uk/gov/gchq/palisade/reader/common/SerialisingResponseWriter.java) and the reader implementation in the abstract class [SerialisedDataReader](readers-common/src/main/java/uk/gov/gchq/palisade/reader/common/SerialisedDataReader.java) provide the implementation for the data retrieval.
+The class [HadoopDataReader](hadoop-reader/src/main/java/uk/gov/gchq/palisade/reader/HadoopDataReader.java) is the reader implementation for Hadoop. In the
+[SerialisingResponseWriter.write](readers-common/src/main/java/uk/gov/gchq/palisade/reader/common/SerialisingResponseWriter.java)` method, these classes are used to
 first retrieve the references to the data plus the rules that will be used for
 filtering. This is used to set up a processing stream for the client's request.
 
