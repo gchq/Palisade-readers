@@ -64,6 +64,6 @@ first retrieve the references to the data plus the rules that will be used for
 filtering. This is used to set up a processing stream for the client's request.
 
 The process will retrieve the data as an input stream. It will then be
-deserialised into records where the rules are applied to filter the records.
+deserialised into records where the rules are applied to redact or mask the records.
 This is then re-serialised into an output stream.  This output stream will be
 the data ready for the Data Service to provide to the client.
