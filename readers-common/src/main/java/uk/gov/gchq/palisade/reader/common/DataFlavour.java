@@ -23,8 +23,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-import uk.gov.gchq.palisade.Generated;
-
 import java.io.IOException;
 import java.util.Objects;
 import java.util.StringJoiner;

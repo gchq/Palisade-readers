@@ -16,7 +16,7 @@
 
 package uk.gov.gchq.palisade.reader.request;
 
-import uk.gov.gchq.palisade.Generated;
+import uk.gov.gchq.palisade.reader.common.Generated;
 import uk.gov.gchq.palisade.reader.common.ResponseWriter;
 
 import java.util.Objects;

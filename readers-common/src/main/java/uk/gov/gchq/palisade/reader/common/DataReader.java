@@ -16,7 +16,8 @@
 
 package uk.gov.gchq.palisade.reader.common;
 
-import uk.gov.gchq.palisade.data.serialise.Serialiser;
+import uk.gov.gchq.palisade.reader.common.data.seralise.Serialiser;
+import uk.gov.gchq.palisade.reader.common.rule.Rules;
 import uk.gov.gchq.palisade.reader.exception.NoCapacityException;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
 import uk.gov.gchq.palisade.reader.request.DataReaderResponse;
@@ -30,7 +31,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * apply the rules, then passes back to the data service the stream of data in
  * the expected format.
  * <p>
- * There is a utility method {@link uk.gov.gchq.palisade.Util#applyRulesToStream(java.util.stream.Stream, uk.gov.gchq.palisade.User, uk.gov.gchq.palisade.Context, uk.gov.gchq.palisade.rule.Rules, java.util.concurrent.atomic.AtomicLong, java.util.concurrent.atomic.AtomicLong)}
+ * There is a utility method {@link Util#applyRulesToStream(java.util.stream.Stream, User, Context, Rules, java.util.concurrent.atomic.AtomicLong, java.util.concurrent.atomic.AtomicLong)}
  * that does the part of applying the rules provided your input data is in the
  * format that the rules expect.
  */

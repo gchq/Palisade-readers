@@ -16,12 +16,11 @@
 
 package uk.gov.gchq.palisade.reader.common;
 
-import uk.gov.gchq.palisade.Generated;
-import uk.gov.gchq.palisade.data.serialise.Serialiser;
-import uk.gov.gchq.palisade.data.serialise.SimpleStringSerialiser;
+import uk.gov.gchq.palisade.reader.common.data.seralise.Serialiser;
+import uk.gov.gchq.palisade.reader.common.data.seralise.SimpleStringSerialiser;
+import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
 import uk.gov.gchq.palisade.reader.request.DataReaderResponse;
-import uk.gov.gchq.palisade.resource.LeafResource;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -60,8 +59,8 @@ public abstract class SerialisedDataReader implements DataReader {
     /**
      * Set the serialiser
      *
-     * @param serialisers   a mapping of data type to serialisers {@link SerialisedDataReader}
-     * @return              the {@link SerialisedDataReader}
+     * @param serialisers a mapping of data type to serialisers {@link SerialisedDataReader}
+     * @return the {@link SerialisedDataReader}
      */
     @Generated
     public SerialisedDataReader serialisers(final Map<DataFlavour, Serialiser<?>> serialisers) {
@@ -73,8 +72,8 @@ public abstract class SerialisedDataReader implements DataReader {
     /**
      * Set the default serialiser.
      *
-     * @param serialiser    the {@link Serialiser} to be set as the default
-     * @return              the {@link SerialisedDataReader} object
+     * @param serialiser the {@link Serialiser} to be set as the default
+     * @return the {@link SerialisedDataReader} object
      */
     @Generated
     public SerialisedDataReader defaultSerialiser(final Serialiser<?> serialiser) {
@@ -123,9 +122,9 @@ public abstract class SerialisedDataReader implements DataReader {
     /**
      * Gets the associated {@link Serialiser} from the serialiser {@link Map} for a specific {@link DataFlavour}.
      *
-     * @param flavour   the {@link DataFlavour} value to retrieve a {@link Serialiser}
-     * @param <T>       the type of {@link Serialiser}
-     * @return          the associated {@link Serialiser}
+     * @param flavour the {@link DataFlavour} value to retrieve a {@link Serialiser}
+     * @param <T>     the type of {@link Serialiser}
+     * @return the associated {@link Serialiser}
      */
     @Generated
     public <T> Serialiser<T> getSerialiser(final DataFlavour flavour) {
@@ -141,9 +140,9 @@ public abstract class SerialisedDataReader implements DataReader {
     /**
      * Gets the associated {@link Serialiser} from the {@link Map} for a {@link LeafResource}.
      *
-     * @param resource  the {@link LeafResource} used to get the {@link Serialiser}
-     * @param <I>       the type of {@link Serialiser}
-     * @return          the associated {@link Serialiser}
+     * @param resource the {@link LeafResource} used to get the {@link Serialiser}
+     * @param <I>      the type of {@link Serialiser}
+     * @return the associated {@link Serialiser}
      */
     @Generated
     public <I> Serialiser<I> getSerialiser(final LeafResource resource) {

@@ -19,7 +19,7 @@ package uk.gov.gchq.palisade.service.resource.util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import uk.gov.gchq.palisade.resource.LeafResource;
+import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
 
 import java.io.File;
 import java.net.URI;

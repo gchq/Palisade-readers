@@ -15,8 +15,6 @@
  */
 package uk.gov.gchq.palisade.reader.exception;
 
-import uk.gov.gchq.palisade.exception.RequestFailedException;
-
 /**
  * An exception thrown when a request is made to a data-service via a ReadRequest
  * or to a {@link uk.gov.gchq.palisade.reader.common.DataReader} via a {@link uk.gov.gchq.palisade.reader.request.DataReaderRequest}
@@ -27,7 +25,7 @@ public class NoCapacityException extends RequestFailedException {
     /**
      * Constructs a new {@link NoCapacityException} with the specified detail message.
      *
-     * @param message   a {@link String} value detailing the error
+     * @param message a {@link String} value detailing the error
      */
     public NoCapacityException(final String message) {
         super(message);
@@ -36,7 +34,7 @@ public class NoCapacityException extends RequestFailedException {
     /**
      * Constructs a new {@link NoCapacityException} with the cause.
      *
-     * @param cause     a {@link Throwable} that caused the error
+     * @param cause a {@link Throwable} that caused the error
      */
     public NoCapacityException(final Throwable cause) {
         super(cause);
@@ -45,8 +43,8 @@ public class NoCapacityException extends RequestFailedException {
     /**
      * Constructs a new {@link NoCapacityException} with the specified detail message and cause.
      *
-     * @param message   a {@link String} value detailing the error
-     * @param cause     a {@link Throwable} that caused the error
+     * @param message a {@link String} value detailing the error
+     * @param cause   a {@link Throwable} that caused the error
      */
     public NoCapacityException(final String message, final Throwable cause) {
         super(message, cause);

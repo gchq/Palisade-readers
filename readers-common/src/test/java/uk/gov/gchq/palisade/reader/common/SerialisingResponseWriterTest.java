@@ -19,42 +19,33 @@ package uk.gov.gchq.palisade.reader.common;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import uk.gov.gchq.palisade.Context;
-import uk.gov.gchq.palisade.User;
-import uk.gov.gchq.palisade.UserId;
-import uk.gov.gchq.palisade.data.serialise.SimpleStringSerialiser;
+import uk.gov.gchq.palisade.reader.common.data.seralise.SimpleStringSerialiser;
+import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
+import uk.gov.gchq.palisade.reader.common.resource.impl.FileResource;
+import uk.gov.gchq.palisade.reader.common.resource.impl.SystemResource;
+import uk.gov.gchq.palisade.reader.common.rule.Rule;
+import uk.gov.gchq.palisade.reader.common.rule.Rules;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
-import uk.gov.gchq.palisade.resource.LeafResource;
-import uk.gov.gchq.palisade.resource.impl.FileResource;
-import uk.gov.gchq.palisade.resource.impl.SystemResource;
-import uk.gov.gchq.palisade.rule.Rule;
-import uk.gov.gchq.palisade.rule.Rules;
-import uk.gov.gchq.palisade.service.SimpleConnectionDetail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SerialisingResponseWriterTest {
 
-    private static final UserId USER_ID = new UserId().id("test-user-id");
-    private static final User USER = new User().userId(USER_ID);
-    private static final String RESOURCE_ID = "/test/resourceId";
-    private static final String RESOURCE_TYPE = "uk.gov.gchq.palisade.test.TestType";
-    private static final String RESOURCE_FORMAT = "avro";
-    private static final String DATA_SERVICE_NAME = "test-data-service";
-    private static final String RESOURCE_PARENT = "/test";
+    private static final User USER = new User().userId("test-user-id");
     private static final Context CONTEXT = new Context().purpose("test-purpose");
 
     private static final LeafResource LEAF_RESOURCE = new FileResource()
-            .id(RESOURCE_ID)
-            .type(RESOURCE_TYPE)
-            .serialisedFormat(RESOURCE_FORMAT)
-            .connectionDetail(new SimpleConnectionDetail().serviceName(DATA_SERVICE_NAME))
-            .parent(new SystemResource().id(RESOURCE_PARENT));
+            .id("/test/resourceId")
+            .type("uk.gov.gchq.palisade.test.TestType")
+            .serialisedFormat("avro")
+            .connectionDetail(new SimpleConnectionDetail().serviceName("test-data-service"))
+            .parent(new SystemResource().id("/test"));
 
     private static class TestPassThroughRule<T extends Serializable> implements Rule<T> {
 
@@ -84,8 +75,8 @@ class SerialisingResponseWriterTest {
 
     }
 
-    private  SimpleStringSerialiser stringSeraliser;
-    private final String testString = "line1\nline2\nline3\n";
+    private SimpleStringSerialiser stringSeraliser;
+    private final String testString = String.join(System.lineSeparator(), List.of("line1", "line2", "line3", ""));
     private ByteArrayOutputStream outputStream;
     private ByteArrayInputStream inputStream;
     private AtomicLong recordsProcessed;
@@ -110,22 +101,21 @@ class SerialisingResponseWriterTest {
      */
     @Test
     void testSerialisingResponseWriterWithMixedRules() throws Exception {
-
-        Rules<Serializable> mixOfRules = new Rules<>()
+        var mixOfRules = new Rules<>()
                 .addRule("first", new TestPassThroughRule<>())
                 .addRule("second", new TestPassThroughRule<>())
                 .addRule("third", new TestApplyRule<>())
                 .addRule("fourth", new TestPassThroughRule<>());
 
-        DataReaderRequest readerRequestWithMixedRules = new DataReaderRequest()
+        var readerRequestWithMixedRules = new DataReaderRequest()
                 .user(USER)
                 .resource(LEAF_RESOURCE)
                 .context(CONTEXT)
                 .rules(mixOfRules);
 
-        SerialisingResponseWriter  serialisingResponseWriter = new SerialisingResponseWriter(inputStream, stringSeraliser, readerRequestWithMixedRules, recordsProcessed, recordsReturned);
+        var serialisingResponseWriter = new SerialisingResponseWriter(inputStream, stringSeraliser, readerRequestWithMixedRules, recordsProcessed, recordsReturned);
         serialisingResponseWriter.write(outputStream);
-        String outputString = new String(outputStream.toByteArray());
+        var outputString = outputStream.toString();
 
         assertThat(recordsProcessed.longValue())
                 .as("Expected to show that there are 3 records processed during the deserialising/serialising")
@@ -150,22 +140,21 @@ class SerialisingResponseWriterTest {
      */
     @Test
     void testSerialisingResponseWriterWithBypassRules() throws Exception {
-
-         Rules<Serializable> passThroughRules = new Rules<>()
+        var passThroughRules = new Rules<>()
                 .addRule("first", new TestPassThroughRule<>())
                 .addRule("second", new TestPassThroughRule<>())
                 .addRule("third", new TestPassThroughRule<>())
                 .addRule("fourth", new TestPassThroughRule<>());
 
-        DataReaderRequest readerRequestWithPassThroughRules = new DataReaderRequest()
+        var readerRequestWithPassThroughRules = new DataReaderRequest()
                 .user(USER)
                 .resource(LEAF_RESOURCE)
                 .context(CONTEXT)
                 .rules(passThroughRules);
 
-        SerialisingResponseWriter  serialisingResponseWriter = new SerialisingResponseWriter(inputStream, stringSeraliser, readerRequestWithPassThroughRules, recordsProcessed, recordsReturned);
+        var serialisingResponseWriter = new SerialisingResponseWriter(inputStream, stringSeraliser, readerRequestWithPassThroughRules, recordsProcessed, recordsReturned);
         serialisingResponseWriter.write(outputStream);
-        String outputString = new String(outputStream.toByteArray());
+        String outputString = outputStream.toString();
 
         assertThat(recordsProcessed.longValue())
                 .as("Expected to show a value of -1 indicating that no deserialising/serialising was done")

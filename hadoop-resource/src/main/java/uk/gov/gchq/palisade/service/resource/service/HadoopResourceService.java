@@ -24,11 +24,11 @@ import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.Generated;
-import uk.gov.gchq.palisade.resource.LeafResource;
-import uk.gov.gchq.palisade.resource.Resource;
-import uk.gov.gchq.palisade.service.ConnectionDetail;
-import uk.gov.gchq.palisade.service.ResourceService;
+import uk.gov.gchq.palisade.reader.common.ConnectionDetail;
+import uk.gov.gchq.palisade.reader.common.Generated;
+import uk.gov.gchq.palisade.reader.common.ResourceService;
+import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
+import uk.gov.gchq.palisade.reader.common.resource.Resource;
 import uk.gov.gchq.palisade.service.resource.util.FunctionalIterator;
 import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
 
@@ -72,8 +72,8 @@ public class HadoopResourceService implements ResourceService {
     /**
      * Creates a new {@link HadoopResourceService} object from a {@link Configuration} object
      *
-     * @param config        A Hadoop {@link Configuration} object
-     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
+     * @param config A Hadoop {@link Configuration} object
+     * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     public HadoopResourceService(final Configuration config) throws IOException {
         requireNonNull(config, "Hadoop Configuration");
@@ -185,7 +185,7 @@ public class HadoopResourceService implements ResourceService {
      * interface.
      * This is not permitted by the HadoopResourceService, so will always return failure (false)
      *
-     * @param leafResource         the resource that Palisade can manage access to
+     * @param leafResource the resource that Palisade can manage access to
      * @return whether or not the addResource call completed successfully, always false
      */
     @Override
@@ -222,9 +222,9 @@ public class HadoopResourceService implements ResourceService {
     /**
      * Sets the {@link Configuration} and {@link FileSystem} values
      *
-     * @param conf          A Hadoop {@link Configuration} object
-     * @return              the current {@link HadoopResourceService} object
-     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
+     * @param conf A Hadoop {@link Configuration} object
+     * @return the current {@link HadoopResourceService} object
+     * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     @Generated
     public HadoopResourceService conf(final Configuration conf) throws IOException {
@@ -237,8 +237,8 @@ public class HadoopResourceService implements ResourceService {
     /**
      * Adds a {@link ConnectionDetail} value to the {@link List} of data-services
      *
-     * @param detail    A {@link ConnectionDetail} object to be added
-     * @return          the current {@link HadoopResourceService} object
+     * @param detail A {@link ConnectionDetail} object to be added
+     * @return the current {@link HadoopResourceService} object
      */
     @Generated
     public HadoopResourceService addDataService(final ConnectionDetail detail) {

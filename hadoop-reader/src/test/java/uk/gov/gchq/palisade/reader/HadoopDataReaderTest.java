@@ -21,15 +21,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import uk.gov.gchq.palisade.Context;
-import uk.gov.gchq.palisade.User;
-import uk.gov.gchq.palisade.data.serialise.SimpleStringSerialiser;
+import uk.gov.gchq.palisade.reader.common.Context;
 import uk.gov.gchq.palisade.reader.common.DataFlavour;
+import uk.gov.gchq.palisade.reader.common.User;
+import uk.gov.gchq.palisade.reader.common.data.seralise.SimpleStringSerialiser;
+import uk.gov.gchq.palisade.reader.common.resource.impl.FileResource;
+import uk.gov.gchq.palisade.reader.common.rule.Rules;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
 import uk.gov.gchq.palisade.reader.request.DataReaderResponse;
 import uk.gov.gchq.palisade.reader.util.PathUtils;
-import uk.gov.gchq.palisade.resource.impl.FileResource;
-import uk.gov.gchq.palisade.rule.Rules;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

@@ -31,17 +31,35 @@
     <!--  *********** Artifact ID ***********    -->
 
     <properties>
+        <!-- Plugin versions -->
+        <jackson.version>2.10.0</jackson.version>
+        <slf4j.api.version>1.7.25</slf4j.api.version>
+        <commons-lang3.version>3.8.1</commons-lang3.version>
+
         <!-- Test dependency versions -->
         <junit.version>5.5.2</junit.version>
         <assertj.version>3.18.0</assertj.version>
     </properties>
 
     <dependencies>
-        <!-- User, Resource, Context types -->
         <dependency>
-            <groupId>uk.gov.gchq.palisade</groupId>
-            <artifactId>common</artifactId>
-            <version>0.5.0-${common.revision}</version>
+            <!-- Core Jackson ObjectMapper API -->
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <!-- Logging Dependencies -->
+        <dependency>
+            <!-- Used for Logging within Palisade -->
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.api.version}</version>
+        </dependency>
+        <dependency>
+            <!-- A package of utility classes for classes in java.lang's hierarchy -->
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
         </dependency>
         <dependency>
             <!-- JUnit -->

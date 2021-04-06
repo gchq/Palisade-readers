@@ -19,13 +19,9 @@ package uk.gov.gchq.palisade.reader.common;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.Context;
-import uk.gov.gchq.palisade.Generated;
-import uk.gov.gchq.palisade.User;
-import uk.gov.gchq.palisade.Util;
-import uk.gov.gchq.palisade.data.serialise.Serialiser;
+import uk.gov.gchq.palisade.reader.common.data.seralise.Serialiser;
+import uk.gov.gchq.palisade.reader.common.rule.Rules;
 import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
-import uk.gov.gchq.palisade.rule.Rules;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -117,7 +113,7 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
 
         try {
 
-            /**
+            /*
              If no rules that apply, then just copy the bytes across
              The value -1L is a convention to indicate deserialise/serialise is by-passed and the number of records
              processed and number of records returned will not be counted

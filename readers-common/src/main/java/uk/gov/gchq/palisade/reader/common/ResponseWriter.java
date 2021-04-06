@@ -16,11 +16,13 @@
 
 package uk.gov.gchq.palisade.reader.common;
 
+import uk.gov.gchq.palisade.reader.request.DataRequestResponse;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * This interface is used by DataService implementations to retrieve the {@link uk.gov.gchq.palisade.service.request.DataRequestResponse}
+ * This interface is used by DataService implementations to retrieve the {@link DataRequestResponse}
  * and examine the response metadata (e.g. schema) before asking for the Palisade filtered data to be written to an {@link OutputStream}.
  */
 public interface ResponseWriter extends AutoCloseable {
