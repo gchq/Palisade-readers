@@ -19,6 +19,9 @@ package uk.gov.gchq.palisade.reader.common;
 import java.net.URI;
 import java.util.List;
 
+/**
+ * A configuration class for adding Resources to a backing store within a service as part of pre-population
+ */
 public interface ResourceConfiguration {
 
     /**

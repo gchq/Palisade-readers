@@ -22,6 +22,12 @@ package uk.gov.gchq.palisade.reader.common.resource;
  */
 public interface ChildResource extends Resource {
 
+    /**
+     * Creates a child resource by specifying its parent
+     *
+     * @param parent the parent of this ChildResouce
+     * @return a ChildResource with a parent in its heirarchy
+     */
     ChildResource parent(ParentResource parent);
 
     ParentResource getParent();

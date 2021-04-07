@@ -30,13 +30,16 @@ import static java.util.Objects.requireNonNull;
  * This is the high level API for any request sent to a service.
  * This makes sure each request has a unique identifier.
  */
-public abstract class Request {
+public class Request {
     // This is a unique ID for each individual request made between the micro-services
-    private RequestId id;
+    private final RequestId id;
 
     // This Id is unique per data access request from a user
     private RequestId originalRequestId;
 
+    /**
+     * Creates a new RequestID with a random {@link UUID} string
+     */
     public Request() {
         this.id = new RequestId().id(UUID.randomUUID().toString());
     }

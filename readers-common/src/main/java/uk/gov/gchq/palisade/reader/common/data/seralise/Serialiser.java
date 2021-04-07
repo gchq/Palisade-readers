@@ -34,6 +34,8 @@ import java.util.stream.Stream;
  * calling either {@link Serialiser#deserialise(InputStream)} or {@link Serialiser#serialise(Stream, OutputStream)} concurrently.
  * The easiest and recommended way to do this is to make the {@code Serialiser} instance stateless; don't store anything related to
  * a particular de/serialisation operation in class member fields.
+ *
+ * @param <I> the type of seraliser, in the most common case, a String
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = As.EXISTING_PROPERTY, property = "class")
 public interface Serialiser<I> extends Serializable {

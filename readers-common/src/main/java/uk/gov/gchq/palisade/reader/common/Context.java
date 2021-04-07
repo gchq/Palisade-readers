@@ -48,10 +48,17 @@ public class Context {
     private static final String PURPOSE = "purpose";
     private Map<String, Object> contents;
 
+    /**
+     * Creates a context class with an empty contents
+     */
     public Context() {
         this(new HashMap<>());
     }
 
+    /**
+     * Creates a context object with a Map of contents containing purposes
+     * @param contents a map of reasons to access the data, as a purpose
+     */
     @JsonCreator
     public Context(@JsonProperty("contents") final Map<String, Object> contents) {
         this.setContents(contents);

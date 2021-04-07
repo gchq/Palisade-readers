@@ -16,8 +16,6 @@
 
 package uk.gov.gchq.palisade.reader.common.rule;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -89,33 +87,6 @@ public class WrappedRule<T extends Serializable> implements Rule<T> {
     public WrappedRule(final SerializablePredicate<T> predicate) {
         requireNonNull(predicate, WRAPPED_RULE_WAS_INITIALISED_WITH_NULL + PREDICATE_STRING);
         this.predicate = predicate;
-    }
-
-    @JsonCreator
-    public WrappedRule(@JsonProperty("rule") final Rule<T> rule,
-                       @JsonProperty("function") final SerializableUnaryOperator<T> function,
-                       @JsonProperty("predicate") final SerializablePredicate<T> predicate) {
-        checkNullCount(rule, function, predicate);
-        this.rule = rule;
-        this.function = function;
-        this.predicate = predicate;
-    }
-
-    private void checkNullCount(final Rule<T> rule, final UnaryOperator<T> function, final Predicate<T> predicate) {
-        //needs improving with Jackson
-        int nullCount = 0;
-        if (rule == null) {
-            nullCount++;
-        }
-        if (function == null) {
-            nullCount++;
-        }
-        if (predicate == null) {
-            nullCount++;
-        }
-        if (nullCount != 2) {
-            throw new IllegalArgumentException("Only one constructor parameter can be non-null");
-        }
     }
 
     @Override

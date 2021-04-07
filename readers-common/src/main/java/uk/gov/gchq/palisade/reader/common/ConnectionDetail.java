@@ -36,6 +36,10 @@ import java.io.Serializable;
 )
 public interface ConnectionDetail extends Serializable {
 
+    /**
+     * Creates a default connection detail of the Service Name
+     * @return a service name as a connection detail
+     */
     String createConnection();
 
     @JsonGetter("class")

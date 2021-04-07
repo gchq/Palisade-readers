@@ -29,28 +29,63 @@ public class PalisadeRuntimeException extends RuntimeException {
 
     private final Status status;
 
+    /**
+     * Creates a PalisadeRuntimeException with an attached message
+     *
+     * @param message the string cause of the error thrown by the service
+     */
     public PalisadeRuntimeException(final String message) {
         this(message, INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Creates a PalisadeRuntimeException with an attached cause
+     *
+     * @param cause the Throwable cause of the error thrown by the service
+     */
     public PalisadeRuntimeException(final Throwable cause) {
         this(cause, INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Creates a PalisadeRuntimeException with an attached message and cause
+     *
+     * @param message the string cause of the error thrown by the service
+     * @param cause   the throwable casue of the error thrown by the service
+     */
     public PalisadeRuntimeException(final String message, final Throwable cause) {
         this(message, cause, INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Creates a PalisadeRuntimeException with an attached message and HTTP status
+     *
+     * @param message the string cause of the error thrown by the service
+     * @param status  a http code to attach to the error, found in {@link Status}
+     */
     public PalisadeRuntimeException(final String message, final Status status) {
         super(message);
         this.status = status;
     }
 
+    /**
+     * Creates a PalisadeRuntimeException with an attached throwable cause and HTTP status
+     *
+     * @param cause  the Throwable cause of the error thrown by the service
+     * @param status a http code to attach to the error, found in {@link Status}
+     */
     public PalisadeRuntimeException(final Throwable cause, final Status status) {
         super(cause);
         this.status = status;
     }
 
+    /**
+     * Creates a PalisadeRuntimeException with an attached message, throwable cause and HTTP status
+     *
+     * @param message the string cause of the error thrown by the service
+     * @param cause  the Throwable cause of the error thrown by the service
+     * @param status a http code to attach to the error, found in {@link Status}
+     */
     public PalisadeRuntimeException(final String message, final Throwable cause, final Status status) {
         super(message, cause);
         this.status = status;

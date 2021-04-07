@@ -26,6 +26,10 @@ import java.util.StringJoiner;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * A DirectoryResource is a Palisade representation of a directory and can have Children and Parent resources
+ * eg. "file:/dev/Palisade/pom.xml" = System "/" -> Directory "/dev/" -> Directory "/dev/Palisade/" -> File "/dev/Palisade/pom.xml"
+ */
 public class DirectoryResource extends AbstractResource implements ChildResource, ParentResource {
     private static final long serialVersionUID = 1L;
 

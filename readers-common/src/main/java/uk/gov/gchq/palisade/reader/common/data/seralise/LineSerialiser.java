@@ -27,14 +27,30 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
+/**
+ * A Simple Seraliser used by the {@link SimpleStringSerialiser} to seralise and deseralise objects in the Hadoop reader package
+ *
+ * @param <T> the type of seraliser
+ */
 public abstract class LineSerialiser<T> implements Serialiser<T> {
     public static final Charset CHARSET = StandardCharsets.UTF_8;
 
+    /**
+     * Takes in a object and seralises it
+     *
+     * @param obj an object to be seralised
+     * @return the seralised string value of the object passed in
+     */
     public abstract String serialiseLine(final T obj);
 
+    /**
+     * Takes in a string and deseralises it back to the original object
+     *
+     * @param line the String to be deseralised
+     * @return the deseralised string, back in its original object
+     */
     public abstract T deserialiseLine(final String line);
 
     @Override
@@ -42,12 +58,18 @@ public abstract class LineSerialiser<T> implements Serialiser<T> {
         serialise(objects.iterator(), output);
     }
 
+    /**
+     * Using a PrintWriter, seralise each object in the iterator.
+     *
+     * @param itr containing a stream of objects to be seralised
+     * @param output an OutputStream used to send the seralised bytes to
+     * @return the seraliser containing all the seralised strings
+     */
     public Serialiser<T> serialise(final Iterator<T> itr, final OutputStream output) {
         requireNonNull(output, "output");
-        if (nonNull(itr)) {
-            try (PrintWriter printOut = new PrintWriter(new OutputStreamWriter(output, CHARSET))) {
-                itr.forEachRemaining(item -> printOut.println(serialiseLine(item)));
-            }
+        requireNonNull(itr);
+        try (PrintWriter printOut = new PrintWriter(new OutputStreamWriter(output, CHARSET))) {
+            itr.forEachRemaining(item -> printOut.println(serialiseLine(item)));
         }
         return this;
     }

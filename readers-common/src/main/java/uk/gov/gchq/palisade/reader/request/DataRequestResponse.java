@@ -59,7 +59,10 @@ public class DataRequestResponse extends Request {
         return this;
     }
 
-
+    /**
+     * Adds a {@link LeafResource} to a set of LeafResources
+     * @param resource a LeafResource to add to this class
+     */
     public void addResource(final LeafResource resource) {
         requireNonNull(resource);
         if (resources == null) {

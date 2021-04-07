@@ -15,6 +15,9 @@
  */
 package uk.gov.gchq.palisade.reader.common.data.seralise;
 
+/**
+ * A simple seraliser for strings, will return the seralised or deseralised string of an object passed in
+ */
 public class SimpleStringSerialiser extends LineSerialiser<String> {
     private static final long serialVersionUID = 1L;
 

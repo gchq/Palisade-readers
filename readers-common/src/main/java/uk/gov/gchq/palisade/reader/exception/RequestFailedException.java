@@ -23,15 +23,31 @@ import uk.gov.gchq.palisade.reader.request.Request;
  */
 public abstract class RequestFailedException extends PalisadeRuntimeException {
 
-    public RequestFailedException(final String e) {
-        super(e);
+    /**
+     * Creates a RequestFailedException which creates a PalisadeRuntimeException and passes in any args
+     *
+     * @param message the string cause of the error thrown by the service
+     */
+    public RequestFailedException(final String message) {
+        super(message);
     }
 
+    /**
+     * Creates a RequestFailedException which creates a PalisadeRuntimeException and passes in any args
+     *
+     * @param cause the Throwable cause of the error thrown by the service
+     */
     public RequestFailedException(final Throwable cause) {
         super(cause);
     }
 
-    public RequestFailedException(final String e, final Throwable cause) {
-        super(e, cause);
+    /**
+     * Creates a RequestFailedException which creates a PalisadeRuntimeException and passes in any args
+     *
+     * @param message the string cause of the error thrown by the service
+     * @param cause   the Throwable cause of the error thrown by the service
+     */
+    public RequestFailedException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 }

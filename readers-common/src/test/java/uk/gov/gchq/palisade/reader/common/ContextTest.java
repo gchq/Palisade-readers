@@ -35,7 +35,7 @@ class ContextTest {
 
         // Then
         assertThat(actualInstance)
-                .as("Check using recursion, that the %s has been deserialized successfully", context.getClass().getSimpleName())
+                .as("Check using recursion, that the %s has been deserialised successfully", context.getClass().getSimpleName())
                 .usingRecursiveComparison()
                 .isEqualTo(context);
     }
