@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * A FileResource is the Palisade representation of a file, which extends a LeafResource.
- * eg. "file:/dev/Palisade/pom.xml" = System "/" -> Directory "/dev/" -> Directory "/dev/Palisade/" -> File "/dev/Palisade/pom.xml"
+ * {@code eg. "file:/dev/Palisade/pom.xml" = System "/" -> Directory "/dev/" -> Directory "/dev/Palisade/" -> File "/dev/Palisade/pom.xml" }
  */
 public class FileResource extends AbstractLeafResource {
     private static final long serialVersionUID = 1L;

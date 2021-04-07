@@ -22,7 +22,7 @@ import uk.gov.gchq.palisade.reader.common.resource.ParentResource;
 
 /**
  * A SystemResource is the Palisade representation of a root directory inside a system
- * eg. "file:/dev/Palisade/pom.xml" = System "/" -> Directory "/dev/" -> Directory "/dev/Palisade/" -> File "/dev/Palisade/pom.xml"
+ * {@code eg. "file:/dev/Palisade/pom.xml" = System "/" -> Directory "/dev/" -> Directory "/dev/Palisade/" -> File "/dev/Palisade/pom.xml" }
  */
 public class SystemResource extends AbstractResource implements ParentResource {
     private static final long serialVersionUID = 1L;
