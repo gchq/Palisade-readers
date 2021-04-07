@@ -16,7 +16,6 @@
 
 package uk.gov.gchq.palisade.reader.common.resource.impl;
 
-
 import uk.gov.gchq.palisade.reader.common.resource.AbstractResource;
 import uk.gov.gchq.palisade.reader.common.resource.ParentResource;
 
