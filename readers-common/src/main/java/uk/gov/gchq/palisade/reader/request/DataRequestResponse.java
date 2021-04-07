@@ -81,13 +81,13 @@ public class DataRequestResponse extends Request {
 
     @Generated
     public Set<LeafResource> getResources() {
-        return resources;
+        return new HashSet<>(resources);
     }
 
     @Generated
     public void setResources(final Set<LeafResource> resources) {
         requireNonNull(resources);
-        this.resources = resources;
+        this.resources = new HashSet<>(resources);
     }
 
     @Override

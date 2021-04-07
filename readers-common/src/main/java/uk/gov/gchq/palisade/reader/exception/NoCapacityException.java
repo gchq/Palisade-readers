@@ -20,6 +20,7 @@ package uk.gov.gchq.palisade.reader.exception;
  * or to a {@link uk.gov.gchq.palisade.reader.common.DataReader} via a {@link uk.gov.gchq.palisade.reader.request.DataReaderRequest}
  * for a resource that cannot currently be served due to a lack of capacity to serve the request.
  */
+@SuppressWarnings("java:S110") // Suppress number of maxium parents
 public class NoCapacityException extends RequestFailedException {
 
     /**

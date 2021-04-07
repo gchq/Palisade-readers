@@ -33,6 +33,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -54,6 +55,10 @@ public class ResourceBuilder {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceBuilder.class);
     private static final URI ROOT;
 
+    public ResourceBuilder() {
+        // Empty Constructor
+    }
+
     static {
         File userDir = new File(System.getProperty("user.dir"));
         URI root;
@@ -64,10 +69,6 @@ public class ResourceBuilder {
             root = userDir.getAbsoluteFile().toURI();
         }
         ROOT = root;
-    }
-
-    private ResourceBuilder() {
-        // empty private constructor
     }
 
     private enum Scheme {
@@ -119,7 +120,7 @@ public class ResourceBuilder {
 
         // This should be assigning the attributes map to the returned object, once resources support attribute maps
 
-        switch (Scheme.valueOf(normal.getScheme().toUpperCase())) {
+        switch (Scheme.valueOf(normal.getScheme().toUpperCase(Locale.ENGLISH))) {
             // Both file:/ and hdfs:/ schema produce filesystem-like structures
             case FILE:
             case HDFS:

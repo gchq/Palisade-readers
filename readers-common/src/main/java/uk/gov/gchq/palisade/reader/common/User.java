@@ -164,31 +164,31 @@ public class User implements Serializable {
     }
 
     @Generated
-    public void setUserId(final UserId userId) {
+    public final void setUserId(final UserId userId) {
         requireNonNull(userId);
         this.userId = userId;
     }
 
     @Generated
     public Set<String> getRoles() {
-        return roles;
+        return new HashSet<>(roles);
     }
 
     @Generated
-    public void setRoles(final Set<String> roles) {
+    public final void setRoles(final Set<String> roles) {
         requireNonNull(roles);
-        this.roles = roles;
+        this.roles = new HashSet<>(roles);
     }
 
     @Generated
     public Set<String> getAuths() {
-        return auths;
+        return new HashSet<>(auths);
     }
 
     @Generated
-    public void setAuths(final Set<String> auths) {
+    public final void setAuths(final Set<String> auths) {
         requireNonNull(auths);
-        this.auths = auths;
+        this.auths = new HashSet<>(auths);
     }
 
     @JsonGetter("class")

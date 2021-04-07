@@ -41,7 +41,7 @@ import java.util.function.Function;
         include = As.EXISTING_PROPERTY,
         property = "class"
 )
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public interface ResourcePrepopulationFactory {
 
     /**

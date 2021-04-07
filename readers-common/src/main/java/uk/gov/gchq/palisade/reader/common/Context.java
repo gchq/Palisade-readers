@@ -70,7 +70,7 @@ public class Context {
     }
 
     @Generated
-    public void setContents(final Map<String, Object> contents) {
+    public final void setContents(final Map<String, Object> contents) {
         requireNonNull(contents);
         this.contents = contents;
     }
@@ -89,6 +89,7 @@ public class Context {
     }
 
     @JsonIgnore
+    @SuppressWarnings({"java:S1166", "java:S112"})
     public String getPurpose() {
         try {
             return (String) contents.get(PURPOSE);

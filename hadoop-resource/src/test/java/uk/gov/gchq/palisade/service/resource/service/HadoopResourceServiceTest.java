@@ -19,14 +19,12 @@ package uk.gov.gchq.palisade.service.resource.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import uk.gov.gchq.palisade.reader.common.ConnectionDetail;
 import uk.gov.gchq.palisade.reader.common.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
 import uk.gov.gchq.palisade.reader.common.util.ResourceBuilder;
 import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
 
 import java.io.File;
-import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,18 +39,23 @@ class HadoopResourceServiceTest {
     @Test
     void testResourceDetailsGetDataServiceConnection() {
         // Given
-        ConnectionDetail dataService = new SimpleConnectionDetail().serviceName("data-service");
+        var dataService = new SimpleConnectionDetail().serviceName("data-service");
         service.addDataService(dataService);
 
-        URI uri = new File(".").toURI().resolve("type_file.format");
-        HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
+        var uri = new File(".").toURI().resolve("type_file.format");
+        var details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
 
         // When
-        LeafResource resource = service.addConnectionDetail(details);
+        var resource = service.addConnectionDetail(details);
 
         // Then
-        assertThat(resource.getConnectionDetail()).isEqualTo(dataService);
-        assertThat(resource).isEqualTo(details.getResource().connectionDetail(dataService));
+        assertThat(resource.getConnectionDetail())
+                .as("Check that the connection detail has been set correctly")
+                .isEqualTo(dataService);
+
+        assertThat(resource)
+                .as("Check that the resource has the correct connection detail")
+                .isEqualTo(details.getResource().connectionDetail(dataService));
     }
 
     @Test
@@ -63,7 +66,9 @@ class HadoopResourceServiceTest {
         boolean success = service.addResource((LeafResource) ResourceBuilder.create("file:/hadoop/test_resource.avro"));
 
         // Then
-        assertThat(success).isFalse();
+        assertThat(success)
+                .as("Check that you cannot add a resource to the hadoop resource service at runtime")
+                .isFalse();
     }
 
 }

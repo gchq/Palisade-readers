@@ -39,6 +39,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common utility methods.
  */
+@SuppressWarnings({"java:S112", "java:S2658", "java:S2142"})
 public final class Util {
     private static final Logger LOGGER = LoggerFactory.getLogger(Util.class);
 
@@ -108,7 +109,7 @@ public final class Util {
         //set up a thread to watch this
         final ThreadFactory defaultFactory = Executors.defaultThreadFactory();
         //ensure thread is daemon
-        return runnable -> {
+        return (Runnable runnable) -> {
             Thread t = defaultFactory.newThread(runnable);
             t.setDaemon(true);
             return t;

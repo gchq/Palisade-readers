@@ -350,6 +350,7 @@ public interface FunctionalIterator<T> extends Iterator<T> {
         }
 
         @Override
+        @SuppressWarnings("java:S1166")
         public T next() {
             try {
                 return this.remoteIterator.next();

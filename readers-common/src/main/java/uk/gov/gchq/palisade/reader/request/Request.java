@@ -31,8 +31,11 @@ import static java.util.Objects.requireNonNull;
  * This makes sure each request has a unique identifier.
  */
 public abstract class Request {
-    private RequestId id; //this is a unique ID for each individual request made between the micro-services
-    private RequestId originalRequestId; //this Id is unique per data access request from a user
+    // This is a unique ID for each individual request made between the micro-services
+    private RequestId id;
+
+    // This Id is unique per data access request from a user
+    private RequestId originalRequestId;
 
     public Request() {
         this.id = new RequestId().id(UUID.randomUUID().toString());

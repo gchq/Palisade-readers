@@ -39,7 +39,7 @@ public class UriBuilder {
     }
 
     private IScheme build() {
-        return scheme -> authority -> path -> query -> fragment -> {
+        return scheme -> authority -> path -> query -> (String fragment) -> {
             String thisScheme = Optional.ofNullable(scheme).or(() -> baseUri.map(URI::getScheme)).orElseThrow();
             String thisAuth = Optional.ofNullable(authority).or(() -> baseUri.map(URI::getAuthority)).orElse(null);
             String thisPath = Optional.ofNullable(path).or(() -> baseUri.map(URI::getPath)).orElseThrow();

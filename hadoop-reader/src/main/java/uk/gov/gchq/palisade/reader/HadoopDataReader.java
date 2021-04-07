@@ -169,7 +169,7 @@ public class HadoopDataReader extends SerialisedDataReader {
         return rtn;
     }
 
-    private Map<String, String> getPlainJobConfWithoutResolvingValues() {
+    private static Map<String, String> getPlainJobConfWithoutResolvingValues() {
         Map<String, String> plainMapWithoutResolvingValues = new HashMap<>();
         for (Entry<String, String> entry : new Configuration()) {
             plainMapWithoutResolvingValues.put(entry.getKey(), entry.getValue());

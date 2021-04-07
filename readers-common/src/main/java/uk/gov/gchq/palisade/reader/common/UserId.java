@@ -65,7 +65,7 @@ public class UserId implements Serializable {
     }
 
     @Generated
-    public void setId(final String id) {
+    public final void setId(final String id) {
         requireNonNull(id);
         this.id = id;
     }

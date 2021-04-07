@@ -69,6 +69,7 @@ public interface DataReader {
      *
      * @return  the {@link String} value of the class
      */
+    @SuppressWarnings("java:S100") // ignore regex on these default classes
     default String _getClass() {
         return getClass().getName();
     }
@@ -78,6 +79,7 @@ public interface DataReader {
      *
      * @param className the {@link String} value of the class
      */
+    @SuppressWarnings("java:S100") // ignore regex on these default classes
     default void _setClass(final String className) {
         // do nothing.
     }
