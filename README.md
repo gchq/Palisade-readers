@@ -32,7 +32,8 @@ These provide the basis of the solution for retrieving the data, filtering accor
 
 The writer in the class [SerialisingResponseWriter](readers-common/src/main/java/uk/gov/gchq/palisade/reader/common/SerialisingResponseWriter.java) and the reader implementation in the abstract class [SerialisedDataReader](readers-common/src/main/java/uk/gov/gchq/palisade/reader/common/SerialisedDataReader.java) provide the implementation for the data retrieval.
 The class [HadoopDataReader](hadoop-reader/src/main/java/uk/gov/gchq/palisade/reader/HadoopDataReader.java) is the reader implementation for Hadoop. In the
-[SerialisingResponseWriter.write](readers-common/src/main/java/uk/gov/gchq/palisade/reader/common/SerialisingResponseWriter.java)` method, these classes are used to
+[SerialisingResponseWriter.write](readers-common/src/main/java/uk/gov/gchq/palisade/reader/common/SerialisingResponseWriter.java) method, these classes are used to
+
 first retrieve the references to the data plus the rules that will be used for
 filtering. This is used to set up a processing stream for the client's request.
 
