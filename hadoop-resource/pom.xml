@@ -50,6 +50,12 @@
             <version>0.5.0-${services.revision}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>resource-service</artifactId>
+            <version>0.5.0-${services.revision}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- Spring Dependency -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
