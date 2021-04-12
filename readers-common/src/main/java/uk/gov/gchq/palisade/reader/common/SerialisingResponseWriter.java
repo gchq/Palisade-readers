@@ -117,11 +117,10 @@ public class SerialisingResponseWriter<T extends Serializable> implements Respon
 
         try {
 
-            /**
-             If none of the rules apply, then just copy the bytes across.
-             The value -1L is a convention to indicate deserialise/serialise is by-passed and the number of records
-             processed and number of records returned will not be counted.
-             */
+
+             //If none of the rules apply, then just copy the bytes across.
+             //The value -1L is a convention to indicate deserialise/serialise is by-passed and the number of records
+             //processed and number of records returned will not be counted.
             if (!doApplyRules(rules, request.getUser(), request.getContext())) {
                 LOGGER.debug("No rules to apply");
                 stream.transferTo(output);
