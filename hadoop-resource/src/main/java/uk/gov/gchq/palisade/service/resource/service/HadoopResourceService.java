@@ -24,11 +24,11 @@ import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.reader.common.ConnectionDetail;
-import uk.gov.gchq.palisade.reader.common.Generated;
-import uk.gov.gchq.palisade.reader.common.ResourceService;
-import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
-import uk.gov.gchq.palisade.reader.common.resource.Resource;
+import uk.gov.gchq.palisade.service.data.common.ConnectionDetail;
+import uk.gov.gchq.palisade.service.data.common.ResourceService;
+import uk.gov.gchq.palisade.service.data.common.resource.LeafResource;
+import uk.gov.gchq.palisade.service.data.common.resource.Resource;
+import uk.gov.gchq.palisade.service.resource.Generated;
 import uk.gov.gchq.palisade.service.resource.util.FunctionalIterator;
 import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
 

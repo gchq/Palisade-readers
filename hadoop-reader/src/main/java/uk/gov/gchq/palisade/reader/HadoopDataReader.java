@@ -21,11 +21,12 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
-import uk.gov.gchq.palisade.reader.common.Generated;
-import uk.gov.gchq.palisade.reader.common.SerialisedDataReader;
-import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
-import uk.gov.gchq.palisade.reader.exception.ReadResourceException;
+import uk.gov.gchq.palisade.service.data.common.Generated;
+import uk.gov.gchq.palisade.service.data.common.SerialisedDataReader;
+import uk.gov.gchq.palisade.service.data.common.exception.ReadResourceException;
+import uk.gov.gchq.palisade.service.data.common.resource.LeafResource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +44,7 @@ import static java.util.Objects.requireNonNull;
  * An HadoopDataReader is an implementation of {@link SerialisedDataReader} for Hadoop that opens a file and returns
  * a single {@link InputStream} containing all the records.
  */
+@EnableAutoConfiguration
 public class HadoopDataReader extends SerialisedDataReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(HadoopDataReader.class);
 

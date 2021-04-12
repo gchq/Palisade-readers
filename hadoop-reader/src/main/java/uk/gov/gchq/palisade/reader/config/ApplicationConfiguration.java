@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.reader.common.rule;
+package uk.gov.gchq.palisade.reader.config;
 
-import java.io.Serializable;
-import java.util.function.Predicate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-/**
- * A serializable interface for a {@link Predicate}
- *
- * @param <T>   the type of the input to the predicate
- */
-public interface SerializablePredicate<T> extends Predicate<T>, Serializable {
+import uk.gov.gchq.palisade.reader.HadoopDataReader;
+import uk.gov.gchq.palisade.service.data.common.DataReader;
+
+import java.io.IOException;
+
+@Configuration
+public class ApplicationConfiguration {
+
+    @Bean
+    DataReader hadoopDataReader() throws IOException {
+        return new HadoopDataReader();
+    }
+
 }

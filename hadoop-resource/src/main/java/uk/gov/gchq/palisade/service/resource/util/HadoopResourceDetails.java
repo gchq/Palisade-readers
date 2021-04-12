@@ -19,9 +19,9 @@ package uk.gov.gchq.palisade.service.resource.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.reader.common.Generated;
-import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
-import uk.gov.gchq.palisade.reader.common.util.ResourceBuilder;
+import uk.gov.gchq.palisade.service.data.common.Generated;
+import uk.gov.gchq.palisade.service.data.common.resource.LeafResource;
+import uk.gov.gchq.palisade.service.data.common.util.ResourceBuilder;
 
 import java.net.URI;
 import java.util.HashMap;

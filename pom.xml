@@ -45,6 +45,7 @@
         <!-- Project properties -->
         <java.version>11</java.version>
         <revision>SNAPSHOT</revision>
+        <services.revision>SNAPSHOT</services.revision>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -71,7 +72,6 @@
     <modules>
         <!-- Core reader packages -->
         <module>hadoop-resource</module>
-        <module>readers-common</module>
         <module>hadoop-reader</module>
     </modules>
 

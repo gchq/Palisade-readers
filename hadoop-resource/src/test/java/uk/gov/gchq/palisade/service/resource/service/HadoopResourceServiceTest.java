@@ -19,9 +19,9 @@ package uk.gov.gchq.palisade.service.resource.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import uk.gov.gchq.palisade.reader.common.SimpleConnectionDetail;
-import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
-import uk.gov.gchq.palisade.reader.common.util.ResourceBuilder;
+import uk.gov.gchq.palisade.service.data.common.SimpleConnectionDetail;
+import uk.gov.gchq.palisade.service.data.common.resource.LeafResource;
+import uk.gov.gchq.palisade.service.data.common.util.ResourceBuilder;
 import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
 
 import java.io.File;

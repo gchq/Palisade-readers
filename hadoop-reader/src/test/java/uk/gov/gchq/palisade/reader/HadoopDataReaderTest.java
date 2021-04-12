@@ -19,14 +19,14 @@ import org.apache.hadoop.conf.Configuration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import uk.gov.gchq.palisade.reader.common.Context;
-import uk.gov.gchq.palisade.reader.common.DataFlavour;
-import uk.gov.gchq.palisade.reader.common.User;
-import uk.gov.gchq.palisade.reader.common.data.seralise.SimpleStringSerialiser;
-import uk.gov.gchq.palisade.reader.common.resource.impl.FileResource;
-import uk.gov.gchq.palisade.reader.common.rule.Rules;
-import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
-import uk.gov.gchq.palisade.reader.request.DataReaderResponse;
+import uk.gov.gchq.palisade.service.data.common.Context;
+import uk.gov.gchq.palisade.service.data.common.DataFlavour;
+import uk.gov.gchq.palisade.service.data.common.User;
+import uk.gov.gchq.palisade.service.data.common.request.DataReaderRequest;
+import uk.gov.gchq.palisade.service.data.common.request.DataReaderResponse;
+import uk.gov.gchq.palisade.service.data.common.resource.impl.FileResource;
+import uk.gov.gchq.palisade.service.data.common.rule.Rules;
+import uk.gov.gchq.palisade.service.data.common.seralise.SimpleStringSerialiser;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
