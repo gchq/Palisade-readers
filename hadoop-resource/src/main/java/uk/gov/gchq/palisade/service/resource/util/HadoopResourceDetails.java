@@ -19,9 +19,9 @@ package uk.gov.gchq.palisade.service.resource.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.service.data.common.Generated;
-import uk.gov.gchq.palisade.service.data.common.resource.LeafResource;
-import uk.gov.gchq.palisade.service.data.common.util.ResourceBuilder;
+import uk.gov.gchq.palisade.service.resource.Generated;
+import uk.gov.gchq.palisade.service.resource.common.resource.LeafResource;
+import uk.gov.gchq.palisade.service.resource.common.util.ResourceBuilder;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Helper class around {@link LeafResource} fields used to validate resource details with what Hadoop
- * expects. Additionally used for predicates filtering Hadoop resource response streams by type or
+ * expects. Additionally, used for predicates filtering Hadoop resource response streams by type or
  * serialised format.
  */
 public class HadoopResourceDetails {

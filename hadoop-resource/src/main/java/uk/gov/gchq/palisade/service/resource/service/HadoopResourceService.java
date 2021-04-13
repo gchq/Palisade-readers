@@ -24,11 +24,11 @@ import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.service.data.common.ConnectionDetail;
-import uk.gov.gchq.palisade.service.data.common.ResourceService;
-import uk.gov.gchq.palisade.service.data.common.resource.LeafResource;
-import uk.gov.gchq.palisade.service.data.common.resource.Resource;
 import uk.gov.gchq.palisade.service.resource.Generated;
+import uk.gov.gchq.palisade.service.resource.common.resource.LeafResource;
+import uk.gov.gchq.palisade.service.resource.common.resource.Resource;
+import uk.gov.gchq.palisade.service.resource.common.service.ConnectionDetail;
+import uk.gov.gchq.palisade.service.resource.common.service.ResourceService;
 import uk.gov.gchq.palisade.service.resource.util.FunctionalIterator;
 import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
 
@@ -67,7 +67,7 @@ public class HadoopResourceService implements ResourceService {
     private Configuration config;
     private FileSystem fileSystem;
 
-    private List<ConnectionDetail> dataServices = new ArrayList<>();
+    private final List<ConnectionDetail> dataServices = new ArrayList<>();
 
     /**
      * Creates a new {@link HadoopResourceService} object from a {@link Configuration} object
@@ -213,7 +213,7 @@ public class HadoopResourceService implements ResourceService {
             throw new IllegalStateException(ERROR_NO_DATA_SERVICES);
         }
         int serviceNum = ThreadLocalRandom.current().nextInt(this.dataServices.size());
-        ConnectionDetail dataService = this.dataServices.get(serviceNum);
+        var dataService = this.dataServices.get(serviceNum);
 
         return hadoopResourceDetails.getResource()
                 .connectionDetail(dataService);
