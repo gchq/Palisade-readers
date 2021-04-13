@@ -23,7 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 import uk.gov.gchq.palisade.service.resource.ResourceApplication;
 import uk.gov.gchq.palisade.service.resource.common.resource.ResourceService;
-import uk.gov.gchq.palisade.service.resource.hadoop.service.HadoopResourceService;
 import uk.gov.gchq.palisade.service.resource.service.ResourceServicePersistenceProxy;
 
 import java.lang.reflect.Field;

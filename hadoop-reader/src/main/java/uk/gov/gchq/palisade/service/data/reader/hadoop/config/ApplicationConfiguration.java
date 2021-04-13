@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.reader.config;
+package uk.gov.gchq.palisade.service.data.reader.hadoop.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import uk.gov.gchq.palisade.reader.HadoopDataReader;
+import uk.gov.gchq.palisade.service.data.reader.hadoop.HadoopDataReader;
 import uk.gov.gchq.palisade.service.data.common.DataReader;
 
 import java.io.IOException;

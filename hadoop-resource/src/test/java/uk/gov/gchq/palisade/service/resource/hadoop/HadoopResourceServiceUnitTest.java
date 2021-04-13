@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.resource.hadoop.service;
+package uk.gov.gchq.palisade.service.resource.hadoop;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import uk.gov.gchq.palisade.service.resource.common.resource.LeafResource;
 import uk.gov.gchq.palisade.service.resource.common.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.service.resource.common.util.ResourceBuilder;
+import uk.gov.gchq.palisade.service.resource.hadoop.HadoopResourceService;
 import uk.gov.gchq.palisade.service.resource.hadoop.util.HadoopResourceDetails;
 
 import java.io.File;

@@ -19,6 +19,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import uk.gov.gchq.palisade.service.data.reader.hadoop.HadoopDataReader;
 import uk.gov.gchq.palisade.service.data.common.Context;
 import uk.gov.gchq.palisade.service.data.common.DataFlavour;
 import uk.gov.gchq.palisade.service.data.common.User;

@@ -20,8 +20,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import uk.gov.gchq.palisade.service.resource.hadoop.service.ConfiguredHadoopResourceService;
-import uk.gov.gchq.palisade.service.resource.hadoop.service.HadoopResourceService;
+import uk.gov.gchq.palisade.service.resource.hadoop.ConfiguredHadoopResourceService;
+import uk.gov.gchq.palisade.service.resource.hadoop.HadoopResourceService;
 
 import java.io.IOException;
 

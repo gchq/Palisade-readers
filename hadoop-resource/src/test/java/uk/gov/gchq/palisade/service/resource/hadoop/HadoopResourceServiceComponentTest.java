@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.resource.hadoop.service;
+package uk.gov.gchq.palisade.service.resource.hadoop;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
@@ -31,6 +31,7 @@ import uk.gov.gchq.palisade.service.resource.common.resource.impl.DirectoryResou
 import uk.gov.gchq.palisade.service.resource.common.resource.impl.FileResource;
 import uk.gov.gchq.palisade.service.resource.common.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.service.resource.common.util.ResourceBuilder;
+import uk.gov.gchq.palisade.service.resource.hadoop.HadoopResourceService;
 import uk.gov.gchq.palisade.service.resource.hadoop.util.HadoopResourceDetails;
 
 import java.io.BufferedWriter;
