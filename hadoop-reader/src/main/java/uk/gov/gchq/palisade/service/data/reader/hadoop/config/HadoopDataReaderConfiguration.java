@@ -16,20 +16,39 @@
 
 package uk.gov.gchq.palisade.service.data.reader.hadoop.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import uk.gov.gchq.palisade.service.data.common.data.reader.SerialisedDataReader;
 import uk.gov.gchq.palisade.service.data.reader.hadoop.HadoopDataReader;
-import uk.gov.gchq.palisade.service.data.common.DataReader;
 
 import java.io.IOException;
 
 @Configuration
 public class HadoopDataReaderConfiguration {
-
+    /**
+     * Default (empty) hadoop configuration.
+     *
+     * @return a {@link org.apache.hadoop.conf.Configuration} to be used to configure the {@link HadoopDataReader} instance
+     */
     @Bean
-    DataReader hadoopDataReader() throws IOException {
-        return new HadoopDataReader();
+    @ConditionalOnProperty(prefix = "data.reader", name = "implementation", havingValue = "hadoop")
+    org.apache.hadoop.conf.Configuration hadoopConfiguration() {
+        return new org.apache.hadoop.conf.Configuration();
+    }
+
+    /**
+     * Bean implementation for {@link HadoopDataReader} which extends {@link SerialisedDataReader} and is used for setting hadoopConfigurations and reading raw data.
+     *
+     * @param hadoopConfig the {@link org.apache.hadoop.conf.Configuration} for the target hadoop instance
+     * @return a new instance of {@link HadoopDataReader}
+     * @throws IOException ioException
+     */
+    @Bean
+    @ConditionalOnProperty(prefix = "data.reader", name = "implementation", havingValue = "hadoop")
+    HadoopDataReader hadoopDataReader(final org.apache.hadoop.conf.Configuration hadoopConfig) throws IOException {
+        return new HadoopDataReader(hadoopConfig);
     }
 
 }

@@ -19,8 +19,6 @@ package uk.gov.gchq.palisade.service.resource.hadoop.util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import uk.gov.gchq.palisade.service.resource.hadoop.util.HadoopResourceDetails;
-
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;

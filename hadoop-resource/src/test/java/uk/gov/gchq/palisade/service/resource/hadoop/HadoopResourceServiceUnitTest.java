@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import uk.gov.gchq.palisade.service.resource.common.resource.LeafResource;
 import uk.gov.gchq.palisade.service.resource.common.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.service.resource.common.util.ResourceBuilder;
-import uk.gov.gchq.palisade.service.resource.hadoop.HadoopResourceService;
 import uk.gov.gchq.palisade.service.resource.hadoop.util.HadoopResourceDetails;
 
 import java.io.File;

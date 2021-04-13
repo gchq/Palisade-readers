@@ -33,6 +33,7 @@
 
     <properties>
         <!-- Dependency versions -->
+        <gson.version>2.8.5</gson.version>
         <hadoop.version>3.2.1</hadoop.version>
 
         <!-- Provided dependency versions -->
@@ -41,29 +42,47 @@
         <!-- Test dependency versions -->
         <junit.version>5.5.2</junit.version>
         <assertj.version>3.18.0</assertj.version>
-
-        <!-- Not strictly needed, just to satisfy spring-boot reflection -->
-        <jackson.version>2.11.4</jackson.version>
-        <gson.version>2.11.4</gson.version>
     </properties>
 
     <dependencies>
         <!--
-       ~ Palisade
-       -->
+        ~ Palisade
+        -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>resource-service</artifactId>
             <version>0.5.0-${services.revision}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Spring Dependency -->
+
+        <!--
+        ~ Spring
+        -->
         <dependency>
+            <!-- Serialise/deserialise objects to/from JSON -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+            <version>${spring-boot.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <!-- JSON compatible with Spring and Hadoop -->
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <!-- Spring Autoconfiguration for provided Beans -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
             <version>${spring-boot.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!--
+        ~ Hadoop
+        -->
         <dependency>
             <!-- Hadoop config classes -->
             <groupId>org.apache.hadoop</groupId>
@@ -83,13 +102,13 @@
         </dependency>
 
         <!--
-       ~ Test Dependencies
-       -->
+        ~ Test Dependencies
+        -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>resource-service</artifactId>
             <version>0.5.0-${services.revision}</version>
-            <classifier>jar-with-dependencies</classifier>
+            <classifier>exec</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -110,24 +129,6 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!--
-        ~ Satisfy SpringBoot reflection for ObjectMappers
-        -->
-        <dependency>
-            <!-- Ser/des to JSON -->
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.11.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <!-- Ser/des to JSON -->
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.6</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

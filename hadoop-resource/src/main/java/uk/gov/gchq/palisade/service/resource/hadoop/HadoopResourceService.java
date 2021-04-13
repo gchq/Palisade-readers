@@ -25,9 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.service.resource.common.Generated;
+import uk.gov.gchq.palisade.service.resource.common.resource.ConnectionDetail;
 import uk.gov.gchq.palisade.service.resource.common.resource.LeafResource;
 import uk.gov.gchq.palisade.service.resource.common.resource.Resource;
-import uk.gov.gchq.palisade.service.resource.common.resource.ConnectionDetail;
 import uk.gov.gchq.palisade.service.resource.common.resource.ResourceService;
 import uk.gov.gchq.palisade.service.resource.hadoop.util.FunctionalIterator;
 import uk.gov.gchq.palisade.service.resource.hadoop.util.HadoopResourceDetails;

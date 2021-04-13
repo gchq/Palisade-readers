@@ -24,7 +24,7 @@ public class IteratorException extends RuntimeException {
     /**
      * Constructs a new {@link IteratorException} with the cause.
      *
-     * @param cause     a {@link Throwable} that caused the error
+     * @param cause a {@link Throwable} that caused the error
      */
     public IteratorException(final Throwable cause) {
         super(cause);
@@ -33,7 +33,7 @@ public class IteratorException extends RuntimeException {
     /**
      * Constructs a new {@link IteratorException} with the specified detail message.
      *
-     * @param message   a {@link String} value detailing the error
+     * @param message a {@link String} value detailing the error
      */
     public IteratorException(final String message) {
         super(message);
@@ -42,8 +42,8 @@ public class IteratorException extends RuntimeException {
     /**
      * Constructs a new {@link IteratorException} with the specified detail message and cause.
      *
-     * @param message   a {@link String} value detailing the error
-     * @param cause     a {@link Throwable} that caused the issue
+     * @param message a {@link String} value detailing the error
+     * @param cause   a {@link Throwable} that caused the issue
      */
     public IteratorException(final String message, final Throwable cause) {
         super(message, cause);

@@ -17,29 +17,16 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
 |  +- com.typesafe.akka:akka-slf4j_2.13:jar:2.6.8:provided
 |  +- com.typesafe.akka:akka-discovery_2.13:jar:2.6.8:provided
 |  +- org.springframework.boot:spring-boot-starter-actuator:jar:2.3.1.RELEASE:provided
-|  |  +- org.springframework.boot:spring-boot-starter:jar:2.3.1.RELEASE:provided
-|  |  |  +- org.springframework.boot:spring-boot-starter-logging:jar:2.3.1.RELEASE:provided
-|  |  |  |  +- org.apache.logging.log4j:log4j-to-slf4j:jar:2.13.3:provided
-|  |  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.13.3:provided
-|  |  |  |  \- org.slf4j:jul-to-slf4j:jar:1.7.30:provided
-|  |  |  +- jakarta.annotation:jakarta.annotation-api:jar:1.3.5:provided
-|  |  |  \- org.yaml:snakeyaml:jar:1.26:provided
 |  |  +- org.springframework.boot:spring-boot-actuator-autoconfigure:jar:2.3.1.RELEASE:provided
-|  |  |  +- org.springframework.boot:spring-boot-actuator:jar:2.3.1.RELEASE:provided
-|  |  |  \- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.11.0:provided
+|  |  |  \- org.springframework.boot:spring-boot-actuator:jar:2.3.1.RELEASE:provided
 |  |  \- io.micrometer:micrometer-core:jar:1.5.1:provided
 |  |     +- org.hdrhistogram:HdrHistogram:jar:2.1.12:provided
 |  |     \- org.latencyutils:LatencyUtils:jar:2.0.3:provided
 |  +- org.springframework.boot:spring-boot-starter-web:jar:2.3.1.RELEASE:provided
-|  |  +- org.springframework.boot:spring-boot-starter-json:jar:2.3.1.RELEASE:provided
-|  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.11.0:provided
-|  |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.11.0:provided
 |  |  +- org.springframework.boot:spring-boot-starter-tomcat:jar:2.3.1.RELEASE:provided
 |  |  |  +- org.apache.tomcat.embed:tomcat-embed-core:jar:9.0.36:provided
 |  |  |  +- org.glassfish:jakarta.el:jar:3.0.3:provided
 |  |  |  \- org.apache.tomcat.embed:tomcat-embed-websocket:jar:9.0.36:provided
-|  |  +- org.springframework:spring-web:jar:5.2.7.RELEASE:provided
-|  |  |  \- org.springframework:spring-beans:jar:5.2.7.RELEASE:provided
 |  |  \- org.springframework:spring-webmvc:jar:5.2.7.RELEASE:provided
 |  |     +- org.springframework:spring-aop:jar:5.2.7.RELEASE:provided
 |  |     \- org.springframework:spring-expression:jar:5.2.7.RELEASE:provided
@@ -54,7 +41,6 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
 |  |  +- org.hibernate:hibernate-core:jar:5.4.17.Final:provided
 |  |  |  +- org.jboss.logging:jboss-logging:jar:3.3.2.Final:provided
 |  |  |  +- org.javassist:javassist:jar:3.24.0-GA:provided
-|  |  |  +- net.bytebuddy:byte-buddy:jar:1.10.10:provided
 |  |  |  +- antlr:antlr:jar:2.7.7:provided
 |  |  |  +- org.jboss:jandex:jar:2.1.3.Final:provided
 |  |  |  +- com.fasterxml:classmate:jar:1.5.1:provided
@@ -71,25 +57,38 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
 |  |  |  \- org.springframework:spring-tx:jar:5.2.7.RELEASE:provided
 |  |  \- org.springframework:spring-aspects:jar:5.2.7.RELEASE:provided
 |  +- com.h2database:h2:jar:1.4.200:provided
-|  +- org.springframework.boot:spring-boot-starter-data-redis:jar:2.3.1.RELEASE:provided
-|  |  +- org.springframework.data:spring-data-redis:jar:2.3.1.RELEASE:provided
-|  |  |  +- org.springframework.data:spring-data-keyvalue:jar:2.3.1.RELEASE:provided
-|  |  |  +- org.springframework:spring-oxm:jar:5.2.7.RELEASE:provided
-|  |  |  \- org.springframework:spring-context-support:jar:5.2.7.RELEASE:provided
-|  |  \- io.lettuce:lettuce-core:jar:5.3.1.RELEASE:provided
-|  |     +- io.netty:netty-common:jar:4.1.50.Final:provided
-|  |     +- io.netty:netty-handler:jar:4.1.50.Final:provided
-|  |     |  +- io.netty:netty-resolver:jar:4.1.50.Final:provided
-|  |     |  +- io.netty:netty-buffer:jar:4.1.50.Final:provided
-|  |     |  \- io.netty:netty-codec:jar:4.1.50.Final:provided
-|  |     +- io.netty:netty-transport:jar:4.1.50.Final:provided
-|  |     \- io.projectreactor:reactor-core:jar:3.3.6.RELEASE:provided
-|  +- com.google.code.gson:gson:jar:2.8.5:compile
-|  \- uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT:provided
+|  \- org.springframework.boot:spring-boot-starter-data-redis:jar:2.3.1.RELEASE:provided
+|     +- org.springframework.data:spring-data-redis:jar:2.3.1.RELEASE:provided
+|     |  +- org.springframework.data:spring-data-keyvalue:jar:2.3.1.RELEASE:provided
+|     |  +- org.springframework:spring-oxm:jar:5.2.7.RELEASE:provided
+|     |  \- org.springframework:spring-context-support:jar:5.2.7.RELEASE:provided
+|     \- io.lettuce:lettuce-core:jar:5.3.1.RELEASE:provided
+|        +- io.netty:netty-common:jar:4.1.50.Final:provided
+|        +- io.netty:netty-handler:jar:4.1.50.Final:provided
+|        |  +- io.netty:netty-resolver:jar:4.1.50.Final:provided
+|        |  +- io.netty:netty-buffer:jar:4.1.50.Final:provided
+|        |  \- io.netty:netty-codec:jar:4.1.50.Final:provided
+|        +- io.netty:netty-transport:jar:4.1.50.Final:provided
+|        \- io.projectreactor:reactor-core:jar:3.3.6.RELEASE:provided
++- org.springframework.boot:spring-boot-starter-json:jar:2.3.1.RELEASE:provided
+|  +- org.springframework.boot:spring-boot-starter:jar:2.3.1.RELEASE:provided
+|  |  +- org.springframework.boot:spring-boot-starter-logging:jar:2.3.1.RELEASE:provided
+|  |  |  +- org.apache.logging.log4j:log4j-to-slf4j:jar:2.13.3:provided
+|  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.13.3:provided
+|  |  |  \- org.slf4j:jul-to-slf4j:jar:1.7.30:provided
+|  |  +- jakarta.annotation:jakarta.annotation-api:jar:1.3.5:provided
+|  |  \- org.yaml:snakeyaml:jar:1.26:provided
+|  +- org.springframework:spring-web:jar:5.2.7.RELEASE:provided
+|  |  \- org.springframework:spring-beans:jar:5.2.7.RELEASE:provided
+|  +- com.fasterxml.jackson.core:jackson-databind:jar:2.11.0:compile
+|  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.11.0:compile
+|  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.11.0:compile
+|  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.11.0:provided
+|  +- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.11.0:provided
+|  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.11.0:provided
++- com.google.code.gson:gson:jar:2.8.5:provided
 +- org.springframework.boot:spring-boot-autoconfigure:jar:2.3.1.RELEASE:provided
 |  \- org.springframework.boot:spring-boot:jar:2.3.1.RELEASE:provided
-|     +- org.springframework:spring-core:jar:5.2.7.RELEASE:provided
-|     |  \- org.springframework:spring-jcl:jar:5.2.7.RELEASE:provided
 |     \- org.springframework:spring-context:jar:5.2.7.RELEASE:provided
 +- ch.qos.logback:logback-classic:jar:1.2.3:compile
 |  +- ch.qos.logback:logback-core:jar:1.2.3:compile
@@ -112,9 +111,6 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
 |  +- commons-net:commons-net:jar:3.6:compile
 |  +- commons-collections:commons-collections:jar:3.2.2:compile
 |  +- javax.servlet:javax.servlet-api:jar:3.1.0:compile
-|  +- org.eclipse.jetty:jetty-server:jar:9.3.24.v20180605:compile
-|  |  +- org.eclipse.jetty:jetty-http:jar:9.3.24.v20180605:compile
-|  |  \- org.eclipse.jetty:jetty-io:jar:9.3.24.v20180605:compile
 |  +- org.eclipse.jetty:jetty-util:jar:9.3.24.v20180605:compile
 |  +- org.eclipse.jetty:jetty-servlet:jar:9.3.24.v20180605:compile
 |  |  \- org.eclipse.jetty:jetty-security:jar:9.3.24.v20180605:compile
@@ -177,12 +173,36 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
 |  |     +- org.apache.kerby:kerb-server:jar:1.0.1:compile
 |  |     |  \- org.apache.kerby:kerb-identity:jar:1.0.1:compile
 |  |     \- org.apache.kerby:kerby-xdr:jar:1.0.1:compile
-|  +- com.fasterxml.jackson.core:jackson-databind:jar:2.9.8:compile
-|  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.9.0:compile
-|  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.9.8:compile
 |  +- org.codehaus.woodstox:stax2-api:jar:3.1.4:compile
 |  +- com.fasterxml.woodstox:woodstox-core:jar:5.0.3:compile
 |  \- dnsjava:dnsjava:jar:2.1.7:compile
++- uk.gov.gchq.palisade:data-service:jar:exec:0.5.0-SNAPSHOT:test
++- org.springframework.boot:spring-boot-starter-test:jar:2.3.1.RELEASE:test
+|  +- org.springframework.boot:spring-boot-test:jar:2.3.1.RELEASE:test
+|  +- org.springframework.boot:spring-boot-test-autoconfigure:jar:2.3.1.RELEASE:test
+|  +- com.jayway.jsonpath:json-path:jar:2.4.0:test
+|  +- jakarta.xml.bind:jakarta.xml.bind-api:jar:2.3.3:test
+|  |  \- jakarta.activation:jakarta.activation-api:jar:1.2.2:test
+|  +- org.hamcrest:hamcrest:jar:2.2:test
+|  +- org.junit.jupiter:junit-jupiter:jar:5.6.2:test
+|  |  \- org.junit.jupiter:junit-jupiter-params:jar:5.6.2:test
+|  +- org.junit.vintage:junit-vintage-engine:jar:5.6.2:test
+|  |  \- junit:junit:jar:4.13:test
+|  +- org.mockito:mockito-core:jar:3.3.3:test
+|  |  +- net.bytebuddy:byte-buddy:jar:1.10.5:provided
+|  |  +- net.bytebuddy:byte-buddy-agent:jar:1.10.5:test
+|  |  \- org.objenesis:objenesis:jar:2.6:test
+|  +- org.mockito:mockito-junit-jupiter:jar:3.3.3:test
+|  +- org.skyscreamer:jsonassert:jar:1.5.0:test
+|  |  \- com.vaadin.external.google:android-json:jar:0.0.20131108.vaadin1:test
+|  +- org.springframework:spring-core:jar:5.2.7.RELEASE:provided
+|  |  \- org.springframework:spring-jcl:jar:5.2.7.RELEASE:provided
+|  +- org.springframework:spring-test:jar:5.2.7.RELEASE:test
+|  \- org.xmlunit:xmlunit-core:jar:2.7.0:test
++- org.eclipse.jetty:jetty-server:jar:11.0.0:test
+|  +- org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api:jar:5.0.1:test
+|  +- org.eclipse.jetty:jetty-http:jar:11.0.0:test
+|  \- org.eclipse.jetty:jetty-io:jar:11.0.0:test
 +- org.junit.jupiter:junit-jupiter-engine:jar:5.5.2:test
 |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
 |  +- org.junit.platform:junit-platform-engine:jar:1.5.2:test

@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.palisade.reader;
+package uk.gov.gchq.palisade.service.data.reader.hadoop;
 
 import org.apache.hadoop.conf.Configuration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import uk.gov.gchq.palisade.service.data.reader.hadoop.HadoopDataReader;
 import uk.gov.gchq.palisade.service.data.common.Context;
-import uk.gov.gchq.palisade.service.data.common.DataFlavour;
-import uk.gov.gchq.palisade.service.data.common.User;
-import uk.gov.gchq.palisade.service.data.common.request.DataReaderRequest;
-import uk.gov.gchq.palisade.service.data.common.request.DataReaderResponse;
+import uk.gov.gchq.palisade.service.data.common.data.DataFlavour;
+import uk.gov.gchq.palisade.service.data.common.data.reader.DataReaderRequest;
+import uk.gov.gchq.palisade.service.data.common.data.reader.DataReaderResponse;
 import uk.gov.gchq.palisade.service.data.common.resource.impl.FileResource;
 import uk.gov.gchq.palisade.service.data.common.rule.Rules;
-import uk.gov.gchq.palisade.service.data.common.seralise.SimpleStringSerialiser;
+import uk.gov.gchq.palisade.service.data.common.user.User;
+import uk.gov.gchq.palisade.service.data.serialise.SimpleStringSerialiser;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

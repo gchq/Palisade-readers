@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import uk.gov.gchq.palisade.service.data.common.Generated;
-import uk.gov.gchq.palisade.service.data.common.SerialisedDataReader;
-import uk.gov.gchq.palisade.service.data.common.exception.ReadResourceException;
+import uk.gov.gchq.palisade.service.data.common.data.reader.SerialisedDataReader;
 import uk.gov.gchq.palisade.service.data.common.resource.LeafResource;
+import uk.gov.gchq.palisade.service.data.exception.ReadResourceException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,7 +56,7 @@ public class HadoopDataReader extends SerialisedDataReader {
      * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     public HadoopDataReader() throws IOException {
-        this.fs = FileSystem.get(new Configuration());
+        this(new Configuration());
     }
 
     /**
@@ -66,7 +66,17 @@ public class HadoopDataReader extends SerialisedDataReader {
      * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the created {@link Configuration}
      */
     public HadoopDataReader(final Map<String, String> conf) throws IOException {
-        this.fs = FileSystem.get(createConfig(conf));
+        this(createConfig(conf));
+    }
+
+    /**
+     * Creates a new {@link HadoopDataReader} object
+     *
+     * @param conf A {@link Configuration} for the target hadoop instance
+     * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the created {@link Configuration}
+     */
+    public HadoopDataReader(final Configuration conf) throws IOException {
+        this.fs = FileSystem.get(conf);
     }
 
     private static Configuration createConfig(final Map<String, String> conf) {
