@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=uk.gov.gchq.palisade.service.resource.config.ApplicationConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=uk.gov.gchq.palisade.service.resource.hadoop.config.ApplicationConfiguration

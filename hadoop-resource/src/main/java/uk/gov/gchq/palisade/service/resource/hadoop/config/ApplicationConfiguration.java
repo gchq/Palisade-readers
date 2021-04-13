@@ -14,33 +14,28 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.resource.config;
+package uk.gov.gchq.palisade.service.resource.hadoop.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import uk.gov.gchq.palisade.service.resource.service.HadoopResourceService;
+import uk.gov.gchq.palisade.service.resource.hadoop.service.ConfiguredHadoopResourceService;
+import uk.gov.gchq.palisade.service.resource.hadoop.service.HadoopResourceService;
 
+import java.io.IOException;
 
 @Configuration
 public class ApplicationConfiguration {
-//    @Bean
-//    @ConditionalOnProperty(prefix = "population", name = "userProvider", havingValue = "example")
-//    @ConfigurationProperties(prefix = "population")
-//    public ExampleUserConfiguration userConfiguration() {
-//        return new ExampleUserConfiguration();
-//    }
-//
-//    @Bean
-//    @ConditionalOnProperty(prefix = "population", name = "userProvider", havingValue = "example")
-//    public ExampleUserPrepopulationFactory userPrepopulationFactory() {
-//        return new ExampleUserPrepopulationFactory();
-//    }
-
-    @Bean("hadoopResourceService")
+    @Bean
     @ConditionalOnProperty(prefix = "resource", name = "implementation", havingValue = "hadoop")
-    public HadoopResourceService hadoopResourceService() {
-        return new HadoopResourceService();
+    org.apache.hadoop.conf.Configuration hadoopConfiguration() {
+        return new org.apache.hadoop.conf.Configuration();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "resource", name = "implementation", havingValue = "hadoop")
+    HadoopResourceService hadoopResourceService(final org.apache.hadoop.conf.Configuration hadoopConf) throws IOException {
+        return new ConfiguredHadoopResourceService(hadoopConf);
     }
 }

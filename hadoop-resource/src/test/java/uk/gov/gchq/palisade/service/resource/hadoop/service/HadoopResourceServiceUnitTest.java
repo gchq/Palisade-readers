@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.resource.service;
+package uk.gov.gchq.palisade.service.resource.hadoop.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import uk.gov.gchq.palisade.service.data.common.SimpleConnectionDetail;
-import uk.gov.gchq.palisade.service.data.common.resource.LeafResource;
-import uk.gov.gchq.palisade.service.data.common.util.ResourceBuilder;
-import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
+import uk.gov.gchq.palisade.service.resource.common.resource.LeafResource;
+import uk.gov.gchq.palisade.service.resource.common.resource.impl.SimpleConnectionDetail;
+import uk.gov.gchq.palisade.service.resource.common.util.ResourceBuilder;
+import uk.gov.gchq.palisade.service.resource.hadoop.util.HadoopResourceDetails;
 
 import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HadoopResourceServiceTest {
+class HadoopResourceServiceUnitTest {
     private final HadoopResourceService service = new HadoopResourceService();
 
     @BeforeEach

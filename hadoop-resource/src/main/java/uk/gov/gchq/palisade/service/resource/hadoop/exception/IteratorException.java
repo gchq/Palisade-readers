@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.resource.exception;
+package uk.gov.gchq.palisade.service.resource.hadoop.exception;
 
 /**
  * A {@link RuntimeException} that is thrown when an iterator encounters an issue.

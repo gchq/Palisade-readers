@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.resource.util;
+package uk.gov.gchq.palisade.service.resource.hadoop.util;
 
 import org.apache.hadoop.fs.RemoteIterator;
 import org.slf4j.Logger;

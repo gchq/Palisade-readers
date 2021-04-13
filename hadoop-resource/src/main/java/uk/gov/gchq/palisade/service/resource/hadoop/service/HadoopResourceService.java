@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.resource.service;
+package uk.gov.gchq.palisade.service.resource.hadoop.service;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
@@ -24,13 +24,13 @@ import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.service.data.common.ConnectionDetail;
-import uk.gov.gchq.palisade.service.data.common.ResourceService;
-import uk.gov.gchq.palisade.service.data.common.resource.LeafResource;
-import uk.gov.gchq.palisade.service.data.common.resource.Resource;
-import uk.gov.gchq.palisade.service.resource.Generated;
-import uk.gov.gchq.palisade.service.resource.util.FunctionalIterator;
-import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
+import uk.gov.gchq.palisade.service.resource.common.Generated;
+import uk.gov.gchq.palisade.service.resource.common.resource.LeafResource;
+import uk.gov.gchq.palisade.service.resource.common.resource.Resource;
+import uk.gov.gchq.palisade.service.resource.common.resource.ConnectionDetail;
+import uk.gov.gchq.palisade.service.resource.common.resource.ResourceService;
+import uk.gov.gchq.palisade.service.resource.hadoop.util.FunctionalIterator;
+import uk.gov.gchq.palisade.service.resource.hadoop.util.HadoopResourceDetails;
 
 import java.io.IOException;
 import java.net.URI;
