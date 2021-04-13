@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
-import uk.gov.gchq.palisade.service.data.common.Generated;
+import uk.gov.gchq.palisade.reader.common.Generated;
 import uk.gov.gchq.palisade.service.data.common.SerialisedDataReader;
 import uk.gov.gchq.palisade.service.data.common.exception.ReadResourceException;
 import uk.gov.gchq.palisade.service.data.common.resource.LeafResource;

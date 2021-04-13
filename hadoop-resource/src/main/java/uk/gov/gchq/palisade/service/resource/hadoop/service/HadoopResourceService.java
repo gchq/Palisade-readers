@@ -67,7 +67,7 @@ public class HadoopResourceService implements ResourceService {
     private Configuration config;
     private FileSystem fileSystem;
 
-    private List<ConnectionDetail> dataServices = new ArrayList<>();
+    private final List<ConnectionDetail> dataServices = new ArrayList<>();
 
     /**
      * Creates a new {@link HadoopResourceService} object from a {@link Configuration} object
@@ -213,7 +213,7 @@ public class HadoopResourceService implements ResourceService {
             throw new IllegalStateException(ERROR_NO_DATA_SERVICES);
         }
         int serviceNum = ThreadLocalRandom.current().nextInt(this.dataServices.size());
-        ConnectionDetail dataService = this.dataServices.get(serviceNum);
+        var dataService = this.dataServices.get(serviceNum);
 
         return hadoopResourceDetails.getResource()
                 .connectionDetail(dataService);

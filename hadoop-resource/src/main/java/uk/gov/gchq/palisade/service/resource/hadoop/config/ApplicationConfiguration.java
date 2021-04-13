@@ -20,6 +20,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
 import uk.gov.gchq.palisade.service.resource.hadoop.service.ConfiguredHadoopResourceService;
 import uk.gov.gchq.palisade.service.resource.hadoop.service.HadoopResourceService;
 
@@ -37,5 +38,18 @@ public class ApplicationConfiguration {
     @ConditionalOnProperty(prefix = "resource", name = "implementation", havingValue = "hadoop")
     HadoopResourceService hadoopResourceService(final org.apache.hadoop.conf.Configuration hadoopConf) throws IOException {
         return new ConfiguredHadoopResourceService(hadoopConf);
+    }
+
+    /**
+     * A bean for the implementation of the HadoopResourceService which implements {@link ResourceService} used for retrieving resources from Hadoop
+     *
+     * @param config hadoop configuration
+     * @return a {@link ConfiguredHadoopResourceService} used for adding connection details to leaf resources
+     * @throws IOException ioexception
+     */
+    @Bean("hadoopResourceService")
+    @ConditionalOnProperty(prefix = "resource", name = "implementation", havingValue = "hadoop")
+    public HadoopResourceService hadoopResourceService(final org.apache.hadoop.conf.Configuration config) throws IOException {
+        return new ConfiguredHadoopResourceService(config);
     }
 }

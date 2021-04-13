@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Helper class around {@link LeafResource} fields used to validate resource details with what Hadoop
- * expects. Additionally used for predicates filtering Hadoop resource response streams by type or
+ * expects. Additionally, used for predicates filtering Hadoop resource response streams by type or
  * serialised format.
  */
 public class HadoopResourceDetails {
