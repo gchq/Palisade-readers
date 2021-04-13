@@ -26,7 +26,7 @@ import uk.gov.gchq.palisade.service.resource.hadoop.HadoopResourceService;
 import java.io.IOException;
 
 @Configuration
-public class ApplicationConfiguration {
+public class HadoopResourceServiceConfiguration {
     /**
      * Default (empty) hadoop configuration.
      *

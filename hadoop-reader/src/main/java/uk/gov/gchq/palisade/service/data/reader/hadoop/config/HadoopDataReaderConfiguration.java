@@ -25,7 +25,7 @@ import uk.gov.gchq.palisade.service.data.common.DataReader;
 import java.io.IOException;
 
 @Configuration
-public class ApplicationConfiguration {
+public class HadoopDataReaderConfiguration {
 
     @Bean
     DataReader hadoopDataReader() throws IOException {
