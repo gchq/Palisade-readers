@@ -20,7 +20,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
 import uk.gov.gchq.palisade.service.resource.hadoop.service.ConfiguredHadoopResourceService;
 import uk.gov.gchq.palisade.service.resource.hadoop.service.HadoopResourceService;
 
@@ -28,28 +27,27 @@ import java.io.IOException;
 
 @Configuration
 public class ApplicationConfiguration {
+    /**
+     * Default (empty) hadoop configuration.
+     *
+     * @return a {@link org.apache.hadoop.conf.Configuration} to be used to configure the {@link HadoopResourceService} instance
+     */
     @Bean
     @ConditionalOnProperty(prefix = "resource", name = "implementation", havingValue = "hadoop")
     org.apache.hadoop.conf.Configuration hadoopConfiguration() {
         return new org.apache.hadoop.conf.Configuration();
     }
 
+    /**
+     * A bean for the implementation of the {@link HadoopResourceService}, along with appropriate configuration, used for retrieving resources from Hadoop
+     *
+     * @param hadoopConf hadoop configuration
+     * @return a {@link ConfiguredHadoopResourceService} used for adding connection details to leaf resources
+     * @throws IOException ioexception
+     */
     @Bean
     @ConditionalOnProperty(prefix = "resource", name = "implementation", havingValue = "hadoop")
     HadoopResourceService hadoopResourceService(final org.apache.hadoop.conf.Configuration hadoopConf) throws IOException {
         return new ConfiguredHadoopResourceService(hadoopConf);
-    }
-
-    /**
-     * A bean for the implementation of the HadoopResourceService which implements {@link ResourceService} used for retrieving resources from Hadoop
-     *
-     * @param config hadoop configuration
-     * @return a {@link ConfiguredHadoopResourceService} used for adding connection details to leaf resources
-     * @throws IOException ioexception
-     */
-    @Bean("hadoopResourceService")
-    @ConditionalOnProperty(prefix = "resource", name = "implementation", havingValue = "hadoop")
-    public HadoopResourceService hadoopResourceService(final org.apache.hadoop.conf.Configuration config) throws IOException {
-        return new ConfiguredHadoopResourceService(config);
     }
 }
