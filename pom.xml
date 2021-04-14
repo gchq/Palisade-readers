@@ -46,7 +46,6 @@
         <java.version>11</java.version>
         <revision>SNAPSHOT</revision>
         <services.revision>SNAPSHOT</services.revision>
-
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <encoding>UTF-8</encoding>
