@@ -18,9 +18,8 @@ package uk.gov.gchq.palisade.service.resource.hadoop;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-import uk.gov.gchq.palisade.service.resource.service.ResourceService;
+import uk.gov.gchq.palisade.service.resource.common.resource.ResourceService;
 
 import java.io.IOException;
 

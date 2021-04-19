@@ -22,9 +22,9 @@ import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.Generated;
-import uk.gov.gchq.palisade.resource.LeafResource;
-import uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader;
+import uk.gov.gchq.palisade.service.data.common.Generated;
+import uk.gov.gchq.palisade.service.data.common.data.reader.SerialisedDataReader;
+import uk.gov.gchq.palisade.service.data.common.resource.LeafResource;
 
 import java.io.IOException;
 import java.io.InputStream;
