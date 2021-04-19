@@ -18,21 +18,29 @@ package uk.gov.gchq.palisade.service.resource.hadoop;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import uk.gov.gchq.palisade.service.resource.common.resource.ResourceService;
+import uk.gov.gchq.palisade.service.resource.service.ResourceService;
 
 import java.io.IOException;
 
+@Configuration
 public class HadoopConfiguration {
+    @Bean
+    org.apache.hadoop.conf.Configuration hadoopConfiguration() {
+        return new org.apache.hadoop.conf.Configuration();
+    }
+
     /**
      * Bean implementation for {@link HadoopResourceService}  and is used for setting hadoopConfigurations and reading available resources.
      *
+     * @param configuration a hadoop configuration specifying the target cluster
      * @return a new instance of {@link HadoopResourceService}
      * @throws IOException ioException
      */
     @Bean
-    @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = "hadoop", matchIfMissing = true)
-    ResourceService hadoopResourceService() throws IOException {
-        return new HadoopResourceService();
+    @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = "hadoop")
+    ResourceService hadoopResourceService(final org.apache.hadoop.conf.Configuration configuration) throws IOException {
+        return new HadoopResourceService(configuration);
     }
 }

@@ -19,21 +19,26 @@ package uk.gov.gchq.palisade.service.data.hadoop;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 
-import uk.gov.gchq.palisade.service.data.common.data.reader.DataReader;
+import uk.gov.gchq.palisade.service.data.reader.DataReader;
 
 import java.io.IOException;
 
 public class HadoopConfiguration {
+    @Bean
+    org.apache.hadoop.conf.Configuration hadoopConfiguration() {
+        return new org.apache.hadoop.conf.Configuration();
+    }
 
     /**
-     * Bean implementation for {@link HadoopDataReader} which extends {@link uk.gov.gchq.palisade.service.data.common.data.reader.SerialisedDataReader} and is used for setting hadoopConfigurations and reading raw data.
+     * Bean implementation for {@link HadoopDataReader} which extends {@link uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader} and is used for setting hadoopConfigurations and reading raw data.
      *
+     * @param configuration a hadoop configuration specifying the target cluster
      * @return a new instance of {@link HadoopDataReader}
      * @throws IOException ioException
      */
     @Bean
     @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = "hadoop", matchIfMissing = true)
-    DataReader hadoopDataReader() throws IOException {
-        return new HadoopDataReader();
+    DataReader hadoopDataReader(final org.apache.hadoop.conf.Configuration configuration) throws IOException {
+        return new HadoopDataReader(configuration);
     }
 }

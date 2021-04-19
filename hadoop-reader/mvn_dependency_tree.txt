@@ -1,5 +1,9 @@
 uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
++- com.google.code.gson:gson:jar:2.8.6:compile
 +- uk.gov.gchq.palisade:data-service:jar:0.5.0-SNAPSHOT:provided
+|  +- uk.gov.gchq.palisade:common:jar:0.5.0-SNAPSHOT:provided
+|  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.10.0:provided
+|  |  \- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.10.0:provided
 |  +- com.typesafe.akka:akka-stream_2.13:jar:2.6.8:provided
 |  |  +- org.scala-lang:scala-library:jar:2.13.1:provided
 |  |  +- com.typesafe.akka:akka-actor_2.13:jar:2.6.8:provided
@@ -29,14 +33,12 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
 |  |  |  |  \- org.springframework:spring-jcl:jar:5.2.7.RELEASE:provided
 |  |  |  \- org.yaml:snakeyaml:jar:1.26:provided
 |  |  +- org.springframework.boot:spring-boot-actuator-autoconfigure:jar:2.3.1.RELEASE:provided
-|  |  |  +- org.springframework.boot:spring-boot-actuator:jar:2.3.1.RELEASE:provided
-|  |  |  \- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.11.0:provided
+|  |  |  \- org.springframework.boot:spring-boot-actuator:jar:2.3.1.RELEASE:provided
 |  |  \- io.micrometer:micrometer-core:jar:1.5.1:provided
 |  |     +- org.hdrhistogram:HdrHistogram:jar:2.1.12:provided
 |  |     \- org.latencyutils:LatencyUtils:jar:2.0.3:provided
 |  +- org.springframework.boot:spring-boot-starter-web:jar:2.3.1.RELEASE:provided
 |  |  +- org.springframework.boot:spring-boot-starter-json:jar:2.3.1.RELEASE:provided
-|  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.11.0:provided
 |  |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.11.0:provided
 |  |  +- org.springframework.boot:spring-boot-starter-tomcat:jar:2.3.1.RELEASE:provided
 |  |  |  +- org.apache.tomcat.embed:tomcat-embed-core:jar:9.0.36:provided
@@ -89,6 +91,9 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
 |        |  \- io.netty:netty-codec:jar:4.1.50.Final:provided
 |        +- io.netty:netty-transport:jar:4.1.50.Final:provided
 |        \- io.projectreactor:reactor-core:jar:3.3.6.RELEASE:provided
++- com.fasterxml.jackson.core:jackson-databind:jar:2.10.4:compile
+|  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.10.4:compile
+|  \- com.fasterxml.jackson.core:jackson-core:jar:2.10.4:compile
 +- ch.qos.logback:logback-classic:jar:1.2.3:compile
 |  +- ch.qos.logback:logback-core:jar:1.2.3:compile
 |  \- org.slf4j:slf4j-api:jar:1.7.25:compile
@@ -143,7 +148,6 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
 |  |  \- org.xerial.snappy:snappy-java:jar:1.0.5:compile
 |  +- com.google.re2j:re2j:jar:1.1:compile
 |  +- com.google.protobuf:protobuf-java:jar:2.5.0:compile
-|  +- com.google.code.gson:gson:jar:2.2.4:compile
 |  +- org.apache.hadoop:hadoop-auth:jar:3.2.1:compile
 |  |  +- com.nimbusds:nimbus-jose-jwt:jar:4.41.1:compile
 |  |  |  \- com.github.stephenc.jcip:jcip-annotations:jar:1.0-1:compile
@@ -176,9 +180,6 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
 |  |     +- org.apache.kerby:kerb-server:jar:1.0.1:compile
 |  |     |  \- org.apache.kerby:kerb-identity:jar:1.0.1:compile
 |  |     \- org.apache.kerby:kerby-xdr:jar:1.0.1:compile
-|  +- com.fasterxml.jackson.core:jackson-databind:jar:2.9.8:compile
-|  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.9.0:compile
-|  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.9.8:compile
 |  +- org.codehaus.woodstox:stax2-api:jar:3.1.4:compile
 |  +- com.fasterxml.woodstox:woodstox-core:jar:5.0.3:compile
 |  \- dnsjava:dnsjava:jar:2.1.7:compile

@@ -21,16 +21,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import uk.gov.gchq.palisade.Context;
+import uk.gov.gchq.palisade.data.serialise.SimpleStringSerialiser;
 import uk.gov.gchq.palisade.reader.util.PathUtils;
-import uk.gov.gchq.palisade.service.data.common.Context;
-import uk.gov.gchq.palisade.service.data.common.data.DataFlavour;
-import uk.gov.gchq.palisade.service.data.common.data.reader.DataReaderRequest;
-import uk.gov.gchq.palisade.service.data.common.data.reader.DataReaderResponse;
-import uk.gov.gchq.palisade.service.data.common.resource.impl.FileResource;
-import uk.gov.gchq.palisade.service.data.common.rule.Rules;
-import uk.gov.gchq.palisade.service.data.common.user.User;
+import uk.gov.gchq.palisade.resource.impl.FileResource;
+import uk.gov.gchq.palisade.rule.Rules;
 import uk.gov.gchq.palisade.service.data.hadoop.HadoopDataReader;
-import uk.gov.gchq.palisade.service.data.serialise.SimpleStringSerialiser;
+import uk.gov.gchq.palisade.service.data.model.DataReaderRequest;
+import uk.gov.gchq.palisade.service.data.model.DataReaderResponse;
+import uk.gov.gchq.palisade.service.data.reader.DataFlavour;
+import uk.gov.gchq.palisade.user.User;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -92,7 +92,7 @@ public class HadoopDataReaderTest {
 
         final FileResource resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
         // Redact any records containing the word 'more'
-        final Rules<String> rules = new Rules<String>().addPredicateRule("1", (r, u, j) -> !r.contains("more"));
+        final Rules<String> rules = new Rules<String>().addRule("1", (PredicateRule<String>) (r, u, j) -> !r.contains("more"));
 
         final DataReaderRequest request = new DataReaderRequest()
                 .resource(resource)

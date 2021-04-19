@@ -24,14 +24,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import uk.gov.gchq.palisade.service.resource.common.resource.ChildResource;
-import uk.gov.gchq.palisade.service.resource.common.resource.ConnectionDetail;
-import uk.gov.gchq.palisade.service.resource.common.resource.LeafResource;
-import uk.gov.gchq.palisade.service.resource.common.resource.ParentResource;
-import uk.gov.gchq.palisade.service.resource.common.resource.impl.DirectoryResource;
-import uk.gov.gchq.palisade.service.resource.common.resource.impl.FileResource;
-import uk.gov.gchq.palisade.service.resource.common.resource.impl.SimpleConnectionDetail;
-import uk.gov.gchq.palisade.service.resource.common.util.ResourceBuilder;
+import uk.gov.gchq.palisade.resource.ChildResource;
+import uk.gov.gchq.palisade.resource.ConnectionDetail;
+import uk.gov.gchq.palisade.resource.LeafResource;
+import uk.gov.gchq.palisade.resource.ParentResource;
+import uk.gov.gchq.palisade.resource.impl.DirectoryResource;
+import uk.gov.gchq.palisade.resource.impl.FileResource;
+import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
+import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.io.BufferedWriter;
 import java.io.File;
