@@ -47,8 +47,9 @@
         <dependency>
             <!-- Readers, Request & Response types -->
             <groupId>uk.gov.gchq.palisade</groupId>
-            <artifactId>readers-common</artifactId>
+            <artifactId>data-service</artifactId>
             <version>${project.parent.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <!-- Logging Dependency -->

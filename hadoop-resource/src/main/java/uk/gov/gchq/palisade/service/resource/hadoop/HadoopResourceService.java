@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.resource.service;
+package uk.gov.gchq.palisade.service.resource.hadoop;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RemoteIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.Generated;
+import uk.gov.gchq.palisade.resource.ConnectionDetail;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.Resource;
-import uk.gov.gchq.palisade.service.ConnectionDetail;
-import uk.gov.gchq.palisade.service.ResourceService;
-import uk.gov.gchq.palisade.service.resource.util.FunctionalIterator;
-import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
+import uk.gov.gchq.palisade.service.resource.service.FunctionalIterator;
+import uk.gov.gchq.palisade.service.resource.service.ResourceService;
 
 import java.io.IOException;
 import java.net.URI;
@@ -194,9 +194,35 @@ public class HadoopResourceService implements ResourceService {
         return false;
     }
 
+    private static <T> Iterator<T> wrapRemoteIterator(final RemoteIterator<T> remote) {
+        return new Iterator<>() {
+            RemoteIterator<T> delegate = remote;
+
+            @Override
+            public boolean hasNext() {
+                try {
+                    return delegate.hasNext();
+                } catch (IOException e) {
+                    throw new IteratorException(e);
+                }
+            }
+
+            @Override
+            public T next() {
+                try {
+                    return delegate.next();
+                } catch (IOException e) {
+                    throw new IteratorException(e);
+
+                }
+            }
+        };
+    }
+
     private FunctionalIterator<LeafResource> getMappings(final String pathString, final Predicate<HadoopResourceDetails> predicate) {
         try {
-            return FunctionalIterator.fromIterator(this.getFileSystem().listFiles(new Path(pathString), true))
+            Iterator<LocatedFileStatus> it = wrapRemoteIterator(this.getFileSystem().listFiles(new Path(pathString), true));
+            return FunctionalIterator.fromIterator(it)
                     .map(HadoopResourceService::getPaths)
                     .filter(HadoopResourceDetails::isValidResourceName)
                     .map(HadoopResourceDetails::getResourceDetailsFromFileName)

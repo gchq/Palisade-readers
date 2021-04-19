@@ -14,38 +14,38 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.reader.exception;
+package uk.gov.gchq.palisade.service.resource.hadoop;
 
 /**
- * A {@link RuntimeException} that is thrown when a data reader is unable to read a resource.
+ * A {@link RuntimeException} that is thrown when an iterator encounters an issue.
  */
-public class ReadResourceException extends RuntimeException {
+public class IteratorException extends RuntimeException {
 
     /**
-     * Constructs a new {@link ReadResourceException} with the cause.
+     * Constructs a new {@link IteratorException} with the cause.
      *
      * @param cause     a {@link Throwable} that caused the error
      */
-    public ReadResourceException(final Throwable cause) {
+    public IteratorException(final Throwable cause) {
         super(cause);
     }
 
     /**
-     * Constructs a new {@link ReadResourceException} with the specified detail message.
+     * Constructs a new {@link IteratorException} with the specified detail message.
      *
      * @param message   a {@link String} value detailing the error
      */
-    public ReadResourceException(final String message) {
+    public IteratorException(final String message) {
         super(message);
     }
 
     /**
-     * Constructs a new {@link ReadResourceException} with the specified detail message and cause.
+     * Constructs a new {@link IteratorException} with the specified detail message and cause.
      *
      * @param message   a {@link String} value detailing the error
      * @param cause     a {@link Throwable} that caused the issue
      */
-    public ReadResourceException(final String message, final Throwable cause) {
+    public IteratorException(final String message, final Throwable cause) {
         super(message, cause);
     }
 }
