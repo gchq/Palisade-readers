@@ -74,6 +74,7 @@
         <module>hadoop-resource</module>
         <module>readers-common</module>
         <module>hadoop-reader</module>
+        <module>S3-resource</module>
     </modules>
 
     <profiles>
