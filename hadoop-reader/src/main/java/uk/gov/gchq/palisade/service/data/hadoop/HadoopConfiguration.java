@@ -23,7 +23,11 @@ import uk.gov.gchq.palisade.service.data.reader.DataReader;
 
 import java.io.IOException;
 
+/**
+ * A Spring Hadoop Configuration class, creating the necessary beans for a Hadoop data reader
+ */
 public class HadoopConfiguration {
+
     @Bean
     org.apache.hadoop.conf.Configuration hadoopConfiguration() {
         return new org.apache.hadoop.conf.Configuration();
