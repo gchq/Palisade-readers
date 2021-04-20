@@ -25,7 +25,7 @@ import uk.gov.gchq.palisade.service.resource.service.ResourceService;
 import java.io.IOException;
 
 /**
- * A Spring Hadoop Configuration class, creating the necessary beans for a Hadoop data reader
+ * A Spring Hadoop Configuration class, creating the necessary beans for an implementation of a {@link HadoopResourceService}
  */
 @Configuration
 public class HadoopConfiguration {
