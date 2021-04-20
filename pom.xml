@@ -74,7 +74,7 @@
         <!-- Core reader packages -->
         <module>hadoop-resource</module>
         <module>hadoop-reader</module>
-        <module>S3-resource</module>
+        <module>s3-resource</module>
     </modules>
 
     <profiles>
