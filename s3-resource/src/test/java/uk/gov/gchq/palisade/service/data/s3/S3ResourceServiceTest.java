@@ -54,12 +54,18 @@ class S3ResourceServiceTest {
         assertThat(s3.listBuckets())
                 .as("Check one bucket exists")
                 .asList()
-                .hasSize(1);
+                .hasSize(1)
+                .first()
+                .extracting("name")
+                .isEqualTo("foo");
 
         assertThat(s3.listObjects("foo").getObjectSummaries())
                 .as("Check one object is returned")
                 .asList()
-                .hasSize(1);
+                .hasSize(1)
+                .first()
+                .extracting("key")
+                .isEqualTo("bar");
     }
 
     @Test
@@ -81,12 +87,18 @@ class S3ResourceServiceTest {
         assertThat(s3.listBuckets().buckets())
                 .as("Check one bucket exists")
                 .asList()
-                .hasSize(1);
+                .hasSize(1)
+                .first()
+                .extracting("name")
+                .isEqualTo("foo");
 
         var lOR = ListObjectsRequest.builder().bucket("foo").build();
         assertThat(s3.listObjects(lOR).contents())
                 .as("Check one object is returned")
                 .asList()
-                .hasSize(1);
+                .hasSize(1)
+                .first()
+                .extracting("key")
+                .isEqualTo("bar");
     }
 }
