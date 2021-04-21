@@ -34,6 +34,8 @@
     <properties>
         <!-- Dependency versions -->
         <alpakka-s3.version>2.0.2</alpakka-s3.version>
+        <amazonaws-sdk.version>1.11.1000</amazonaws-sdk.version>
+        <aws-sdk.version>2.16.44</aws-sdk.version>
         <jackson.version>2.10.4</jackson.version>
         <logback.version>1.2.3</logback.version>
 
@@ -60,7 +62,31 @@
             <artifactId>akka-stream-alpakka-s3_2.13</artifactId>
             <version>${alpakka-s3.version}</version>
         </dependency>
+        <!--
+       ~ Amazon S3 Dependencies
+       -->
         <dependency>
+            <!-- AWS SDK v1 -->
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>${amazonaws-sdk.version}</version>
+        </dependency>
+
+        <dependency>
+            <!-- AWS SDK v2 -->
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>aws-sdk-java</artifactId>
+            <version>${aws-sdk.version}</version>
+        </dependency>
+        <dependency>
+            <!-- AWS SDK v2 -->
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sdk-core</artifactId>
+            <version>${aws-sdk.version}</version>
+        </dependency>
+
+        <dependency>
+            <!-- Json Dependency -->
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
@@ -92,6 +118,12 @@
             <!-- S3 TestContainers Dependency -->
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
+            <version>${localstack.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <version>${localstack.version}</version>
             <scope>test</scope>
         </dependency>

@@ -6,8 +6,10 @@ List of third-party dependencies grouped by their license type
 * Apache Hadoop Common ([org.apache.hadoop:hadoop-common:3.2.1](no url defined))
 * AssertJ fluent assertions ([org.assertj:assertj-core:3.18.0](https://assertj.github.io/doc/assertj-core/))
 * data-service ([uk.gov.gchq.palisade:data-service:0.5.0-SNAPSHOT](no url defined))
-* readers-common ([uk.gov.gchq.palisade:readers-common:0.5.0-SNAPSHOT](https://github.com/gchq/Palisade-readers/tree/develop/readers-common))
 * resource-service ([uk.gov.gchq.palisade:resource-service:0.5.0-SNAPSHOT](https://github.com/gchq/Palisade-services/tree/develop/resource-service))
+
+### [Apache-2.0](./licenses/not recognised):
+* akka-stream-alpakka-s3 ([com.lightbend.akka:akka-stream-alpakka-s3_2.13:2.0.2](https://doc.akka.io/docs/alpakka/current))
 
 ### [Eclipse Public License 1.0](./licenses/eclipse_public_license_1.0.html):
 * Logback Classic Module ([ch.qos.logback:logback-classic:1.2.3](http://logback.qos.ch/logback-classic))
@@ -18,3 +20,6 @@ List of third-party dependencies grouped by their license type
 
 ### [GNU Lesser General Public License 2.1](./licenses/gnu_lgpl_2.1.html):
 * Logback Classic Module ([ch.qos.logback:logback-classic:1.2.3](http://logback.qos.ch/logback-classic))
+
+### [MIT](./licenses/not recognised):
+* Testcontainers :: Localstack ([org.testcontainers:localstack:1.15.3](https://testcontainers.org))
