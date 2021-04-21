@@ -74,7 +74,7 @@ public class S3ResourceService implements ResourceService {
      * interface.
      * This is not permitted by the S3ResourceService, so will always return failure (false)
      *
-     * @param leafResource         the resource that Palisade can manage access to
+     * @param leafResource the resource that Palisade can manage access to
      * @return whether or not the addResource call completed successfully, always false
      */
     @Override
