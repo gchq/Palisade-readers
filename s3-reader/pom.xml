@@ -14,7 +14,6 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<!-- TODO clean-up -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -38,18 +37,16 @@
         <scala.version>2.13</scala.version>
         <akka.version>2.6.8</akka.version>
         <alpakka.version>2.0.4</alpakka.version>
-
-
         <!-- Test dependency versions -->
-        <testcontainers.version>1.14.3</testcontainers.version>
+        <testcontainers.version>1.15.3</testcontainers.version>
 
     </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>software.amazon.awssdk</groupId>
-                <artifactId>bom</artifactId>
-                <version>2.16.20</version>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-bom</artifactId>
+                <version>1.11.959</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -65,6 +62,12 @@
             <artifactId>readers-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <!-- Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
         <!--
         ~ Akka and Alpakka (Kafka)
         -->
@@ -79,6 +82,12 @@
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-stream-kafka_${scala.version}</artifactId>
             <version>${alpakka.version}</version>
+        </dependency>
+        <!-- Alpakka S3 connector -->
+        <dependency>
+            <groupId>com.lightbend.akka</groupId>
+            <artifactId>akka-stream-alpakka-s3_${scala.version}</artifactId>
+            <version>2.0.2</version>
         </dependency>
         <dependency>
             <!-- Akka/SLF4j logging connector -->
@@ -95,17 +104,12 @@
         <!--
        ~ Test Dependencies
        -->
+
         <dependency>
-            <!-- JUnit, Jupiter, SpringBootTest etc... -->
+            <!-- SpringBootTests and other testing annotations -->
+            <!-- Also jupiter/junit5, mockito, etc... -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <!-- Kafka contract testing -->
-            <groupId>org.testcontainers</groupId>
-            <artifactId>kafka</artifactId>
-            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -122,61 +126,43 @@
             <version>${alpakka.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- Test Containers  -->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>1.15.2</version>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.testcontainers/localstack -->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.15.2</version>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter -->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.15.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>s3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cloud.localstack</groupId>
-            <artifactId>localstack-utils</artifactId>
-            <version>0.2.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>services</artifactId>
-            <version>2.16.20</version>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
 
-        <!--
+        <dependency>
+            <groupId>cloud.localstack</groupId>
+            <artifactId>localstack-utils</artifactId>
+            <version>0.2.11</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
         </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/s3 -->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
-            <artifactId>services</artifactId>
+            <artifactId>s3</artifactId>
         </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>kms</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>s3control</artifactId>
-        </dependency>
-        -->
+
     </dependencies>
 </project>
