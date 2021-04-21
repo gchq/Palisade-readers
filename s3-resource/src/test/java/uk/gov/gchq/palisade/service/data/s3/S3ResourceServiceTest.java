@@ -17,19 +17,31 @@
 package uk.gov.gchq.palisade.service.data.s3;
 
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 import org.testcontainers.utility.DockerImageName;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 
 @Testcontainers
@@ -39,8 +51,14 @@ class S3ResourceServiceTest {
     private final LocalStackContainer localstack = new LocalStackContainer(DockerImageName.parse("localstack/localstack:0.12.9.1"))
             .withServices(S3);
 
+    @TempDir
+    File tempFileDirectory;
+
+    @TempDir
+    Path tempPathDirectory;
+
     @Test
-    void testV1() {
+    void testV1() throws IOException {
         // AWS SDK v1
         var s3 = AmazonS3ClientBuilder
                 .standard()
@@ -48,8 +66,14 @@ class S3ResourceServiceTest {
                 .withCredentials(localstack.getDefaultCredentialsProvider())
                 .build();
 
+        // Create a test file and add some text to it
+        var testFile = new File(tempFileDirectory, "testFile.txt");
+        var lines = Arrays.asList("x", "y", "z");
+        Files.write(testFile.toPath(), lines);
+
+        // Create a bucket and add the file to it
         s3.createBucket("foo");
-        s3.putObject("foo", "bar", "baz");
+        s3.putObject("foo", testFile.getPath(), testFile);
 
         assertThat(s3.listBuckets())
                 .as("Check one bucket exists")
@@ -65,11 +89,28 @@ class S3ResourceServiceTest {
                 .hasSize(1)
                 .first()
                 .extracting("key")
-                .isEqualTo("bar");
+                .isEqualTo(testFile.getPath());
+
+        // Get the object which returns it as an InputStream
+        var s3object = s3.getObject("foo", testFile.getPath());
+        var inputStream = s3object.getObjectContent();
+
+        // Save the inputStream as a file
+        FileUtils.copyInputStreamToFile(inputStream, new File(tempFileDirectory, "testFileFromS3.txt"));
+        // Get the file
+        var fileFromS3 = FileUtils.getFile(tempFileDirectory, "testFileFromS3.txt");
+
+        assertThat(Files.readAllLines(fileFromS3.toPath()))
+                .as("Check that the lines are the same and the file has not been modified")
+                .isEqualTo(Files.readAllLines(testFile.toPath()));
+
+        // Getting the object should throw an exception as it no longer exists
+        s3.deleteObject("foo", testFile.getPath());
+        assertThrows(AmazonS3Exception.class, () -> s3.getObject("foo", testFile.getPath()), "Test should throw an exception");
     }
 
     @Test
-    void testV2() {
+    void testV2() throws IOException {
         // AWS SDK v2
         var s3 = S3Client
                 .builder()
@@ -80,9 +121,14 @@ class S3ResourceServiceTest {
                 .region(Region.of(localstack.getRegion()))
                 .build();
 
+        // Create a test file and add some text to it
+        var testFile = tempPathDirectory.resolve("testFile.txt");
+        var lines = Arrays.asList("1", "2", "3");
+        Files.write(testFile, lines);
 
+        // Create the bucket, and ad the object
         s3.createBucket(b -> b.bucket("foo"));
-        s3.putObject(b -> b.bucket("foo").key("bar"), RequestBody.fromBytes("baz".getBytes()));
+        s3.putObject(b -> b.bucket("foo").key(testFile.toString()), testFile);
 
         assertThat(s3.listBuckets().buckets())
                 .as("Check one bucket exists")
@@ -99,6 +145,22 @@ class S3ResourceServiceTest {
                 .hasSize(1)
                 .first()
                 .extracting("key")
-                .isEqualTo("bar");
+                .isEqualTo(testFile.toString());
+
+        // Getting the object using the getObjectRequest saves the file to the tempPathDirectory
+        var gOR = GetObjectRequest.builder().bucket("foo").key(testFile.toString()).build();
+        s3.getObject(gOR, tempPathDirectory.resolve("testFileFromS3.txt"));
+
+        // Get the file from the temp directory
+        var fileFromS3 = FileUtils.getFile(String.valueOf(tempPathDirectory), "testFileFromS3.txt");
+
+        assertThat(Files.readAllLines(fileFromS3.toPath()))
+                .as("Check that the lines are the same and the file has not been modified")
+                .isEqualTo(Files.readAllLines(testFile.toAbsolutePath()));
+
+        // Getting the object should throw an exception as it no longer exists
+        var dOR = DeleteObjectRequest.builder().bucket("foo").key(testFile.toString()).build();
+        s3.deleteObject(dOR);
+        assertThrows(NoSuchKeyException.class, () -> s3.getObject(gOR), "Test should throw an exception");
     }
 }
