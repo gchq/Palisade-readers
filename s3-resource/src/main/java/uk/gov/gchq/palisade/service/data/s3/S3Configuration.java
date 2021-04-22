@@ -16,6 +16,7 @@
 
 package uk.gov.gchq.palisade.service.data.s3;
 
+import akka.stream.Materializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,12 +41,13 @@ public class S3Configuration {
      * Bean implementation for {@link S3ResourceService}  and is used for setting s3Configurations and reading available resources.
      * //     * @param configuration a s3 configuration specifying the target cluster
      *
+     * @param materialiser the materialiser
      * @return a new instance of {@link S3ResourceService}
      * @throws IOException ioException
      */
     @Bean
     @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = "S3")
-    ResourceService hadoopResourceService() throws IOException {
-        return new S3ResourceService();
+    ResourceService hadoopResourceService(final Materializer materialiser) throws IOException {
+        return new S3ResourceService(materialiser);
     }
 }

@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "s3-resource-service.bucket-name",
+      "type": "java.lang.String",
+      "description": "Description for s3-resource-service.bucket-name."
+    },
+    {
+      "name": "s3-resource-service.region",
+      "type": "java.lang.String",
+      "description": "Description for s3-resource-service.region."
+    }
+  ]
+}

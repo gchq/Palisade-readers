@@ -82,6 +82,7 @@ uk.gov.gchq.palisade:s3-resource:jar:0.5.0-SNAPSHOT
 |  |  +- software.amazon.awssdk:regions:jar:2.11.14:compile
 |  |  \- software.amazon.eventstream:eventstream:jar:1.0.1:compile
 |  \- com.fasterxml.jackson.core:jackson-core:jar:2.10.5:compile
++- org.springframework.boot:spring-boot-configuration-processor:jar:2.2.6.RELEASE:compile (optional) 
 +- com.amazonaws:aws-java-sdk:jar:1.11.1000:compile
 |  +- com.amazonaws:aws-java-sdk-lookoutequipment:jar:1.11.1000:compile
 |  |  \- com.amazonaws:jmespath-java:jar:1.11.1000:compile

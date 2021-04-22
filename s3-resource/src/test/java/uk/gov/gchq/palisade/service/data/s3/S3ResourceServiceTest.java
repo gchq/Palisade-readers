@@ -16,8 +16,6 @@
 
 package uk.gov.gchq.palisade.service.data.s3;
 
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.testcontainers.containers.localstack.LocalStackContainer;
@@ -34,7 +32,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -52,62 +49,7 @@ class S3ResourceServiceTest {
             .withServices(S3);
 
     @TempDir
-    File tempFileDirectory;
-
-    @TempDir
     Path tempPathDirectory;
-
-    @Test
-    void testV1() throws IOException {
-        // AWS SDK v1
-        var s3 = AmazonS3ClientBuilder
-                .standard()
-                .withEndpointConfiguration(localstack.getEndpointConfiguration(S3))
-                .withCredentials(localstack.getDefaultCredentialsProvider())
-                .build();
-
-        // Create a test file and add some text to it
-        var testFile = new File(tempFileDirectory, "testFile.txt");
-        var lines = Arrays.asList("x", "y", "z");
-        Files.write(testFile.toPath(), lines);
-
-        // Create a bucket and add the file to it
-        s3.createBucket("foo");
-        s3.putObject("foo", testFile.getPath(), testFile);
-
-        assertThat(s3.listBuckets())
-                .as("Check one bucket exists")
-                .asList()
-                .hasSize(1)
-                .first()
-                .extracting("name")
-                .isEqualTo("foo");
-
-        assertThat(s3.listObjects("foo").getObjectSummaries())
-                .as("Check one object is returned")
-                .asList()
-                .hasSize(1)
-                .first()
-                .extracting("key")
-                .isEqualTo(testFile.getPath());
-
-        // Get the object which returns it as an InputStream
-        var s3object = s3.getObject("foo", testFile.getPath());
-        var inputStream = s3object.getObjectContent();
-
-        // Save the inputStream as a file
-        FileUtils.copyInputStreamToFile(inputStream, new File(tempFileDirectory, "testFileFromS3.txt"));
-        // Get the file
-        var fileFromS3 = FileUtils.getFile(tempFileDirectory, "testFileFromS3.txt");
-
-        assertThat(Files.readAllLines(fileFromS3.toPath()))
-                .as("Check that the lines are the same and the file has not been modified")
-                .isEqualTo(Files.readAllLines(testFile.toPath()));
-
-        // Getting the object should throw an exception as it no longer exists
-        s3.deleteObject("foo", testFile.getPath());
-        assertThrows(AmazonS3Exception.class, () -> s3.getObject("foo", testFile.getPath()), "Test should throw an exception");
-    }
 
     @Test
     void testV2() throws IOException {
@@ -115,9 +57,7 @@ class S3ResourceServiceTest {
         var s3 = S3Client
                 .builder()
                 .endpointOverride(localstack.getEndpointOverride(LocalStackContainer.Service.S3))
-                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(
-                        localstack.getAccessKey(), localstack.getSecretKey()
-                )))
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())))
                 .region(Region.of(localstack.getRegion()))
                 .build();
 
