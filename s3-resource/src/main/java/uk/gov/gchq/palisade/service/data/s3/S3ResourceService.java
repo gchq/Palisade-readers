@@ -34,6 +34,7 @@ import uk.gov.gchq.palisade.service.resource.service.ResourceService;
 import java.util.Iterator;
 import java.util.Optional;
 
+import static akka.stream.alpakka.s3.javadsl.S3.checkIfBucketExists;
 import static akka.stream.alpakka.s3.javadsl.S3.getObjectMetadata;
 import static akka.stream.alpakka.s3.javadsl.S3.listBucket;
 import static java.util.Objects.requireNonNull;
@@ -72,7 +73,7 @@ public class S3ResourceService implements ResourceService {
 
     @Override
     public Iterator<LeafResource> getResourcesById(final String resourceId) {
-        if (checkIfBucketExists(bucketName, materialiser, null) == Boolean.TRUE) {
+        if (validateBucket(bucketName, materialiser, null) == Boolean.TRUE) {
 
             listBucket(bucketName, Optional.of(resourceId))
                     .flatMap((ListBucketResultContents s3Resource) -> getObjectMetadata(bucketName, s3Resource.getKey(), null, null)
@@ -121,12 +122,12 @@ public class S3ResourceService implements ResourceService {
      * @param attr   any additional attributes
      * @return a Boolean value if the user has access to the bucket or not
      */
-    public Boolean checkIfBucketExists(final String bucket, final Materializer mat, final Attributes attr) {
-        var bucketAccessFuture = S3Stream.checkIfBucketExists(bucket, null, mat, attr);
+    public Boolean validateBucket(final String bucket, final Materializer mat, final Attributes attr) {
+        var bucketAccessFuture = checkIfBucketExists(bucket, mat, attr, null).toCompletableFuture().join();
 
-        if (bucketAccessFuture.isCompleted() && bucketAccessFuture instanceof AccessGranted$) {
+        if (bucketAccessFuture instanceof AccessGranted$) {
             return Boolean.TRUE;
-        } else if (bucketAccessFuture.isCompleted() && bucketAccessFuture instanceof AccessDenied$) {
+        } else if (bucketAccessFuture instanceof AccessDenied$) {
             return Boolean.FALSE;
         } else {
             throw new UnsupportedOperationException(String.format(NOT_EXISTS, bucket));
