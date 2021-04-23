@@ -9,6 +9,11 @@
       "name": "s3-resource-service.region",
       "type": "java.lang.String",
       "description": "Description for s3-resource-service.region."
+    },
+    {
+      "name": "s3-resource-service.connection-detail",
+      "type": "java.lang.String",
+      "description": "Description for s3-resource-service.connection-detail."
     }
   ]
 }

@@ -28,9 +28,11 @@ import akka.stream.javadsl.Source;
 import akka.stream.javadsl.StreamConverters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.Resource;
+import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.service.resource.service.ResourceService;
 import uk.gov.gchq.palisade.util.ResourceBuilder;
 
@@ -59,6 +61,9 @@ public class S3ResourceService implements ResourceService {
     private static final int PARALLELISM = 1;
     private final String bucketName;
     private final Materializer materialiser;
+
+    @Value("${s3-resource-service.connection-detail}")
+    private String connectionDetail;
 
     public S3ResourceService(final String bucketName, final Materializer materialiser) throws IOException {
         this.bucketName = bucketName;
@@ -96,19 +101,24 @@ public class S3ResourceService implements ResourceService {
                     var fileName = objectMetaPair.first().getKey();
                     // Get the content-type from the headers as the serialised format
                     var contentType = objectMetaPair.second().contentType().get();
-                    // Build the LeafResource
-                    var resource = ((LeafResource) ResourceBuilder.create("s3:" + fileName)).serialisedFormat(contentType);
+
 
                     String userMetaPrefix = "x-amz-meta-";
-                    Map<String, String> userMetadata = objectMetaPair.second().headers().stream()
+                    var userMetadata = objectMetaPair.second().headers().stream()
                             .filter(header -> header.name().startsWith(userMetaPrefix))
                             .map(header -> Map.entry(header.name().substring(userMetaPrefix.length()), header.value()))
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-                    Map<String, String> systemMetadata = objectMetaPair.second().headers().stream()
+                    var systemMetadata = objectMetaPair.second().headers().stream()
                             .filter(header -> !header.name().startsWith(userMetaPrefix))
                             .map(header -> Map.entry(header.name(), header.value()))
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+
+                    var s3Resource = new S3Resource(userMetadata, systemMetadata);
+                    // Build the LeafResource
+                    var resource = ((LeafResource) ResourceBuilder.create("s3:" + fileName)).serialisedFormat(contentType).connectionDetail(new SimpleConnectionDetail().serviceName(connectionDetail));
+
 
                     return resource;
                 });
