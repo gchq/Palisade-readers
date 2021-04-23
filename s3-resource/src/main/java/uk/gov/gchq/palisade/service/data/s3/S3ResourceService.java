@@ -17,13 +17,13 @@
 package uk.gov.gchq.palisade.service.data.s3;
 
 import akka.NotUsed;
-import akka.http.javadsl.model.HttpHeader;
 import akka.japi.Pair;
 import akka.stream.Materializer;
 import akka.stream.alpakka.s3.BucketAccess;
 import akka.stream.alpakka.s3.ListBucketResultContents;
 import akka.stream.alpakka.s3.ObjectMetadata;
 import akka.stream.alpakka.s3.javadsl.S3;
+import akka.stream.javadsl.Sink;
 import akka.stream.javadsl.Source;
 import akka.stream.javadsl.StreamConverters;
 import org.slf4j.Logger;
@@ -34,9 +34,13 @@ import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.service.resource.service.ResourceService;
 import uk.gov.gchq.palisade.util.ResourceBuilder;
 
+import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URI;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -56,10 +60,13 @@ public class S3ResourceService implements ResourceService {
     private final String bucketName;
     private final Materializer materialiser;
 
-    public S3ResourceService(final String bucketName, final Materializer materialiser) {
-        bucketExists();
+    public S3ResourceService(final String bucketName, final Materializer materialiser) throws IOException {
         this.bucketName = bucketName;
         this.materialiser = materialiser;
+
+        if (bucketExists().runWith(Sink.head(), materialiser).toCompletableFuture().join().equals(Boolean.FALSE)) {
+            throw new IOException(String.format("Bucket %s does not exist", bucketName));
+        }
     }
 
     @Override
@@ -75,25 +82,35 @@ public class S3ResourceService implements ResourceService {
         var resourceUri = URI.create(resourceId);
 
         if (!resourceUri.getScheme().equals(S3Configuration.s3Prefix)) {
-            throw new UnsupportedOperationException(java.lang.String.format(ERROR_OUT_SCOPE, resourceId, S3Configuration.s3Prefix));
+            throw new UnsupportedOperationException(String.format(ERROR_OUT_SCOPE, resourceId, S3Configuration.s3Prefix));
         }
 
-        return StreamConverters.asJavaStream(getResourcesObject(resourceUri.getPath()), materialiser).iterator();
+        return getResourceObjects(resourceUri.getSchemeSpecificPart())
+                .runWith(StreamConverters.asJavaStream(), materialiser).iterator();
     }
 
-    private Source<LeafResource, NotUsed> getResourcesObject(final String resourceId) {
+    private Source<LeafResource, NotUsed> getResourceObjects(final String resourceId) {
         return listBucketWithMetadata(resourceId)
                 .map((Pair<ListBucketResultContents, ObjectMetadata> objectMetaPair) -> {
                     // Get the filename
                     var fileName = objectMetaPair.first().getKey();
                     // Get the content-type from the headers as the serialised format
-                    var contentType = objectMetaPair.second().headers()
-                            .stream().findFirst()
-                            .map(HttpHeader::name)
-                            .filter(name -> name.equals("Content-Type"))
-                            .orElse(null);
+                    var contentType = objectMetaPair.second().contentType().get();
                     // Build the LeafResource
-                    return ((LeafResource) ResourceBuilder.create(fileName)).serialisedFormat(contentType);
+                    var resource = ((LeafResource) ResourceBuilder.create("s3:" + fileName)).serialisedFormat(contentType);
+
+                    String userMetaPrefix = "x-amz-meta-";
+                    Map<String, String> userMetadata = objectMetaPair.second().headers().stream()
+                            .filter(header -> header.name().startsWith(userMetaPrefix))
+                            .map(header -> Map.entry(header.name().substring(userMetaPrefix.length()), header.value()))
+                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+                    Map<String, String> systemMetadata = objectMetaPair.second().headers().stream()
+                            .filter(header -> !header.name().startsWith(userMetaPrefix))
+                            .map(header -> Map.entry(header.name(), header.value()))
+                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+                    return resource;
                 });
     }
 
@@ -140,13 +157,13 @@ public class S3ResourceService implements ResourceService {
      * Check the resource exists in the bucket by calling {@link S3#listBucket(String, Optional)}, if it does, then get the objectMetadata by calling {@link S3#getObjectMetadata(String, String)}.
      * If the resource exists, return a pair of the contents and metadata, otherwise throw a Runtime Exception with the object key.
      *
-     * @param resourceId the resource the user wants to request from S3
+     * @param resourcePrefix the (prefix of a) resource the user wants to request from S3
      * @return a Pair of the Contents and metadata for that resource
      */
-    private Source<Pair<ListBucketResultContents, ObjectMetadata>, NotUsed> listBucketWithMetadata(final String resourceId) {
+    private Source<Pair<ListBucketResultContents, ObjectMetadata>, NotUsed> listBucketWithMetadata(final String resourcePrefix) {
         // List the contents of the bucket, and if the resource exists, get the metadata for the resource
         // Then return the value as a Pair of Contents and the resources metadata
-        return S3.listBucket(bucketName, Optional.of(resourceId))
+        return S3.listBucket(bucketName, Optional.of(resourcePrefix))
                 .flatMapMerge(PARALLELISM, bucketContents -> S3.getObjectMetadata(bucketName, bucketContents.getKey())
                         .map(objectMetadata -> Pair.create(bucketContents, objectMetadata
                                 .orElseThrow(() -> new RuntimeException(String.format("Lost object '%s' while listing bucket", bucketContents.getKey()))))));
