@@ -17,6 +17,7 @@
 package uk.gov.gchq.palisade.service.data.s3;
 
 import akka.stream.Materializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,7 @@ import java.io.IOException;
  */
 @Configuration
 public class S3Configuration {
+    public static final String s3Prefix = "s3";
 
     //TODO Add S3 Configuration
 //    @Bean
@@ -48,6 +50,6 @@ public class S3Configuration {
     @Bean
     @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = "S3")
     ResourceService hadoopResourceService(final Materializer materialiser) throws IOException {
-        return new S3ResourceService(materialiser);
+        return new S3ResourceService("testBucket", materialiser);
     }
 }
