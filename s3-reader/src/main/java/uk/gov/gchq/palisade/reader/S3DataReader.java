@@ -16,8 +16,8 @@
 
 package uk.gov.gchq.palisade.reader;
 
-import akka.NotUsed;
-import akka.actor.ActorSystem;
+//import akka.NotUsed;
+//import akka.actor.ActorSystem;
 //import akka.japi.Pair;
 //import akka.stream.Materializer;
 //import akka.stream.alpakka.s3.ObjectMetadata;
@@ -27,37 +27,37 @@ import akka.actor.ActorSystem;
 //import akka.util.ByteString;
 //import com.typesafe.config.Config;
 //import com.typesafe.config.ConfigFactory;
-import uk.gov.gchq.palisade.reader.common.SerialisedDataReader;
-import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
+//import uk.gov.gchq.palisade.reader.common.SerialisedDataReader;
+//import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
 //import uk.gov.gchq.palisade.reader.exception.ReadResourceException;
 
-import java.io.InputStream;
+//import java.io.InputStream;
 //import java.util.Optional;
 //import java.util.concurrent.ExecutionException;
 //import java.util.concurrent.TimeUnit;
 //import java.util.concurrent.TimeoutException;
 
 /**
- * An S3DataReader is an implementation of {@link SerialisedDataReader} for S3 that opens a file and returns
- * a single {@link InputStream} containing all the records for a given {@link LeafResource}.
+ * An S3DataReader is an implementation of SerialisedDataReader} for S3 that opens a file and returns
+ * a single {InputStream} containing all the records for a given  LeafResource}.
  */
-public class S3DataReader extends SerialisedDataReader {
+public class S3DataReader { //extends SerialisedDataReader {
 
 
-    @Override
-    protected InputStream readRaw(final LeafResource resource) {
+   // @Override
+   // protected InputStream readRaw(final LeafResource resource) {
 
         //pseudo code
 
         //need to retrieve the data from S3
         //bucketURL will be unique to the client request.
         //will need for this to come in as part of the creation of this instance.
-      final Source<Optional<Pair<Source<ByteString, NotUsed>, ObjectMetadata>>, NotUsed> sourceAndMeta = S3.download("bucketURL", resource.getId());
+   //   final Source<Optional<Pair<Source<ByteString, NotUsed>, ObjectMetadata>>, NotUsed> sourceAndMeta = S3.download("bucketURL", resource.getId());
         //
 
        //config, properties -injected in via dependency injection
 
-       ActorSystem system = ActorSystem.create();
+    //   ActorSystem system = ActorSystem.create();
       //?  Materializer materializer = Materializer.createMaterializer(system);
        // Materializer materializer = null;
        /* try {
@@ -85,6 +85,6 @@ public class S3DataReader extends SerialisedDataReader {
 
         //if it is empty, then what
 
-        return null;
-    }
+      //  return null;
+   // }
 }

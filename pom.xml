@@ -16,15 +16,7 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <!-- TODO clean-up -->
-
     <modelVersion>4.0.0</modelVersion>
-
-    <parent>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <groupId>org.springframework.boot</groupId>
-        <version>2.3.1.RELEASE</version>
-    </parent>
 
     <groupId>uk.gov.gchq.palisade</groupId>
     <artifactId>readers</artifactId>
@@ -54,6 +46,7 @@
         <java.version>11</java.version>
         <revision>SNAPSHOT</revision>
         <common.revision>SNAPSHOT</common.revision>
+        <services.revision>SNAPSHOT</services.revision>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -80,7 +73,6 @@
     <modules>
         <!-- Core reader packages -->
         <module>hadoop-resource</module>
-        <module>readers-common</module>
         <module>hadoop-reader</module>
         <module>s3-reader</module>
     </modules>

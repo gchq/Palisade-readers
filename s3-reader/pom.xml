@@ -14,9 +14,8 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -34,134 +33,100 @@
 
     <properties>
         <!-- Dependency versions -->
-        <scala.version>2.13</scala.version>
-        <akka.version>2.6.8</akka.version>
-        <alpakka.version>2.0.4</alpakka.version>
-        <!-- Test dependency versions -->
-        <testcontainers.version>1.15.3</testcontainers.version>
+        <alpakka-s3.version>2.0.2</alpakka-s3.version>
+        <amazonaws-sdk.version>1.11.1000</amazonaws-sdk.version>
+        <aws-sdk.version>2.16.44</aws-sdk.version>
+        <jackson.version>2.10.4</jackson.version>
+        <logback.version>1.2.3</logback.version>
 
+        <!-- Test dependency versions -->
+        <junit.version>5.5.2</junit.version>
+        <assertj.version>3.18.0</assertj.version>
+        <localstack.version>1.15.3</localstack.version>
     </properties>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk-bom</artifactId>
-                <version>1.11.959</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+
     <dependencies>
         <!--
-     ~ Palisade
-     -->
+       ~ Palisade
+       -->
         <dependency>
             <!-- Readers, Request & Response types -->
             <groupId>uk.gov.gchq.palisade</groupId>
-            <artifactId>readers-common</artifactId>
+            <artifactId>resource-service</artifactId>
             <version>${project.parent.version}</version>
+            <scope>provided</scope>
         </dependency>
-        <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>2.2.6.RELEASE</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Alpakka S3 dependency-->
+        <dependency>
+            <groupId>com.lightbend.akka</groupId>
+            <artifactId>akka-stream-alpakka-s3_2.13</artifactId>
+            <version>${alpakka-s3.version}</version>
         </dependency>
 
         <!--
-        ~ Akka and Alpakka (Kafka)
-        -->
+       ~ Amazon S3 Dependencies
+       -->
         <dependency>
-            <!-- Core Akka streaming (more up-to-date than alpakka dependency) -->
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-stream_${scala.version}</artifactId>
-            <version>${akka.version}</version>
+            <!-- AWS SDK v2 -->
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>aws-sdk-java</artifactId>
+            <version>${aws-sdk.version}</version>
         </dependency>
         <dependency>
-            <!-- Alpakka Kafka connectors -->
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-stream-kafka_${scala.version}</artifactId>
-            <version>${alpakka.version}</version>
+            <!-- AWS SDK v2 -->
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sdk-core</artifactId>
+            <version>${aws-sdk.version}</version>
         </dependency>
-        <!-- Alpakka S3 connector -->
+
         <dependency>
-            <groupId>com.lightbend.akka</groupId>
-            <artifactId>akka-stream-alpakka-s3_${scala.version}</artifactId>
-            <version>2.0.2</version>
-        </dependency>
-        <dependency>
-            <!-- Akka/SLF4j logging connector -->
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-slf4j_${scala.version}</artifactId>
-            <version>${akka.version}</version>
+            <!-- Json Dependency -->
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
-            <!-- Smarter discovery of Kafka servers -->
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-discovery_${scala.version}</artifactId>
-            <version>${akka.version}</version>
+            <!-- Logging Dependency -->
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
         </dependency>
         <!--
        ~ Test Dependencies
        -->
-
         <dependency>
-            <!-- SpringBootTests and other testing annotations -->
-            <!-- Also jupiter/junit5, mockito, etc... -->
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
+            <!-- JUnit -->
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <!-- Akka testing -->
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-stream-testkit_${scala.version}</artifactId>
-            <version>${akka.version}</version>
+            <!-- AssertJ for test assertions -->
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <!-- Akka Kafka testing -->
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-stream-kafka-testkit_${scala.version}</artifactId>
-            <version>${alpakka.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- Test Containers  -->
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
+            <!-- S3 TestContainers Dependency -->
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>${testcontainers.version}</version>
+            <version>${localstack.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${testcontainers.version}</version>
+            <version>${localstack.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>cloud.localstack</groupId>
-            <artifactId>localstack-utils</artifactId>
-            <version>0.2.11</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>s3</artifactId>
-        </dependency>
-
-
-        <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/s3 -->
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>s3</artifactId>
         </dependency>
 
     </dependencies>
