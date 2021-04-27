@@ -13,6 +13,7 @@
 # limitations under the License.
 
 s3-resource-service:
-  bucket-name: test-bucket
-  region: EU_WEST_2
-  connection-detail: s3-data-service
+  bucket-name: "test-bucket"
+  region: "EU_WEST_2"
+  connection-detail: "s3-data-service"
+  palisade-type-header: "x-pal-type"

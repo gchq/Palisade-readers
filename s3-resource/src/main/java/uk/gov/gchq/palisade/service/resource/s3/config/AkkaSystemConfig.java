@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.data.s3.config;
+package uk.gov.gchq.palisade.service.resource.s3.config;
 
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;

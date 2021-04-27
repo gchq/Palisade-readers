@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.data.s3.config;
+package uk.gov.gchq.palisade.service.resource.s3.config;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -35,7 +35,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.lang.NonNull;
 
-import uk.gov.gchq.palisade.service.data.s3.exception.PropertyLoadingException;
+import uk.gov.gchq.palisade.service.resource.s3.exception.PropertyLoadingException;
 
 import java.io.IOException;
 import java.util.ArrayList;

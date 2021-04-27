@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.data.s3;
+package uk.gov.gchq.palisade.service.resource.s3;
 
 import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
@@ -25,13 +25,13 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 public class S3Resource extends FileResource {
+    private static final long serialVersionUID = 1L;
 
     private Map<String, String> userMetadata;
     private Map<String, String> systemMetadata;
 
-    public S3Resource(Map<String, String> userMetadata, Map<String, String> systemMetadata) {
-        this.userMetadata = userMetadata;
-        this.systemMetadata = systemMetadata;
+    public S3Resource() {
+        // Empty constructor for serialisation
     }
 
     @Generated
@@ -45,6 +45,12 @@ public class S3Resource extends FileResource {
     }
 
     @Generated
+    public S3Resource userMetadata(final Map<String, String> userMetadata) {
+        this.setUserMetadata(userMetadata);
+        return this;
+    }
+
+    @Generated
     public Map<String, String> getSystemMetadata() {
         return new HashMap<>(systemMetadata);
     }
@@ -54,12 +60,24 @@ public class S3Resource extends FileResource {
         this.systemMetadata = new HashMap<>(systemMetadata);
     }
 
+    @Generated
+    public S3Resource systemMetadata(final Map<String, String> systemMetadata) {
+        this.setSystemMetadata(systemMetadata);
+        return this;
+    }
+
     @Override
     @Generated
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
         final S3Resource that = (S3Resource) o;
         return Objects.equals(userMetadata, that.userMetadata) &&
                 Objects.equals(systemMetadata, that.systemMetadata);
@@ -77,6 +95,7 @@ public class S3Resource extends FileResource {
         return new StringJoiner(", ", S3Resource.class.getSimpleName() + "[", "]")
                 .add("userMetadata=" + userMetadata)
                 .add("systemMetadata=" + systemMetadata)
+                .add(super.toString())
                 .toString();
     }
 }

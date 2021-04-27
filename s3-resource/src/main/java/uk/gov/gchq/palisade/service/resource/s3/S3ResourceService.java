@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.data.s3;
+package uk.gov.gchq.palisade.service.resource.s3;
 
 import akka.NotUsed;
 import akka.japi.Pair;
@@ -35,16 +35,14 @@ import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.service.resource.service.ResourceService;
 import uk.gov.gchq.palisade.util.ResourceBuilder;
+import uk.gov.gchq.palisade.util.UriBuilder;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.URI;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * An implementation of the ResourceService.
@@ -52,18 +50,18 @@ import static java.util.Objects.requireNonNull;
  * through the actual real filing system.
  */
 public class S3ResourceService implements ResourceService {
-    public static final String ERROR_ADD_RESOURCE = "AddResource is not supported by the Resource Service, resources should be added/created via regular file system behaviour.";
-    public static final String ERROR_GET_BY_FORMAT = "getResourcesBySerialisedFormat is not supported by the Resource Service";
-    public static final String ERROR_GET_BY_TYPE = "getResourcesByType is not supported by the Resource Service";
-    public static final String ERROR_BUCKET_DOES_NOT_EXIST = "The bucket %s does not exist, or is not known to S3";
-    public static final String ERROR_OUT_SCOPE = "resourceId is out of scope of the this Resource Service. Found: %s expected: %s";
+    public static final String USER_META_PREFIX = "x-amz-meta-";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(S3ResourceService.class);
     private static final int PARALLELISM = 1;
+
     private final String bucketName;
     private final Materializer materialiser;
 
     @Value("${s3-resource-service.connection-detail}")
     private String connectionDetail;
+    @Value("${s3-resource-service.palisade-type-header}")
+    private String palisadeTypeHeader;
 
     public S3ResourceService(final String bucketName, final Materializer materialiser) throws IOException {
         this.bucketName = bucketName;
@@ -76,80 +74,69 @@ public class S3ResourceService implements ResourceService {
 
     @Override
     public Iterator<LeafResource> getResourcesByResource(final Resource resource) {
-        requireNonNull(resource, "resource");
         LOGGER.debug("Invoking getResourcesByResource with request: {}", resource);
         return getResourcesById(resource.getId());
     }
 
     @Override
     public Iterator<LeafResource> getResourcesById(final String resourceId) {
-        requireNonNull(resourceId, "resourceId");
-        var resourceUri = URI.create(resourceId);
+        URI resourceUri = URI.create(resourceId);
 
-        if (!resourceUri.getScheme().equals(S3Configuration.s3Prefix)) {
-            throw new UnsupportedOperationException(String.format(ERROR_OUT_SCOPE, resourceId, S3Configuration.s3Prefix));
+        if (!resourceUri.getScheme().equals(S3Configuration.S3_PREFIX)) {
+            throw new UnsupportedOperationException(String.format(
+                    "Requested resource scheme is out of scope for %s. Found: %s expected: %s",
+                    S3ResourceService.class.getSimpleName(), resourceUri.getScheme(), S3Configuration.S3_PREFIX
+            ));
         }
 
-        return getResourceObjects(resourceUri.getSchemeSpecificPart())
+        return getResourceObjects(resourceUri)
                 .runWith(StreamConverters.asJavaStream(), materialiser).iterator();
     }
 
-    private Source<LeafResource, NotUsed> getResourceObjects(final String resourceId) {
-        return listBucketWithMetadata(resourceId)
-                .map((Pair<ListBucketResultContents, ObjectMetadata> objectMetaPair) -> {
-                    // Get the filename
-                    var fileName = objectMetaPair.first().getKey();
-                    // Get the content-type from the headers as the serialised format
-                    var contentType = objectMetaPair.second().contentType().get();
+    private Source<LeafResource, NotUsed> getResourceObjects(final URI resourceUri) {
+        return listBucketWithMetadata(resourceUri.getSchemeSpecificPart())
+                .map((Pair<ListBucketResultContents, ObjectMetadata> resourceMetaPair) -> {
+                    // Copy the URI of the request, except the discovered resource path
+                    URI fileUri = UriBuilder.create(resourceUri)
+                            .withoutScheme().withoutAuthority()
+                            .withPath(resourceMetaPair.first().getKey())
+                            .withoutQuery().withoutFragment();
 
-
-                    String userMetaPrefix = "x-amz-meta-";
-                    var userMetadata = objectMetaPair.second().headers().stream()
-                            .filter(header -> header.name().startsWith(userMetaPrefix))
-                            .map(header -> Map.entry(header.name().substring(userMetaPrefix.length()), header.value()))
+                    // Get headers starting with USER_META_PREFIX, strip the prefix, collect to map
+                    Map<String, String> userMetadata = resourceMetaPair.second().headers().stream()
+                            .filter(header -> header.name().startsWith(USER_META_PREFIX))
+                            .map(header -> Map.entry(header.name().substring(USER_META_PREFIX.length()), header.value()))
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-                    var systemMetadata = objectMetaPair.second().headers().stream()
-                            .filter(header -> !header.name().startsWith(userMetaPrefix))
+                    // Get headers _NOT_ starting with USER_META_PREFIX, collect to map
+                    Map<String, String> systemMetadata = resourceMetaPair.second().headers().stream()
+                            .filter(header -> !header.name().startsWith(USER_META_PREFIX))
                             .map(header -> Map.entry(header.name(), header.value()))
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-
-                    var s3Resource = new S3Resource(userMetadata, systemMetadata);
-                    // Build the LeafResource
-                    var resource = ((LeafResource) ResourceBuilder.create("s3:" + fileName)).serialisedFormat(contentType).connectionDetail(new SimpleConnectionDetail().serviceName(connectionDetail));
-
-
-                    return resource;
+                    // Build the S3Resource object
+                    return ((S3Resource) ((LeafResource) ResourceBuilder.create(fileUri))
+                            .type(userMetadata.get(palisadeTypeHeader))
+                            .serialisedFormat(resourceMetaPair.second().contentType().get())
+                            .connectionDetail(new SimpleConnectionDetail().serviceName(connectionDetail)))
+                            .userMetadata(userMetadata)
+                            .systemMetadata(systemMetadata);
                 });
     }
 
     @Override
-    @Deprecated
     public Iterator<LeafResource> getResourcesByType(final String type) {
-        LOGGER.error(ERROR_GET_BY_TYPE);
-        return null;
+        throw new UnsupportedOperationException("No such implementation of getResourcesByType for " + S3ResourceService.class.getSimpleName());
     }
 
     @Override
-    @Deprecated
     public Iterator<LeafResource> getResourcesBySerialisedFormat(final String serialisedFormat) {
-        LOGGER.error(ERROR_GET_BY_FORMAT);
-        return null;
+        throw new UnsupportedOperationException("No such implementation of getResourcesBySerialisedFormat for " + S3ResourceService.class.getSimpleName());
     }
 
-    /**
-     * Informs Palisade about a specific resource that it may return to users. This lets Palisade clients request access
-     * to that resource and allows Palisade to provide policy controlled access to it via the other methods in this
-     * interface.
-     * This is not permitted by the S3ResourceService, so will always return failure (false)
-     *
-     * @param leafResource the resource that Palisade can manage access to
-     * @return whether or not the addResource call completed successfully, always false
-     */
     @Override
     public Boolean addResource(final LeafResource leafResource) {
-        LOGGER.error(ERROR_ADD_RESOURCE);
+        LOGGER.error("No such implementation of addResource for " + S3ResourceService.class.getSimpleName());
         return false;
     }
 

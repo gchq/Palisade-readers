@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.data.s3;
+package uk.gov.gchq.palisade.service.resource.s3;
 
 import akka.stream.Materializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +30,8 @@ import java.io.IOException;
  */
 @Configuration
 public class S3Configuration {
-    public static final String s3Prefix = "s3";
+    public static final String S3_PREFIX = "s3";
+    public static final String S3_PATH_SEP = "/";
 
     //TODO Add S3 Configuration
 //    @Bean
@@ -48,7 +48,7 @@ public class S3Configuration {
      * @throws IOException ioException
      */
     @Bean
-    @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = "S3")
+    @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = S3_PREFIX)
     ResourceService hadoopResourceService(final Materializer materialiser) throws IOException {
         return new S3ResourceService("testBucket", materialiser);
     }

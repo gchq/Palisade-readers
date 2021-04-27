@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.data.s3;
+package uk.gov.gchq.palisade.service.resource.s3;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

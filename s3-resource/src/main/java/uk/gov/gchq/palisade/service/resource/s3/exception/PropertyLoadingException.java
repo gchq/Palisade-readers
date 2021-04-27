@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.data.s3.exception;
+package uk.gov.gchq.palisade.service.resource.s3.exception;
 
-import uk.gov.gchq.palisade.service.data.s3.config.PropertiesConfigurer;
+import uk.gov.gchq.palisade.service.resource.s3.config.PropertiesConfigurer;
 
 /**
  * Elevate thrown IOExceptions when loading spring/akka config to RuntimeExceptions.
