@@ -28,7 +28,6 @@ import akka.stream.javadsl.Source;
 import akka.stream.javadsl.StreamConverters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.Resource;
@@ -42,6 +41,7 @@ import java.net.URI;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
 /**
@@ -50,26 +50,19 @@ import java.util.stream.Collectors;
  * through the actual real filing system.
  */
 public class S3ResourceService implements ResourceService {
-    public static final String USER_META_PREFIX = "x-amz-meta-";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(S3ResourceService.class);
     private static final int PARALLELISM = 1;
+    private static final URI ROOT_URI = URI.create("s3:");
 
-    private final String bucketName;
+    private final S3Properties properties;
     private final Materializer materialiser;
 
-    @Value("${s3-resource-service.connection-detail}")
-    private String connectionDetail;
-    @Value("${s3-resource-service.palisade-type-header}")
-    private String palisadeTypeHeader;
-
-    public S3ResourceService(final String bucketName, final Materializer materialiser) throws IOException {
-        this.bucketName = bucketName;
+    public S3ResourceService(final S3Properties properties, final Materializer materialiser) throws IOException {
+        this.properties = properties;
         this.materialiser = materialiser;
 
-        if (bucketExists().runWith(Sink.head(), materialiser).toCompletableFuture().join().equals(Boolean.FALSE)) {
-            throw new IOException(String.format("Bucket %s does not exist", bucketName));
-        }
+        // Check bucket exists, or throw
+        this.checkBucketExists();
     }
 
     @Override
@@ -80,6 +73,11 @@ public class S3ResourceService implements ResourceService {
 
     @Override
     public Iterator<LeafResource> getResourcesById(final String resourceId) {
+        return getResourcesByIdSource(resourceId)
+            .runWith(StreamConverters.asJavaStream(), materialiser).iterator();
+    }
+
+    public Source<LeafResource, NotUsed> getResourcesByIdSource(final String resourceId) {
         URI resourceUri = URI.create(resourceId);
 
         if (!resourceUri.getScheme().equals(S3Configuration.S3_PREFIX)) {
@@ -89,55 +87,69 @@ public class S3ResourceService implements ResourceService {
             ));
         }
 
-        return getResourceObjects(resourceUri)
+        return getResourceObjects(resourceUri);
+    }
+
+    @Override
+    public Iterator<LeafResource> getResourcesByType(final String type) {
+        LOGGER.warn("No efficient implementation of getResourcesBySerialisedFormat for {}", S3ResourceService.class.getSimpleName());
+        return getResourcesByTypeSource(type)
                 .runWith(StreamConverters.asJavaStream(), materialiser).iterator();
+    }
+
+    public Source<LeafResource, NotUsed> getResourcesByTypeSource(final String type) {
+        return getResourceObjects(ROOT_URI)
+                .filter(resource -> resource.getType().equals(type));
+    }
+
+    @Override
+    public Iterator<LeafResource> getResourcesBySerialisedFormat(final String serialisedFormat) {
+        LOGGER.warn("No efficient implementation of getResourcesBySerialisedFormat for {}", S3ResourceService.class.getSimpleName());
+        return getResourcesBySerialisedFormatSource(serialisedFormat)
+                .runWith(StreamConverters.asJavaStream(), materialiser).iterator();
+    }
+
+    public Source<LeafResource, NotUsed> getResourcesBySerialisedFormatSource(final String serialisedFormat) {
+        return getResourceObjects(ROOT_URI)
+                .filter(resource -> resource.getSerialisedFormat().equals(serialisedFormat));
+    }
+
+    @Override
+    public Boolean addResource(final LeafResource leafResource) {
+        LOGGER.error("No such implementation of addResource for {}", S3ResourceService.class.getSimpleName());
+        return false;
     }
 
     private Source<LeafResource, NotUsed> getResourceObjects(final URI resourceUri) {
         return listBucketWithMetadata(resourceUri.getSchemeSpecificPart())
                 .map((Pair<ListBucketResultContents, ObjectMetadata> resourceMetaPair) -> {
-                    // Copy the URI of the request, except the discovered resource path
-                    URI fileUri = UriBuilder.create(resourceUri)
-                            .withoutScheme().withoutAuthority()
+                    // Create a uri of the format 's3:resource-key'
+                    URI fileUri = UriBuilder.create()
+                            .withScheme(S3Configuration.S3_PREFIX)
+                            .withoutAuthority()
                             .withPath(resourceMetaPair.first().getKey())
                             .withoutQuery().withoutFragment();
 
                     // Get headers starting with USER_META_PREFIX, strip the prefix, collect to map
                     Map<String, String> userMetadata = resourceMetaPair.second().headers().stream()
-                            .filter(header -> header.name().startsWith(USER_META_PREFIX))
-                            .map(header -> Map.entry(header.name().substring(USER_META_PREFIX.length()), header.value()))
+                            .filter(header -> header.name().startsWith(properties.getUserMetaPrefix()))
+                            .map(header -> Map.entry(header.name().substring(properties.getUserMetaPrefix().length()), header.value()))
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
                     // Get headers _NOT_ starting with USER_META_PREFIX, collect to map
                     Map<String, String> systemMetadata = resourceMetaPair.second().headers().stream()
-                            .filter(header -> !header.name().startsWith(USER_META_PREFIX))
+                            .filter(header -> !header.name().startsWith(properties.getUserMetaPrefix()))
                             .map(header -> Map.entry(header.name(), header.value()))
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
                     // Build the S3Resource object
                     return ((S3Resource) ((LeafResource) ResourceBuilder.create(fileUri))
-                            .type(userMetadata.get(palisadeTypeHeader))
+                            .type(userMetadata.get(properties.getPalisadeTypeHeader()))
                             .serialisedFormat(resourceMetaPair.second().contentType().get())
-                            .connectionDetail(new SimpleConnectionDetail().serviceName(connectionDetail)))
+                            .connectionDetail(new SimpleConnectionDetail().serviceName(properties.getConnectionDetail())))
                             .userMetadata(userMetadata)
                             .systemMetadata(systemMetadata);
                 });
-    }
-
-    @Override
-    public Iterator<LeafResource> getResourcesByType(final String type) {
-        throw new UnsupportedOperationException("No such implementation of getResourcesByType for " + S3ResourceService.class.getSimpleName());
-    }
-
-    @Override
-    public Iterator<LeafResource> getResourcesBySerialisedFormat(final String serialisedFormat) {
-        throw new UnsupportedOperationException("No such implementation of getResourcesBySerialisedFormat for " + S3ResourceService.class.getSimpleName());
-    }
-
-    @Override
-    public Boolean addResource(final LeafResource leafResource) {
-        LOGGER.error("No such implementation of addResource for " + S3ResourceService.class.getSimpleName());
-        return false;
     }
 
     /**
@@ -145,9 +157,15 @@ public class S3ResourceService implements ResourceService {
      *
      * @return a {@link Boolean} true if access is granted to the bucket
      */
-    private Source<Boolean, NotUsed> bucketExists() {
-        return S3.checkIfBucketExistsSource(bucketName)
-                .map(bucketAccess -> bucketAccess.equals(BucketAccess.accessGranted()));
+    private CompletionStage<Boolean> bucketExists() {
+        return S3.checkIfBucketExists(properties.getBucketName(), materialiser)
+                .thenApply(bucketAccess -> bucketAccess.equals(BucketAccess.accessGranted()));
+    }
+
+    private void checkBucketExists() throws IOException {
+        if (this.bucketExists().toCompletableFuture().join().equals(false)) {
+            throw new IOException(String.format("Bucket %s does not exist", properties.getBucketName()));
+        }
     }
 
     /**
@@ -160,8 +178,8 @@ public class S3ResourceService implements ResourceService {
     private Source<Pair<ListBucketResultContents, ObjectMetadata>, NotUsed> listBucketWithMetadata(final String resourcePrefix) {
         // List the contents of the bucket, and if the resource exists, get the metadata for the resource
         // Then return the value as a Pair of Contents and the resources metadata
-        return S3.listBucket(bucketName, Optional.of(resourcePrefix))
-                .flatMapMerge(PARALLELISM, bucketContents -> S3.getObjectMetadata(bucketName, bucketContents.getKey())
+        return S3.listBucket(properties.getBucketName(), Optional.of(resourcePrefix))
+                .flatMapMerge(PARALLELISM, bucketContents -> S3.getObjectMetadata(properties.getBucketName(), bucketContents.getKey())
                         .map(objectMetadata -> Pair.create(bucketContents, objectMetadata
                                 .orElseThrow(() -> new RuntimeException(String.format("Lost object '%s' while listing bucket", bucketContents.getKey()))))));
     }

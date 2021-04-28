@@ -18,6 +18,7 @@ package uk.gov.gchq.palisade.service.resource.s3;
 
 import akka.stream.Materializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,15 +30,10 @@ import java.io.IOException;
  * A Spring S3 Configuration class, creating the necessary beans for an implementation of a {@link S3ResourceService}
  */
 @Configuration
+@EnableConfigurationProperties(S3Properties.class)
 public class S3Configuration {
     public static final String S3_PREFIX = "s3";
     public static final String S3_PATH_SEP = "/";
-
-    //TODO Add S3 Configuration
-//    @Bean
-//    s3Configuration() {
-//        return new s3Configuration;
-//    }
 
     /**
      * Bean implementation for {@link S3ResourceService}  and is used for setting s3Configurations and reading available resources.
@@ -49,7 +45,7 @@ public class S3Configuration {
      */
     @Bean
     @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = S3_PREFIX)
-    ResourceService hadoopResourceService(final Materializer materialiser) throws IOException {
-        return new S3ResourceService("testBucket", materialiser);
+    ResourceService s3ResourceService(final S3Properties properties, final Materializer materialiser) throws IOException {
+        return new S3ResourceService(properties, materialiser);
     }
 }
