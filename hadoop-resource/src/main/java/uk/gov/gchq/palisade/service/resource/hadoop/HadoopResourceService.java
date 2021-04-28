@@ -41,6 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.ThreadLocalRandom;
@@ -67,13 +68,13 @@ public class HadoopResourceService implements ResourceService {
     private Configuration config;
     private FileSystem fileSystem;
 
-    private List<ConnectionDetail> dataServices = new ArrayList<>();
+    private final List<ConnectionDetail> dataServices = new ArrayList<>();
 
     /**
      * Creates a new {@link HadoopResourceService} object from a {@link Configuration} object
      *
-     * @param config        A Hadoop {@link Configuration} object
-     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
+     * @param config A Hadoop {@link Configuration} object
+     * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     public HadoopResourceService(final Configuration config) throws IOException {
         requireNonNull(config, "Hadoop Configuration");
@@ -185,7 +186,7 @@ public class HadoopResourceService implements ResourceService {
      * interface.
      * This is not permitted by the HadoopResourceService, so will always return failure (false)
      *
-     * @param leafResource         the resource that Palisade can manage access to
+     * @param leafResource the resource that Palisade can manage access to
      * @return whether or not the addResource call completed successfully, always false
      */
     @Override
@@ -196,7 +197,7 @@ public class HadoopResourceService implements ResourceService {
 
     private static <T> Iterator<T> wrapRemoteIterator(final RemoteIterator<T> remote) {
         return new Iterator<>() {
-            RemoteIterator<T> delegate = remote;
+            private final RemoteIterator<T> delegate = remote;
 
             @Override
             public boolean hasNext() {
@@ -211,9 +212,11 @@ public class HadoopResourceService implements ResourceService {
             public T next() {
                 try {
                     return delegate.next();
+                } catch (NoSuchElementException exception) {
+                    LOGGER.error("NoSuchElementException thrown with", exception);
+                    throw new NoSuchElementException();
                 } catch (IOException e) {
                     throw new IteratorException(e);
-
                 }
             }
         };
@@ -248,9 +251,9 @@ public class HadoopResourceService implements ResourceService {
     /**
      * Sets the {@link Configuration} and {@link FileSystem} values
      *
-     * @param conf          A Hadoop {@link Configuration} object
-     * @return              the current {@link HadoopResourceService} object
-     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
+     * @param conf A Hadoop {@link Configuration} object
+     * @return the current {@link HadoopResourceService} object
+     * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     @Generated
     public HadoopResourceService conf(final Configuration conf) throws IOException {
@@ -263,8 +266,8 @@ public class HadoopResourceService implements ResourceService {
     /**
      * Adds a {@link ConnectionDetail} value to the {@link List} of data-services
      *
-     * @param detail    A {@link ConnectionDetail} object to be added
-     * @return          the current {@link HadoopResourceService} object
+     * @param detail A {@link ConnectionDetail} object to be added
+     * @return the current {@link HadoopResourceService} object
      */
     @Generated
     public HadoopResourceService addDataService(final ConnectionDetail detail) {
@@ -309,7 +312,7 @@ public class HadoopResourceService implements ResourceService {
         this.conf(conf);
     }
 
-    private Map<String, String> getPlainJobConfWithoutResolvingValues() {
+    private static Map<String, String> getPlainJobConfWithoutResolvingValues() {
         Map<String, String> plainMapWithoutResolvingValues = new HashMap<>();
         for (Entry<String, String> entry : new Configuration()) {
             plainMapWithoutResolvingValues.put(entry.getKey(), entry.getValue());
