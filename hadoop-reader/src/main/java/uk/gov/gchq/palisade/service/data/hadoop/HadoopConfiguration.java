@@ -41,7 +41,7 @@ public class HadoopConfiguration {
      * @throws IOException ioException
      */
     @Bean
-    @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = "hadoop", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = "hadoop")
     DataReader hadoopDataReader(final org.apache.hadoop.conf.Configuration configuration) throws IOException {
         return new HadoopDataReader(configuration);
     }
