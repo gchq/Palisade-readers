@@ -222,31 +222,6 @@ public class HadoopResourceService implements ResourceService {
         };
     }
 
-    private static <T> Iterator<T> wrapRemoteIterator(final RemoteIterator<T> remote) {
-        return new Iterator<>() {
-            RemoteIterator<T> delegate = remote;
-
-            @Override
-            public boolean hasNext() {
-                try {
-                    return delegate.hasNext();
-                } catch (IOException e) {
-                    throw new IteratorException(e);
-                }
-            }
-
-            @Override
-            public T next() {
-                try {
-                    return delegate.next();
-                } catch (IOException e) {
-                    throw new IteratorException(e);
-
-                }
-            }
-        };
-    }
-
     private FunctionalIterator<LeafResource> getMappings(final String pathString, final Predicate<HadoopResourceDetails> predicate) {
         try {
             Iterator<LocatedFileStatus> it = wrapRemoteIterator(this.getFileSystem().listFiles(new Path(pathString), true));
