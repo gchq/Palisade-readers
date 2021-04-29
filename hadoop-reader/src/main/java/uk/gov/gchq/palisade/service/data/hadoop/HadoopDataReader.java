@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.reader;
+package uk.gov.gchq.palisade.service.data.hadoop;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -23,9 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.Generated;
-import uk.gov.gchq.palisade.reader.common.SerialisedDataReader;
-import uk.gov.gchq.palisade.reader.exception.ReadResourceException;
 import uk.gov.gchq.palisade.resource.LeafResource;
+import uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,10 +50,10 @@ public class HadoopDataReader extends SerialisedDataReader {
     /**
      * Creates a new {@link HadoopDataReader} object.
      *
-     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
+     * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     public HadoopDataReader() throws IOException {
-        this.fs = FileSystem.get(new Configuration());
+        this(new Configuration());
     }
 
     /**
@@ -64,7 +63,7 @@ public class HadoopDataReader extends SerialisedDataReader {
      * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the created {@link Configuration}
      */
     public HadoopDataReader(final Map<String, String> conf) throws IOException {
-        this.fs = FileSystem.get(createConfig(conf));
+        this(createConfig(conf));
     }
 
     private static Configuration createConfig(final Map<String, String> conf) {
@@ -80,9 +79,9 @@ public class HadoopDataReader extends SerialisedDataReader {
     /**
      * Creates a {@link Configuration} using the {@link Map} of {@link String}s.
      *
-     * @param conf          A {@link Map} of {@link String}s used as the configuration
-     * @return              the current {@link HadoopDataReader} object
-     * @throws IOException  the {@link Exception} thrown when there is an issue inside the {@link #conf(Configuration)} method.
+     * @param conf A {@link Map} of {@link String}s used as the configuration
+     * @return the current {@link HadoopDataReader} object
+     * @throws IOException the {@link Exception} thrown when there is an issue inside the {@link #conf(Configuration)} method.
      */
     @Generated
     public HadoopDataReader conf(final Map<String, String> conf) throws IOException {
@@ -92,9 +91,9 @@ public class HadoopDataReader extends SerialisedDataReader {
     /**
      * Sets the {@link FileSystem} value.
      *
-     * @param conf          A Hadoop {@link Configuration} object
-     * @return              the current {@link HadoopDataReader} object
-     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
+     * @param conf A Hadoop {@link Configuration} object
+     * @return the current {@link HadoopDataReader} object
+     * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     @Generated
     public HadoopDataReader conf(final Configuration conf) throws IOException {
@@ -105,8 +104,8 @@ public class HadoopDataReader extends SerialisedDataReader {
     /**
      * Sets the {@link FileSystem} value.
      *
-     * @param fs    the {@link FileSystem} value
-     * @return      the current {@link HadoopDataReader} object
+     * @param fs the {@link FileSystem} value
+     * @return the current {@link HadoopDataReader} object
      */
     @Generated
     public HadoopDataReader fs(final FileSystem fs) {

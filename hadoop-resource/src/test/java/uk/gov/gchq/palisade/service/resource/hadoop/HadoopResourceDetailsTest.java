@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.resource.util;
+package uk.gov.gchq.palisade.service.resource.hadoop;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,9 @@ class HadoopResourceDetailsTest {
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
 
         // Then
-        assertThat(details).isEqualTo(expected);
+        assertThat(details)
+                .as("Check that the details have been populated correctly")
+                .isEqualTo(expected);
     }
 
     @Test
@@ -58,7 +60,9 @@ class HadoopResourceDetailsTest {
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(absolute);
 
         // Then
-        assertThat(details).isEqualTo(expected);
+        assertThat(details)
+                .as("Check that the details have been populated correctly")
+                .isEqualTo(expected);
     }
 
     @Test
@@ -71,7 +75,9 @@ class HadoopResourceDetailsTest {
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(relative);
 
         // Then
-        assertThat(details).isEqualTo(expected);
+        assertThat(details)
+                .as("Check that the details have been populated correctly")
+                .isEqualTo(expected);
     }
 
     @Test
@@ -84,7 +90,9 @@ class HadoopResourceDetailsTest {
                 () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidType), "Test should throw an exception");
 
         // Then check the assertion message
-        assertThat(illegalAccessException.getMessage()).contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
+        assertThat(illegalAccessException.getMessage())
+                .as("Check the error message contains the correct message")
+                .contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
     }
 
     @Test
@@ -97,7 +105,9 @@ class HadoopResourceDetailsTest {
                 () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidType), "Test should throw an exception");
 
         // Then check the assertion message
-        assertThat(illegalAccessException.getMessage()).contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
+        assertThat(illegalAccessException.getMessage())
+                .as("Check the error message contains the correct message")
+                .contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
     }
 
     @Test
@@ -110,7 +120,9 @@ class HadoopResourceDetailsTest {
                 () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidFormat), "Test should throw an exception");
 
         // Then check the assertion message
-        assertThat(illegalAccessException.getMessage()).contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
+        assertThat(illegalAccessException.getMessage())
+                .as("Check the error message contains the correct message")
+                .contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
     }
 
     @Test
@@ -123,7 +135,9 @@ class HadoopResourceDetailsTest {
                 () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidFormat), "Test should throw an exception");
 
         // Then check the assertion message
-        assertThat(illegalAccessException.getMessage()).contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
+        assertThat(illegalAccessException.getMessage())
+                .as("Check the error message contains the correct message")
+                .contains("Filename doesn't comply with TYPE_FILENAME.FORMAT");
     }
 
     @Test
@@ -136,7 +150,9 @@ class HadoopResourceDetailsTest {
         HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
 
         // Then
-        assertThat(details).isEqualTo(expected);
+        assertThat(details)
+                .as("Check that the details have been formatted correctly")
+                .isEqualTo(expected);
     }
 
     @Test
@@ -146,11 +162,11 @@ class HadoopResourceDetailsTest {
 
         // When
         LeafResource resource = details.getResource();
-
         // Then
-        assertThat(resource.getId()).isEqualTo(details.getFileName().toString());
-        assertThat(resource.getType()).isEqualTo(details.getType());
-        assertThat(resource.getSerialisedFormat()).isEqualTo(details.getFormat());
+        assertThat(resource)
+                .as("Check that when extracting the components of the resource they have not been modified")
+                .extracting("id", "type", "serialisedFormat")
+                .contains(details.getFileName().toString(), details.getType(), details.getFormat());
     }
 
     @Test
@@ -163,7 +179,9 @@ class HadoopResourceDetailsTest {
                 () -> HadoopResourceDetails.getResourceDetailsFromFileName(uri), "Test should throw an exception");
 
         // Then check the assertion message
-        assertThat(illegalAccessException.getMessage()).contains("Type 'a' is not supported");
+        assertThat(illegalAccessException.getMessage())
+                .as("Check that the error message has been set correctly")
+                .isEqualTo("Type 'a' is not supported");
     }
 
     @Test
@@ -174,6 +192,8 @@ class HadoopResourceDetailsTest {
         // When
         boolean details = HadoopResourceDetails.isValidResourceName(uri);
 
-        assertThat(details).isFalse();
+        assertThat(details)
+                .as("Check that the resource uri is not valid")
+                .isFalse();
     }
 }
