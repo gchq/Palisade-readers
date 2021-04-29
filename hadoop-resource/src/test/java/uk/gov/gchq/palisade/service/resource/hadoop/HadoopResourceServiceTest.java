@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.resource.service;
+package uk.gov.gchq.palisade.service.resource.hadoop;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import uk.gov.gchq.palisade.reader.common.SimpleConnectionDetail;
-import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
-import uk.gov.gchq.palisade.reader.common.util.ResourceBuilder;
-import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
+import uk.gov.gchq.palisade.resource.ConnectionDetail;
+import uk.gov.gchq.palisade.resource.LeafResource;
+import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
+import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.io.File;
+import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,14 +40,14 @@ class HadoopResourceServiceTest {
     @Test
     void testResourceDetailsGetDataServiceConnection() {
         // Given
-        var dataService = new SimpleConnectionDetail().serviceName("data-service");
+        ConnectionDetail dataService = new SimpleConnectionDetail().serviceName("data-service");
         service.addDataService(dataService);
 
-        var uri = new File(".").toURI().resolve("type_file.format");
-        var details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
+        URI uri = new File(".").toURI().resolve("type_file.format");
+        HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
 
         // When
-        var resource = service.addConnectionDetail(details);
+        LeafResource resource = service.addConnectionDetail(details);
 
         // Then
         assertThat(resource.getConnectionDetail())
@@ -54,7 +55,7 @@ class HadoopResourceServiceTest {
                 .isEqualTo(dataService);
 
         assertThat(resource)
-                .as("Check that the resource has the correct connection detail")
+                .as("Check that resource has been retrieved successfully")
                 .isEqualTo(details.getResource().connectionDetail(dataService));
     }
 
@@ -67,7 +68,7 @@ class HadoopResourceServiceTest {
 
         // Then
         assertThat(success)
-                .as("Check that you cannot add a resource to the hadoop resource service at runtime")
+                .as("Check that you cant add files to the HadoopResourceService")
                 .isFalse();
     }
 

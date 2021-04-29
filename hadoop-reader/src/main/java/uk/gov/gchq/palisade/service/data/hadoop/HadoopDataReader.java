@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.reader;
+package uk.gov.gchq.palisade.service.data.hadoop;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -22,10 +22,9 @@ import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.reader.common.Generated;
-import uk.gov.gchq.palisade.reader.common.SerialisedDataReader;
-import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
-import uk.gov.gchq.palisade.reader.exception.ReadResourceException;
+import uk.gov.gchq.palisade.Generated;
+import uk.gov.gchq.palisade.resource.LeafResource;
+import uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,12 +48,22 @@ public class HadoopDataReader extends SerialisedDataReader {
     private FileSystem fs;
 
     /**
+     * Create a new HadoopDataReader and with a file system configuration
+     *
+     * @param configuration a hadoop configuration specifying the target cluster
+     * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
+     */
+    public HadoopDataReader(final Configuration configuration) throws IOException {
+        this.fs = FileSystem.get(configuration);
+    }
+
+    /**
      * Creates a new {@link HadoopDataReader} object
      *
      * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     public HadoopDataReader() throws IOException {
-        this.fs = FileSystem.get(new Configuration());
+        this(new Configuration());
     }
 
     /**
@@ -64,7 +73,7 @@ public class HadoopDataReader extends SerialisedDataReader {
      * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the created {@link Configuration}
      */
     public HadoopDataReader(final Map<String, String> conf) throws IOException {
-        this.fs = FileSystem.get(createConfig(conf));
+        this(createConfig(conf));
     }
 
     private static Configuration createConfig(final Map<String, String> conf) {
@@ -169,7 +178,7 @@ public class HadoopDataReader extends SerialisedDataReader {
         return rtn;
     }
 
-    private static Map<String, String> getPlainJobConfWithoutResolvingValues() {
+    private Map<String, String> getPlainJobConfWithoutResolvingValues() {
         Map<String, String> plainMapWithoutResolvingValues = new HashMap<>();
         for (Entry<String, String> entry : new Configuration()) {
             plainMapWithoutResolvingValues.put(entry.getKey(), entry.getValue());

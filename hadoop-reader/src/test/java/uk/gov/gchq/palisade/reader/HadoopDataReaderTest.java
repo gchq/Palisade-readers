@@ -15,82 +15,54 @@
  */
 package uk.gov.gchq.palisade.reader;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
-import uk.gov.gchq.palisade.reader.common.Context;
-import uk.gov.gchq.palisade.reader.common.DataFlavour;
-import uk.gov.gchq.palisade.reader.common.User;
-import uk.gov.gchq.palisade.reader.common.data.seralise.SimpleStringSerialiser;
-import uk.gov.gchq.palisade.reader.common.resource.impl.FileResource;
-import uk.gov.gchq.palisade.reader.common.rule.Rules;
-import uk.gov.gchq.palisade.reader.request.DataReaderRequest;
-import uk.gov.gchq.palisade.reader.request.DataReaderResponse;
+import uk.gov.gchq.palisade.Context;
+import uk.gov.gchq.palisade.data.serialise.SimpleStringSerialiser;
+import uk.gov.gchq.palisade.reader.util.PathUtils;
+import uk.gov.gchq.palisade.resource.impl.FileResource;
+import uk.gov.gchq.palisade.rule.Rules;
+import uk.gov.gchq.palisade.service.data.hadoop.HadoopDataReader;
+import uk.gov.gchq.palisade.service.data.model.DataReaderRequest;
+import uk.gov.gchq.palisade.service.data.model.DataReaderResponse;
+import uk.gov.gchq.palisade.service.data.reader.DataFlavour;
+import uk.gov.gchq.palisade.user.User;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.junit.Assert.assertEquals;
 
 public class HadoopDataReaderTest {
-    @TempDir
-    Path testFolder;
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder(PathUtils.getTestDir(HadoopDataReaderTest.class));
 
     @Test
-    public void testShouldReadTextFileWithNoRules() throws IOException {
+    public void shouldReadTextFileWithNoRules() throws IOException {
         // Given
-        var tmpFile = testFolder.resolve("file1.txt");
-        Files.write(tmpFile, "some data\nsome more data".getBytes(StandardCharsets.UTF_8));
+        final File tmpFile = testFolder.newFile("file1.txt");
+        FileUtils.write(tmpFile, "some data\nsome more data", StandardCharsets.UTF_8);
 
         final Configuration conf = new Configuration();
         final HadoopDataReader reader = getReader(conf);
         reader.addSerialiser(DataFlavour.of("string", "string"), new SimpleStringSerialiser());
 
-        final DataReaderRequest request = new DataReaderRequest()
-                .resource(new FileResource().id(tmpFile.toString()).type("string").serialisedFormat("string"))
-                .user(new User())
-                .context(new Context())
-                .rules(new Rules<>());
-
-        // When
-        final DataReaderResponse response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
-
-        // Then
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        response.getWriter().write(os);
-        final Stream<String> lines = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()))).lines();
-
-        assertThat(lines.collect(Collectors.toList()))
-                .as("Check that the file has the correct data")
-                .isEqualTo(Arrays.asList("some data", "some more data"));
-    }
-
-    @Test
-    public void testShouldReadTextFileWithRules() throws IOException {
-        // Given
-        var tmpFile = testFolder.resolve("file2.txt");
-        Files.write(tmpFile, "some data\nsome more data".getBytes(StandardCharsets.UTF_8));
-
-        final Configuration conf = new Configuration();
-        final HadoopDataReader reader = getReader(conf);
-        reader.addSerialiser(DataFlavour.of("string", "string"), new SimpleStringSerialiser());
-
-        final FileResource resource = new FileResource().id(tmpFile.toString()).type("string").serialisedFormat("string");
-        // Redact any records containing the word 'more'
-        final Rules<String> rules = new Rules<String>().addPredicateRule("1", (r, u, j) -> !r.contains("more"));
+        final FileResource resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
+        final Rules<String> rules = new Rules<>();
 
         final DataReaderRequest request = new DataReaderRequest()
                 .resource(resource)
@@ -105,27 +77,28 @@ public class HadoopDataReaderTest {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         response.getWriter().write(os);
         final Stream<String> lines = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()))).lines();
-
-        assertThat(lines.collect(Collectors.toList()))
-                .as("Check that the file has the correct data")
-                .isEqualTo(Collections.singletonList("some data"));
+        assertEquals(Arrays.asList("some data", "some more data"), lines.collect(Collectors.toList()));
     }
 
     @Test
-    public void testShouldDecodeURIEncodedFilesCorrectly() throws IOException {
+    public void shouldReadTextFileWithRules() throws IOException {
         // Given
-        var tmpFile = testFolder.resolve("file3.txt");
-        Files.write(tmpFile, "some data\nsome more data".getBytes(StandardCharsets.UTF_8));
+        final File tmpFile = testFolder.newFile("file1.txt");
+        FileUtils.write(tmpFile, "some data\nsome more data", StandardCharsets.UTF_8);
 
         final Configuration conf = new Configuration();
         final HadoopDataReader reader = getReader(conf);
         reader.addSerialiser(DataFlavour.of("string", "string"), new SimpleStringSerialiser());
 
+        final FileResource resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
+        // Redact any records containing the word 'more'
+        final Rules<String> rules = new Rules<String>().addRule("1", (PredicateRule<String>) (r, u, j) -> !r.contains("more"));
+
         final DataReaderRequest request = new DataReaderRequest()
-                .resource(new FileResource().id(tmpFile.toString()).type("string").serialisedFormat("string"))
+                .resource(resource)
                 .user(new User())
                 .context(new Context())
-                .rules(new Rules<>());
+                .rules(rules);
 
         // When
         final DataReaderResponse response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
@@ -134,10 +107,36 @@ public class HadoopDataReaderTest {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         response.getWriter().write(os);
         final Stream<String> lines = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()))).lines();
+        assertEquals(Collections.singletonList("some data"), lines.collect(Collectors.toList()));
+    }
 
-        assertThat(lines.collect(Collectors.toList()))
-                .as("Check that the file has the correct data")
-                .isEqualTo(Arrays.asList("some data", "some more data"));
+    @Test
+    public void shouldDecodeURIEncodedFilesCorrectly() throws IOException {
+        // Given
+        final File tmpFile = testFolder.newFile("fi le1.txt");
+        FileUtils.write(tmpFile, "some data\nsome more data", StandardCharsets.UTF_8);
+
+        final Configuration conf = new Configuration();
+        final HadoopDataReader reader = getReader(conf);
+        reader.addSerialiser(DataFlavour.of("string", "string"), new SimpleStringSerialiser());
+
+        final FileResource resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
+        final Rules<String> rules = new Rules<>();
+
+        final DataReaderRequest request = new DataReaderRequest()
+                .resource(resource)
+                .user(new User())
+                .context(new Context())
+                .rules(rules);
+
+        // When
+        final DataReaderResponse response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
+
+        // Then
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        response.getWriter().write(os);
+        final Stream<String> lines = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()))).lines();
+        assertEquals(Arrays.asList("some data", "some more data"), lines.collect(Collectors.toList()));
     }
 
     private static HadoopDataReader getReader(final Configuration conf) throws IOException {

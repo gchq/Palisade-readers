@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.resource.service;
+package uk.gov.gchq.palisade.service.resource.hadoop;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RemoteIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.reader.common.ConnectionDetail;
-import uk.gov.gchq.palisade.reader.common.Generated;
-import uk.gov.gchq.palisade.reader.common.ResourceService;
-import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
-import uk.gov.gchq.palisade.reader.common.resource.Resource;
-import uk.gov.gchq.palisade.service.resource.util.FunctionalIterator;
-import uk.gov.gchq.palisade.service.resource.util.HadoopResourceDetails;
+import uk.gov.gchq.palisade.Generated;
+import uk.gov.gchq.palisade.resource.ConnectionDetail;
+import uk.gov.gchq.palisade.resource.LeafResource;
+import uk.gov.gchq.palisade.resource.Resource;
+import uk.gov.gchq.palisade.service.resource.service.FunctionalIterator;
+import uk.gov.gchq.palisade.service.resource.service.ResourceService;
 
 import java.io.IOException;
 import java.net.URI;
@@ -41,6 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.ThreadLocalRandom;
@@ -67,7 +68,7 @@ public class HadoopResourceService implements ResourceService {
     private Configuration config;
     private FileSystem fileSystem;
 
-    private List<ConnectionDetail> dataServices = new ArrayList<>();
+    private final List<ConnectionDetail> dataServices = new ArrayList<>();
 
     /**
      * Creates a new {@link HadoopResourceService} object from a {@link Configuration} object
@@ -194,9 +195,37 @@ public class HadoopResourceService implements ResourceService {
         return false;
     }
 
+    private static <T> Iterator<T> wrapRemoteIterator(final RemoteIterator<T> remote) {
+        return new Iterator<>() {
+            private final RemoteIterator<T> delegate = remote;
+
+            @Override
+            public boolean hasNext() {
+                try {
+                    return delegate.hasNext();
+                } catch (IOException e) {
+                    throw new IteratorException(e);
+                }
+            }
+
+            @Override
+            public T next() {
+                try {
+                    return delegate.next();
+                } catch (NoSuchElementException exception) {
+                    LOGGER.error("NoSuchElementException thrown with", exception);
+                    throw new NoSuchElementException();
+                } catch (IOException e) {
+                    throw new IteratorException(e);
+                }
+            }
+        };
+    }
+
     private FunctionalIterator<LeafResource> getMappings(final String pathString, final Predicate<HadoopResourceDetails> predicate) {
         try {
-            return FunctionalIterator.fromIterator(this.getFileSystem().listFiles(new Path(pathString), true))
+            Iterator<LocatedFileStatus> it = wrapRemoteIterator(this.getFileSystem().listFiles(new Path(pathString), true));
+            return FunctionalIterator.fromIterator(it)
                     .map(HadoopResourceService::getPaths)
                     .filter(HadoopResourceDetails::isValidResourceName)
                     .map(HadoopResourceDetails::getResourceDetailsFromFileName)

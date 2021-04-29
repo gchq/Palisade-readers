@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.resource.util;
+package uk.gov.gchq.palisade.service.resource.hadoop;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.reader.common.Generated;
-import uk.gov.gchq.palisade.reader.common.resource.LeafResource;
-import uk.gov.gchq.palisade.reader.common.util.ResourceBuilder;
+import uk.gov.gchq.palisade.Generated;
+import uk.gov.gchq.palisade.resource.LeafResource;
+import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -53,9 +53,9 @@ public class HadoopResourceDetails {
      * Constructs a new {@link HadoopResourceDetails} object using a {@link URI} file name value,
      * a {@link String} type value and a {@link String} format value.
      *
-     * @param fileName the {@link URI} value of the file name
-     * @param type     a {@link String} value of the file type
-     * @param format   a {@link String} value of the file format
+     * @param fileName  the {@link URI} value of the file name
+     * @param type      a {@link String} value of the file type
+     * @param format    a {@link String} value of the file format
      */
     public HadoopResourceDetails(final URI fileName, final String type, final String format) {
         this.fileName = fileName;
@@ -66,8 +66,8 @@ public class HadoopResourceDetails {
     /**
      * Adds a valid type and type class to a {@link Map} of supported types
      *
-     * @param type        A {@link String} value of the type that will be in the resource file name
-     * @param classString A {@link String} value of the fully qualified class of the type
+     * @param type          A {@link String} value of the type that will be in the resource file name
+     * @param classString   A {@link String} value of the fully qualified class of the type
      */
     public static void addTypeSupport(final String type, final String classString) {
         if (SUPPORTED_TYPES.containsKey(type)) {
@@ -79,8 +79,8 @@ public class HadoopResourceDetails {
     /**
      * Creates a new {@link HadoopResourceDetails} object using a {@link URI} file name value.
      *
-     * @param fileName the {@link URI} value of the file name
-     * @return a new {@link HadoopResourceDetails} object
+     * @param fileName  the {@link URI} value of the file name
+     * @return          a new {@link HadoopResourceDetails} object
      */
     public static HadoopResourceDetails getResourceDetailsFromFileName(final URI fileName) {
 
@@ -101,8 +101,8 @@ public class HadoopResourceDetails {
     /**
      * Checks that the {@link URI} file name value matches a defined regex expression
      *
-     * @param fileURI the {@link URI} value of the file
-     * @return a {@link Boolean} value
+     * @param fileURI  the {@link URI} value of the file
+     * @return          a {@link Boolean} value
      */
     public static boolean isValidResourceName(final URI fileURI) {
         requireNonNull(fileURI);
