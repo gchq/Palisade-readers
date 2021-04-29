@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.palisade.exception;
+package uk.gov.gchq.palisade.service.data.s3.exception;
 
 /**
  * Elevate thrown IOExceptions when loading spring/akka config to RuntimeExceptions.
