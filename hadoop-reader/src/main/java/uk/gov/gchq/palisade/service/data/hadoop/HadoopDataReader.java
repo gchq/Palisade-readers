@@ -48,6 +48,16 @@ public class HadoopDataReader extends SerialisedDataReader {
     private FileSystem fs;
 
     /**
+     * Create a new HadoopDataReader and with a file system configuration.
+     *
+     * @param configuration a hadoop configuration specifying the target cluster
+     * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
+     */
+    public HadoopDataReader(final Configuration configuration) throws IOException {
+        this.fs = FileSystem.get(configuration);
+    }
+
+    /**
      * Creates a new {@link HadoopDataReader} object.
      *
      * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
