@@ -16,9 +16,11 @@ alpakka:
   s3:
     aws:
       credentials:
+        access-key-id = "accesskey"
+        secret-access-key = "secretkey"
 
 
-logging:
-  level:
-  org.apache.kafka: WARN
+#logging:
+#  level:
+#  org.apache.kafka: WARN
 

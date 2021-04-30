@@ -18,8 +18,11 @@ package uk.gov.gchq.palisade.service.data.s3;
 
 import akka.NotUsed;
 import akka.japi.Pair;
+import akka.stream.Attributes;
 import akka.stream.Materializer;
 import akka.stream.alpakka.s3.ObjectMetadata;
+import akka.stream.alpakka.s3.S3Attributes;
+import akka.stream.alpakka.s3.S3Settings;
 import akka.stream.alpakka.s3.javadsl.S3;
 import akka.stream.javadsl.Sink;
 import akka.stream.javadsl.Source;
@@ -56,13 +59,17 @@ public class S3DataReader extends SerialisedDataReader {
     @Override
     protected InputStream readRaw(final LeafResource resource) {
 
-        String temp ="";
+        String temp = "";
         //pseudo code -copy and paste of the 2.0.2 Alpakka S3
         //config, properties -injected in via dependency injection
 
         //need to retrieve the data from S3
         //bucket will be unique to the client request.
         //will need for this to come in as part of the creation of this instance.
+
+      //  final S3Settings settings = S3Settings
+     //   final Attributes sampleAttributes = S3Attributes.settings();
+
         try {
 
             final Source<Optional<Pair<Source<ByteString, NotUsed>, ObjectMetadata>>, NotUsed>
