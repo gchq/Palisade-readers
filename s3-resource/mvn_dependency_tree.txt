@@ -631,6 +631,7 @@ uk.gov.gchq.palisade:s3-resource:jar:0.5.0-SNAPSHOT
 |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.10.4:compile
 +- ch.qos.logback:logback-classic:jar:1.2.3:compile
 |  \- ch.qos.logback:logback-core:jar:1.2.3:compile
++- org.jetbrains:annotations:jar:20.1.0:compile
 +- org.springframework.boot:spring-boot-starter-test:jar:2.3.1.RELEASE:test
 |  +- org.springframework.boot:spring-boot-starter:jar:2.3.1.RELEASE:provided
 |  |  +- org.springframework.boot:spring-boot:jar:2.3.1.RELEASE:provided

@@ -18,8 +18,10 @@ package uk.gov.gchq.palisade.service.resource.s3;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.lang.NonNull;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.localstack.LocalStackContainer;
@@ -30,20 +32,35 @@ import static org.testcontainers.containers.localstack.LocalStackContainer.Servi
 public class S3Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3Initializer.class);
 
-    static final GenericContainer<?> LOCAL_STACK_CONTAINER = new LocalStackContainer(DockerImageName.parse("localstack/localstack:0.12.9.1"))
-            .withServices(S3)
-            .withReuse(true);
+    @Value("${testcontainers.localstack.image}")
+    private String fullImageName;
+    @Value("${testcontainers.localstack.default.image}")
+    private String defaultImageName;
 
     static LocalStackContainer lcs;
 
-
     @Override
-    public void initialize(final ConfigurableApplicationContext context) {
+    public void initialize(@NonNull final ConfigurableApplicationContext context) {
+
+        DockerImageName localstackImageName;
+        try {
+            localstackImageName = DockerImageName.parse(fullImageName)
+                    .asCompatibleSubstituteFor(defaultImageName);
+            localstackImageName.assertValid();
+        } catch (IllegalArgumentException ex) {
+            LOGGER.warn("Image name {} was invalid, falling back to default name {}", fullImageName, defaultImageName, ex);
+            localstackImageName = DockerImageName.parse(defaultImageName);
+        }
+
+        final GenericContainer<?> localStackContainer = new LocalStackContainer(localstackImageName)
+                .withServices(S3)
+                .withReuse(true);
+
         context.getEnvironment().setActiveProfiles("s3");
         // Start container
-        LOCAL_STACK_CONTAINER.start();
+        localStackContainer.start();
 
-        lcs = (LocalStackContainer) LOCAL_STACK_CONTAINER;
+        lcs = (LocalStackContainer) localStackContainer;
         var accessKey = "aws.accessKeyId=" + lcs.getDefaultCredentialsProvider().getCredentials().getAWSAccessKeyId();
         var secretKey = "aws.secretKey=" + lcs.getDefaultCredentialsProvider().getCredentials().getAWSSecretKey();
         var endpoint = "aws.endpoint=" + lcs.getEndpointConfiguration(S3).getServiceEndpoint();

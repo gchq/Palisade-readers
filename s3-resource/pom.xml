@@ -38,12 +38,15 @@
         <aws-sdk.version>2.16.44</aws-sdk.version>
         <jackson.version>2.10.4</jackson.version>
         <logback.version>1.2.3</logback.version>
+        <jetbrains-annotation.version>20.1.0</jetbrains-annotation.version>
 
         <!-- Test dependency versions -->
         <spring-boot-testing.version>2.3.1.RELEASE</spring-boot-testing.version>
         <junit.version>5.5.2</junit.version>
         <assertj.version>3.18.0</assertj.version>
         <localstack.version>1.15.3</localstack.version>
+        <!-- Testcontainers images -->
+        <testcontainers.localstack.image>localstack/localstack:0.12.9.1</testcontainers.localstack.image>
     </properties>
 
     <dependencies>
@@ -104,6 +107,13 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
         </dependency>
+        <dependency>
+            <!-- JetBrains annotations Dependency -->
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>${jetbrains-annotation.version}</version>
+        </dependency>
+
         <!--
        ~ Test Dependencies
        -->
@@ -127,5 +137,35 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <!-- Substitute maven properties in values.yaml -->
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/values.yaml</include>
+                </includes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/values.yaml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <!-- Substitute maven properties in tests yaml -->
+                <filtering>true</filtering>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*.yaml</include>
+                </includes>
+            </testResource>
+        </testResources>
+    </build>
 
 </project>

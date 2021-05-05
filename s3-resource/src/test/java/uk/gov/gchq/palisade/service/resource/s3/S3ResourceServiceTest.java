@@ -16,21 +16,16 @@
 
 package uk.gov.gchq.palisade.service.resource.s3;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.localstack.LocalStackContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
-import org.testcontainers.utility.DockerImageName;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -44,14 +39,12 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.testcontainers.containers.localstack.LocalStackContainer.Service.*;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
-import static uk.gov.gchq.palisade.service.resource.s3.S3Initializer.LOCAL_STACK_CONTAINER;
 import static uk.gov.gchq.palisade.service.resource.s3.S3Initializer.lcs;
 
 @Testcontainers
 @ContextConfiguration(initializers = {S3Initializer.class})
-@ActiveProfiles({"s3"})
+@ActiveProfiles({"s3", "testcontainers"})
 class S3ResourceServiceTest {
 
     @Autowired
@@ -63,9 +56,19 @@ class S3ResourceServiceTest {
     private S3Client s3;
     private Path testFile;
 
+    @Test
+    @Order(1)
+    void testAutowiring() {
+        assertThat(service)
+                .as("Check that the service has been started successfully")
+                .isNotNull();
+        assertThat(lcs)
+                .as("Check that the service has been started successfully")
+                .isNotNull();
+    }
 
-    @BeforeEach
-    public void setup() throws IOException {
+    @Test
+    void testV2() throws IOException {
         // AWS SDK v2
         s3 = S3Client
                 .builder()
@@ -81,18 +84,7 @@ class S3ResourceServiceTest {
         // Create the bucket, and add the object
         s3.createBucket(b -> b.bucket("foo"));
         s3.putObject(b -> b.bucket("foo").key(testFile.toString()), testFile);
-    }
 
-    @Test
-    @Order(1)
-    void testAutowiring() {
-        assertThat(service)
-                .as("Check that the service has been started successfully")
-                .isNotNull();
-    }
-
-    @Test
-    void testV2() throws IOException {
         assertThat(s3.listBuckets().buckets())
                 .as("Check one bucket exists")
                 .asList()
@@ -104,6 +96,7 @@ class S3ResourceServiceTest {
 
         var x = service.getResourcesById(testFile.toString());
         assertThat(x.next())
+                .as("Check the iterator has an item in")
                 .isNotNull();
 
         var lOR = ListObjectsRequest.builder().bucket("foo").build();
