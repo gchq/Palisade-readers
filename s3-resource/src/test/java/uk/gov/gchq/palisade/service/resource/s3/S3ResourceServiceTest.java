@@ -16,8 +16,13 @@
 
 package uk.gov.gchq.palisade.service.resource.s3;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -39,37 +44,55 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.testcontainers.containers.localstack.LocalStackContainer.Service.*;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
+import static uk.gov.gchq.palisade.service.resource.s3.S3Initializer.LOCAL_STACK_CONTAINER;
+import static uk.gov.gchq.palisade.service.resource.s3.S3Initializer.lcs;
 
 @Testcontainers
+@ContextConfiguration(initializers = {S3Initializer.class})
+@ActiveProfiles({"s3"})
 class S3ResourceServiceTest {
 
-    @Container
-    private final LocalStackContainer localstack = new LocalStackContainer(DockerImageName.parse("localstack/localstack:0.12.9.1"))
-            .withServices(S3);
+    @Autowired
+    S3ResourceService service;
 
     @TempDir
     Path tempPathDirectory;
 
-    @Test
-    void testV2() throws IOException {
+    private S3Client s3;
+    private Path testFile;
+
+
+    @BeforeEach
+    public void setup() throws IOException {
         // AWS SDK v2
-        var s3 = S3Client
+        s3 = S3Client
                 .builder()
-                .endpointOverride(localstack.getEndpointOverride(LocalStackContainer.Service.S3))
-                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())))
-                .region(Region.of(localstack.getRegion()))
+                .endpointOverride(lcs.getEndpointOverride(S3))
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(lcs.getAccessKey(), lcs.getSecretKey())))
                 .build();
 
         // Create a test file and add some text to it
-        var testFile = tempPathDirectory.resolve("testFile.txt");
+        testFile = tempPathDirectory.resolve("testFile.txt");
         var lines = Arrays.asList("1", "2", "3");
         Files.write(testFile, lines);
 
-        // Create the bucket, and ad the object
+        // Create the bucket, and add the object
         s3.createBucket(b -> b.bucket("foo"));
         s3.putObject(b -> b.bucket("foo").key(testFile.toString()), testFile);
+    }
 
+    @Test
+    @Order(1)
+    void testAutowiring() {
+        assertThat(service)
+                .as("Check that the service has been started successfully")
+                .isNotNull();
+    }
+
+    @Test
+    void testV2() throws IOException {
         assertThat(s3.listBuckets().buckets())
                 .as("Check one bucket exists")
                 .asList()
@@ -77,6 +100,11 @@ class S3ResourceServiceTest {
                 .first()
                 .extracting("name")
                 .isEqualTo("foo");
+
+
+        var x = service.getResourcesById(testFile.toString());
+        assertThat(x.next())
+                .isNotNull();
 
         var lOR = ListObjectsRequest.builder().bucket("foo").build();
         assertThat(s3.listObjects(lOR).contents())

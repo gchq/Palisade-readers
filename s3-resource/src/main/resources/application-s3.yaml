@@ -44,7 +44,7 @@ alpakka.s3:
       # attempts to get the region from either:
       #   - environment variables
       #   - system properties
-      #   - progile file
+      #   - profile file
       #   - EC2 metadata
       provider: default
 

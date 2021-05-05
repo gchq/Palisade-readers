@@ -1,12 +1,16 @@
 List of third-party dependencies grouped by their license type
 
 ### [Apache Software License 2.0](./licenses/apache_software_license_2.0.txt):
+* AWS SDK For Java ([com.amazonaws:aws-java-sdk:1.11.1000](https://aws.amazon.com/sdkforjava))
 * jackson-databind ([com.fasterxml.jackson.core:jackson-databind:2.10.4](http://github.com/FasterXML/jackson))
 * Gson ([com.google.code.gson:gson:2.8.6](https://github.com/google/gson/gson))
 * Apache Hadoop Common ([org.apache.hadoop:hadoop-common:3.2.1](no url defined))
 * AssertJ fluent assertions ([org.assertj:assertj-core:3.18.0](https://assertj.github.io/doc/assertj-core/))
-* data-service ([uk.gov.gchq.palisade:data-service:0.5.0-SNAPSHOT](no url defined))
-* resource-service ([uk.gov.gchq.palisade:resource-service:0.5.0-SNAPSHOT](https://github.com/gchq/Palisade-services/tree/develop/resource-service))
+* Spring Boot Configuration Processor ([org.springframework.boot:spring-boot-configuration-processor:2.2.6.RELEASE](https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-tools/spring-boot-configuration-processor))
+* AWS SDK for Java ([software.amazon.awssdk:aws-sdk-java:2.16.44](https://aws.amazon.com/sdkforjava))
+* AWS Java SDK :: SDK Core ([software.amazon.awssdk:sdk-core:2.16.44](https://aws.amazon.com/sdkforjava))
+* data-service ([uk.gov.gchq.palisade:data-service:0.5.0-20210430.155226-167](no url defined))
+* resource-service ([uk.gov.gchq.palisade:resource-service:0.5.0-20210430.155452-164](https://github.com/gchq/Palisade-services/tree/develop/resource-service))
 
 ### [Apache-2.0](./licenses/not recognised):
 * akka-stream-alpakka-s3 ([com.lightbend.akka:akka-stream-alpakka-s3_2.13:2.0.2](https://doc.akka.io/docs/alpakka/current))
@@ -22,4 +26,5 @@ List of third-party dependencies grouped by their license type
 * Logback Classic Module ([ch.qos.logback:logback-classic:1.2.3](http://logback.qos.ch/logback-classic))
 
 ### [MIT](./licenses/not recognised):
+* Testcontainers :: JUnit Jupiter Extension ([org.testcontainers:junit-jupiter:1.15.3](https://testcontainers.org))
 * Testcontainers :: Localstack ([org.testcontainers:localstack:1.15.3](https://testcontainers.org))

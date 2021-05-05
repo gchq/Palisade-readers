@@ -26,6 +26,7 @@ import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.io.File;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -55,14 +56,16 @@ class HadoopResourceServiceTest {
     }
 
     @Test
-    void testCannotAddResourcesAtRuntime() {
+    void testCannotAddResourcesAtRuntime() throws URISyntaxException {
         // Given this is a hadoop resource service
 
         // When
-        boolean success = service.addResource((LeafResource) ResourceBuilder.create("file:/hadoop/test_resource.avro"));
+        var resource = (LeafResource) ResourceBuilder.create(new URI("file:/hadoop/test_resource.avro"));
+        boolean success = service.addResource(resource);
 
         // Then
-        assertThat(success).isFalse();
+        assertThat(success)
+                .isFalse();
     }
 
 }

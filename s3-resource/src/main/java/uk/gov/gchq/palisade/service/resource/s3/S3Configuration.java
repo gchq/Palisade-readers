@@ -26,19 +26,19 @@ import uk.gov.gchq.palisade.service.resource.service.ResourceService;
 
 import java.io.IOException;
 
+import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
+
 /**
  * A Spring S3 Configuration class, creating the necessary beans for an implementation of a {@link S3ResourceService}
  */
 @Configuration
 @EnableConfigurationProperties(S3Properties.class)
 public class S3Configuration {
-    public static final String S3_PREFIX = "s3";
-    public static final String S3_PATH_SEP = "/";
 
     /**
      * Bean implementation for {@link S3ResourceService}  and is used for setting s3Configurations and reading available resources.
-     * //     * @param configuration a s3 configuration specifying the target cluster
      *
+     * @param properties   a s3 configuration specifying the target cluster
      * @param materialiser the materialiser
      * @return a new instance of {@link S3ResourceService}
      * @throws IOException ioException

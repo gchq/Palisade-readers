@@ -23,7 +23,6 @@ import akka.stream.alpakka.s3.BucketAccess;
 import akka.stream.alpakka.s3.ListBucketResultContents;
 import akka.stream.alpakka.s3.ObjectMetadata;
 import akka.stream.alpakka.s3.javadsl.S3;
-import akka.stream.javadsl.Sink;
 import akka.stream.javadsl.Source;
 import akka.stream.javadsl.StreamConverters;
 import org.slf4j.Logger;
@@ -43,6 +42,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
+
+import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
 
 /**
  * An implementation of the ResourceService.
@@ -74,16 +75,16 @@ public class S3ResourceService implements ResourceService {
     @Override
     public Iterator<LeafResource> getResourcesById(final String resourceId) {
         return getResourcesByIdSource(resourceId)
-            .runWith(StreamConverters.asJavaStream(), materialiser).iterator();
+                .runWith(StreamConverters.asJavaStream(), materialiser).iterator();
     }
 
     public Source<LeafResource, NotUsed> getResourcesByIdSource(final String resourceId) {
         URI resourceUri = URI.create(resourceId);
 
-        if (!resourceUri.getScheme().equals(S3Configuration.S3_PREFIX)) {
+        if (!resourceUri.getScheme().equals(S3_PREFIX)) {
             throw new UnsupportedOperationException(String.format(
                     "Requested resource scheme is out of scope for %s. Found: %s expected: %s",
-                    S3ResourceService.class.getSimpleName(), resourceUri.getScheme(), S3Configuration.S3_PREFIX
+                    S3ResourceService.class.getSimpleName(), resourceUri.getScheme(), S3_PREFIX
             ));
         }
 
@@ -125,7 +126,7 @@ public class S3ResourceService implements ResourceService {
                 .map((Pair<ListBucketResultContents, ObjectMetadata> resourceMetaPair) -> {
                     // Create a uri of the format 's3:resource-key'
                     URI fileUri = UriBuilder.create()
-                            .withScheme(S3Configuration.S3_PREFIX)
+                            .withScheme(S3_PREFIX)
                             .withoutAuthority()
                             .withPath(resourceMetaPair.first().getKey())
                             .withoutQuery().withoutFragment();
