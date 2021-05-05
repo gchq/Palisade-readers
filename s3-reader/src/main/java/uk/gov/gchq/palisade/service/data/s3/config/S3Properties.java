@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.palisade.service.data.s3;
+package uk.gov.gchq.palisade.service.data.s3.config;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import uk.gov.gchq.palisade.Generated;
 
-import java.util.StringJoiner;
-
-public class S3Bucket {
-
-    private final String bucketName;
-    private final String bucketKey;
-
-    public S3Bucket(final String bucketName, final String bucketKey) {
-        this.bucketName = bucketName;
-        this.bucketKey = bucketKey;
-    }
+@ConfigurationProperties(prefix = "s3")
+public class S3Properties {
+    private String bucketName;
+    private String region;
+  ///  private String connectionDetail = "s3-data-service";
+   // private String palisadeTypeHeader = "x-pal-type";
+  //  private String userMetaPrefix = "x-amz-meta-";
 
     @Generated
     public String getBucketName() {
@@ -35,16 +33,19 @@ public class S3Bucket {
     }
 
     @Generated
-    public String getBucketKey() {
-        return bucketKey;
+    public void setBucketName(final String bucketName) {
+        this.bucketName = bucketName;
     }
 
-    @Override
     @Generated
-    public String toString() {
-        return new StringJoiner(", ", S3Bucket.class.getSimpleName() + "[", "]")
-                .add("bucketName=                '" + bucketName + "'")
-                .add("bucketKey=                '" + bucketKey + "'")
-                .toString();
+    public String getRegion() {
+        return region;
     }
+
+    @Generated
+    public void setRegion(final String region) {
+        this.region = region;
+    }
+
+
 }

@@ -26,7 +26,11 @@ public class S3ReaderApplication {
         SpringApplication.run(S3ReaderApplication.class, args);
     }
 
-
+    /**
+     * Performs the tasks that need to be done after Spring initialisation and before running the service. This
+     * includes the configuration of the serialiser and the starting of the Kafka sinks used for sending audit
+     * messages to the Audit Service.
+     */
     @EventListener(ApplicationReadyEvent.class)
     public void initPostConstruct() {
         //TODO later set-up initalise the connection to the S3
