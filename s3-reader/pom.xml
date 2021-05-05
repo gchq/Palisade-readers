@@ -44,8 +44,7 @@
         <alpakka.version>2.1.0-M1</alpakka.version>
 
         <!-- Test dependency versions -->
-        <junit.version>5.5.2</junit.version>
-        <assertj.version>3.18.0</assertj.version>
+        <springboot-test.version>2.3.1.RELEASE</springboot-test.version>
         <testcontainers.version>1.15.3</testcontainers.version>
     </properties>
 
@@ -57,6 +56,12 @@
             <!-- Readers, Request & Response types -->
             <groupId>uk.gov.gchq.palisade</groupId>
             <artifactId>resource-service</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.palisade</groupId>
+            <artifactId>data-service</artifactId>
             <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -78,13 +83,13 @@
        ~ Amazon S3 Dependencies
        -->
         <dependency>
-            <!-- AWS SDK v2 -->
+            <!-- AWS SDK Java v2 -->
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>aws-sdk-java</artifactId>
             <version>${aws-sdk.version}</version>
         </dependency>
         <dependency>
-            <!-- AWS SDK v2 -->
+            <!-- AWS SDK Core v2 -->
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>sdk-core</artifactId>
             <version>${aws-sdk.version}</version>
@@ -102,37 +107,21 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
         </dependency>
+
         <!--
-       ~ Test Dependencies
-       -->
+        ~ Test Dependencies
+        -->
         <dependency>
+            <!-- JUnit, Jupiter, SpringBootTest etc... -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>2.3.9.RELEASE</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <!-- JUnit -->
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
+            <version>${springboot-test.version}</version>
             <scope>test</scope>
         </dependency>
+        <!--
+        ~ S3 TestContainers Dependencies
+         -->
         <dependency>
-            <!-- AssertJ for test assertions -->
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>${assertj.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <!-- S3 TestContainers Dependency -->
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
             <version>${testcontainers.version}</version>
@@ -143,31 +132,6 @@
             <artifactId>junit-jupiter</artifactId>
             <version>${testcontainers.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <!-- AWS SDK v1 -->
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
-            <version>${amazonaws-sdk.version}</version>
-        </dependency>
-
-        <dependency>
-            <!-- AWS SDK v2 -->
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>aws-sdk-java</artifactId>
-            <version>${aws-sdk.version}</version>
-        </dependency>
-        <dependency>
-            <!-- AWS SDK v2 -->
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>sdk-core</artifactId>
-            <version>${aws-sdk.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.gchq.palisade</groupId>
-            <artifactId>data-service</artifactId>
-            <version>0.5.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

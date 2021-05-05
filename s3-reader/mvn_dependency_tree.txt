@@ -1,0 +1,709 @@
+uk.gov.gchq.palisade:s3-reader:jar:0.5.0-SNAPSHOT
++- uk.gov.gchq.palisade:resource-service:jar:0.5.0-SNAPSHOT:provided
+|  +- uk.gov.gchq.palisade:common:jar:0.5.0-SNAPSHOT:provided
+|  |  \- org.apache.avro:avro:jar:1.8.2:provided
+|  |     +- org.codehaus.jackson:jackson-core-asl:jar:1.9.13:provided
+|  |     +- org.codehaus.jackson:jackson-mapper-asl:jar:1.9.13:provided
+|  |     +- com.thoughtworks.paranamer:paranamer:jar:2.7:provided
+|  |     +- org.xerial.snappy:snappy-java:jar:1.1.1.3:provided
+|  |     \- org.tukaani:xz:jar:1.5:provided
+|  +- com.typesafe.akka:akka-stream_2.13:jar:2.6.10:compile
+|  |  +- com.typesafe.akka:akka-actor_2.13:jar:2.6.10:compile
+|  |  |  +- com.typesafe:config:jar:1.4.0:compile
+|  |  |  \- org.scala-lang.modules:scala-java8-compat_2.13:jar:0.9.0:compile
+|  |  +- com.typesafe.akka:akka-protobuf-v3_2.13:jar:2.6.10:compile
+|  |  \- com.typesafe:ssl-config-core_2.13:jar:0.4.2:compile
+|  |     \- org.scala-lang.modules:scala-parser-combinators_2.13:jar:1.1.2:compile
+|  +- com.typesafe.akka:akka-stream-kafka_2.13:jar:2.1.0-M1:provided
+|  |  +- org.apache.kafka:kafka-clients:jar:2.6.0:provided
+|  |  |  +- com.github.luben:zstd-jni:jar:1.4.4-7:provided
+|  |  |  \- org.lz4:lz4-java:jar:1.7.1:provided
+|  |  \- org.scala-lang.modules:scala-collection-compat_2.13:jar:2.2.0:provided
+|  +- com.typesafe.akka:akka-slf4j_2.13:jar:2.6.10:provided
+|  +- com.typesafe.akka:akka-discovery_2.13:jar:2.6.10:provided
+|  +- org.springframework.boot:spring-boot-starter-actuator:jar:2.3.1.RELEASE:provided
+|  |  +- org.springframework.boot:spring-boot-actuator-autoconfigure:jar:2.3.1.RELEASE:provided
+|  |  |  +- org.springframework.boot:spring-boot-actuator:jar:2.3.1.RELEASE:provided
+|  |  |  \- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.11.0:provided
+|  |  \- io.micrometer:micrometer-core:jar:1.5.1:provided
+|  |     +- org.hdrhistogram:HdrHistogram:jar:2.1.12:provided
+|  |     \- org.latencyutils:LatencyUtils:jar:2.0.3:provided
+|  +- org.springframework.boot:spring-boot-starter-web:jar:2.3.1.RELEASE:provided
+|  |  +- org.springframework.boot:spring-boot-starter-json:jar:2.3.1.RELEASE:provided
+|  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.11.0:provided
+|  |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.11.0:provided
+|  |  +- org.springframework.boot:spring-boot-starter-tomcat:jar:2.3.1.RELEASE:provided
+|  |  |  +- org.apache.tomcat.embed:tomcat-embed-core:jar:9.0.36:provided
+|  |  |  +- org.glassfish:jakarta.el:jar:3.0.3:provided
+|  |  |  \- org.apache.tomcat.embed:tomcat-embed-websocket:jar:9.0.36:provided
+|  |  +- org.springframework:spring-web:jar:5.2.7.RELEASE:provided
+|  |  |  \- org.springframework:spring-beans:jar:5.2.7.RELEASE:provided
+|  |  \- org.springframework:spring-webmvc:jar:5.2.7.RELEASE:provided
+|  |     +- org.springframework:spring-aop:jar:5.2.7.RELEASE:provided
+|  |     +- org.springframework:spring-context:jar:5.2.7.RELEASE:provided
+|  |     \- org.springframework:spring-expression:jar:5.2.7.RELEASE:provided
+|  +- org.springframework.boot:spring-boot-starter-data-r2dbc:jar:2.3.1.RELEASE:provided
+|  |  +- org.springframework.data:spring-data-r2dbc:jar:1.1.1.RELEASE:provided
+|  |  |  +- org.springframework.data:spring-data-commons:jar:2.3.1.RELEASE:provided
+|  |  |  +- org.springframework.data:spring-data-relational:jar:2.0.1.RELEASE:provided
+|  |  |  \- org.springframework:spring-tx:jar:5.2.7.RELEASE:provided
+|  |  +- io.r2dbc:r2dbc-spi:jar:0.8.2.RELEASE:provided
+|  |  \- io.r2dbc:r2dbc-pool:jar:0.8.3.RELEASE:provided
+|  |     \- io.projectreactor.addons:reactor-pool:jar:0.1.3.RELEASE:provided
+|  +- io.r2dbc:r2dbc-h2:jar:0.8.4.RELEASE:provided
+|  |  \- io.projectreactor:reactor-core:jar:3.3.5.RELEASE:provided
+|  \- org.springframework.boot:spring-boot-starter-data-redis-reactive:jar:2.3.1.RELEASE:provided
++- uk.gov.gchq.palisade:data-service:jar:0.5.0-SNAPSHOT:provided
+|  +- org.springframework.boot:spring-boot-starter-data-jpa:jar:2.3.1.RELEASE:provided
+|  |  +- org.springframework.boot:spring-boot-starter-aop:jar:2.3.1.RELEASE:provided
+|  |  |  \- org.aspectj:aspectjweaver:jar:1.9.5:provided
+|  |  +- org.springframework.boot:spring-boot-starter-jdbc:jar:2.3.1.RELEASE:provided
+|  |  |  +- com.zaxxer:HikariCP:jar:3.4.5:provided
+|  |  |  \- org.springframework:spring-jdbc:jar:5.2.7.RELEASE:provided
+|  |  +- jakarta.transaction:jakarta.transaction-api:jar:1.3.3:provided
+|  |  +- jakarta.persistence:jakarta.persistence-api:jar:2.2.3:provided
+|  |  +- org.hibernate:hibernate-core:jar:5.4.17.Final:provided
+|  |  |  +- org.jboss.logging:jboss-logging:jar:3.3.2.Final:provided
+|  |  |  +- org.javassist:javassist:jar:3.24.0-GA:provided
+|  |  |  +- antlr:antlr:jar:2.7.7:provided
+|  |  |  +- org.jboss:jandex:jar:2.1.3.Final:provided
+|  |  |  +- com.fasterxml:classmate:jar:1.5.1:provided
+|  |  |  +- org.dom4j:dom4j:jar:2.1.3:provided
+|  |  |  +- org.hibernate.common:hibernate-commons-annotations:jar:5.1.0.Final:provided
+|  |  |  \- org.glassfish.jaxb:jaxb-runtime:jar:2.3.1:provided
+|  |  |     +- org.glassfish.jaxb:txw2:jar:2.3.1:provided
+|  |  |     +- com.sun.istack:istack-commons-runtime:jar:3.0.7:provided
+|  |  |     +- org.jvnet.staxex:stax-ex:jar:1.8:provided
+|  |  |     \- com.sun.xml.fastinfoset:FastInfoset:jar:1.2.15:provided
+|  |  +- org.springframework.data:spring-data-jpa:jar:2.3.1.RELEASE:provided
+|  |  |  \- org.springframework:spring-orm:jar:5.2.7.RELEASE:provided
+|  |  \- org.springframework:spring-aspects:jar:5.2.7.RELEASE:provided
+|  +- com.h2database:h2:jar:1.4.200:provided
+|  \- org.springframework.boot:spring-boot-starter-data-redis:jar:2.3.1.RELEASE:provided
+|     +- org.springframework.data:spring-data-redis:jar:2.3.1.RELEASE:provided
+|     |  +- org.springframework.data:spring-data-keyvalue:jar:2.3.1.RELEASE:provided
+|     |  +- org.springframework:spring-oxm:jar:5.2.7.RELEASE:provided
+|     |  \- org.springframework:spring-context-support:jar:5.2.7.RELEASE:provided
+|     \- io.lettuce:lettuce-core:jar:5.3.1.RELEASE:provided
+|        +- io.netty:netty-common:jar:4.1.50.Final:compile
+|        \- io.netty:netty-transport:jar:4.1.50.Final:compile
++- org.springframework.boot:spring-boot-configuration-processor:jar:2.2.6.RELEASE:compile (optional) 
++- com.lightbend.akka:akka-stream-alpakka-s3_2.13:jar:2.0.2:compile
+|  +- org.scala-lang:scala-library:jar:2.13.3:compile
+|  +- com.typesafe.akka:akka-http_2.13:jar:10.1.11:compile
+|  |  \- com.typesafe.akka:akka-http-core_2.13:jar:10.1.11:compile
+|  |     \- com.typesafe.akka:akka-parsing_2.13:jar:10.1.11:compile
+|  +- com.typesafe.akka:akka-http-xml_2.13:jar:10.1.11:compile
+|  |  \- org.scala-lang.modules:scala-xml_2.13:jar:1.2.0:compile
+|  +- software.amazon.awssdk:auth:jar:2.11.14:compile
+|  |  +- software.amazon.awssdk:regions:jar:2.11.14:compile
+|  |  \- software.amazon.eventstream:eventstream:jar:1.0.1:compile
+|  \- com.fasterxml.jackson.core:jackson-core:jar:2.10.5:compile
++- software.amazon.awssdk:aws-sdk-java:jar:2.16.44:compile
+|  +- software.amazon.awssdk:acm:jar:2.16.44:compile
+|  |  +- software.amazon.awssdk:aws-json-protocol:jar:2.16.44:compile
+|  |  +- software.amazon.awssdk:protocol-core:jar:2.16.44:compile
+|  |  +- software.amazon.awssdk:aws-core:jar:2.16.44:compile
+|  |  +- software.amazon.awssdk:apache-client:jar:2.16.44:runtime
+|  |  |  \- org.apache.httpcomponents:httpcore:jar:4.4.11:compile
+|  |  \- software.amazon.awssdk:netty-nio-client:jar:2.16.44:runtime
+|  |     +- io.netty:netty-codec-http2:jar:4.1.61.Final:runtime
+|  |     +- io.netty:netty-codec:jar:4.1.61.Final:compile
+|  |     +- io.netty:netty-buffer:jar:4.1.61.Final:compile
+|  |     +- io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.61.Final:runtime
+|  |     |  \- io.netty:netty-transport-native-unix-common:jar:4.1.61.Final:runtime
+|  |     \- com.typesafe.netty:netty-reactive-streams-http:jar:2.0.4:runtime
+|  |        \- com.typesafe.netty:netty-reactive-streams:jar:2.0.4:runtime
+|  +- software.amazon.awssdk:acmpca:jar:2.16.44:compile
+|  +- software.amazon.awssdk:alexaforbusiness:jar:2.16.44:compile
+|  +- software.amazon.awssdk:amplify:jar:2.16.44:compile
+|  +- software.amazon.awssdk:apigateway:jar:2.16.44:compile
+|  +- software.amazon.awssdk:apigatewaymanagementapi:jar:2.16.44:compile
+|  +- software.amazon.awssdk:apigatewayv2:jar:2.16.44:compile
+|  +- software.amazon.awssdk:applicationautoscaling:jar:2.16.44:compile
+|  +- software.amazon.awssdk:applicationdiscovery:jar:2.16.44:compile
+|  +- software.amazon.awssdk:appmesh:jar:2.16.44:compile
+|  +- software.amazon.awssdk:appstream:jar:2.16.44:compile
+|  +- software.amazon.awssdk:appsync:jar:2.16.44:compile
+|  +- software.amazon.awssdk:athena:jar:2.16.44:compile
+|  +- software.amazon.awssdk:autoscaling:jar:2.16.44:compile
+|  |  \- software.amazon.awssdk:aws-query-protocol:jar:2.16.44:compile
+|  +- software.amazon.awssdk:autoscalingplans:jar:2.16.44:compile
+|  +- software.amazon.awssdk:backup:jar:2.16.44:compile
+|  +- software.amazon.awssdk:batch:jar:2.16.44:compile
+|  +- software.amazon.awssdk:budgets:jar:2.16.44:compile
+|  +- software.amazon.awssdk:chime:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cloud9:jar:2.16.44:compile
+|  +- software.amazon.awssdk:clouddirectory:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cloudformation:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cloudfront:jar:2.16.44:compile
+|  |  \- software.amazon.awssdk:aws-xml-protocol:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cloudhsm:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cloudhsmv2:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cloudsearch:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cloudsearchdomain:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cloudtrail:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cloudwatch:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cloudwatchevents:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cloudwatchlogs:jar:2.16.44:compile
+|  +- software.amazon.awssdk:codebuild:jar:2.16.44:compile
+|  +- software.amazon.awssdk:codecommit:jar:2.16.44:compile
+|  +- software.amazon.awssdk:codedeploy:jar:2.16.44:compile
+|  +- software.amazon.awssdk:codepipeline:jar:2.16.44:compile
+|  +- software.amazon.awssdk:codestar:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cognitoidentity:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cognitoidentityprovider:jar:2.16.44:compile
+|  +- software.amazon.awssdk:cognitosync:jar:2.16.44:compile
+|  +- software.amazon.awssdk:comprehend:jar:2.16.44:compile
+|  +- software.amazon.awssdk:comprehendmedical:jar:2.16.44:compile
+|  +- software.amazon.awssdk:config:jar:2.16.44:compile
+|  +- software.amazon.awssdk:connect:jar:2.16.44:compile
+|  +- software.amazon.awssdk:costandusagereport:jar:2.16.44:compile
+|  +- software.amazon.awssdk:costexplorer:jar:2.16.44:compile
+|  +- software.amazon.awssdk:databasemigration:jar:2.16.44:compile
+|  +- software.amazon.awssdk:datapipeline:jar:2.16.44:compile
+|  +- software.amazon.awssdk:datasync:jar:2.16.44:compile
+|  +- software.amazon.awssdk:dax:jar:2.16.44:compile
+|  +- software.amazon.awssdk:devicefarm:jar:2.16.44:compile
+|  +- software.amazon.awssdk:directconnect:jar:2.16.44:compile
+|  +- software.amazon.awssdk:directory:jar:2.16.44:compile
+|  +- software.amazon.awssdk:dlm:jar:2.16.44:compile
+|  +- software.amazon.awssdk:docdb:jar:2.16.44:compile
+|  +- software.amazon.awssdk:dynamodb:jar:2.16.44:compile
+|  +- software.amazon.awssdk:ec2:jar:2.16.44:compile
+|  +- software.amazon.awssdk:ecr:jar:2.16.44:compile
+|  +- software.amazon.awssdk:ecs:jar:2.16.44:compile
+|  +- software.amazon.awssdk:efs:jar:2.16.44:compile
+|  +- software.amazon.awssdk:eks:jar:2.16.44:compile
+|  +- software.amazon.awssdk:elasticache:jar:2.16.44:compile
+|  +- software.amazon.awssdk:elasticbeanstalk:jar:2.16.44:compile
+|  +- software.amazon.awssdk:elasticloadbalancing:jar:2.16.44:compile
+|  +- software.amazon.awssdk:elasticloadbalancingv2:jar:2.16.44:compile
+|  +- software.amazon.awssdk:elasticsearch:jar:2.16.44:compile
+|  +- software.amazon.awssdk:elastictranscoder:jar:2.16.44:compile
+|  +- software.amazon.awssdk:emr:jar:2.16.44:compile
+|  +- software.amazon.awssdk:firehose:jar:2.16.44:compile
+|  +- software.amazon.awssdk:fms:jar:2.16.44:compile
+|  +- software.amazon.awssdk:fsx:jar:2.16.44:compile
+|  +- software.amazon.awssdk:gamelift:jar:2.16.44:compile
+|  +- software.amazon.awssdk:glacier:jar:2.16.44:compile
+|  +- software.amazon.awssdk:globalaccelerator:jar:2.16.44:compile
+|  +- software.amazon.awssdk:glue:jar:2.16.44:compile
+|  +- software.amazon.awssdk:greengrass:jar:2.16.44:compile
+|  +- software.amazon.awssdk:guardduty:jar:2.16.44:compile
+|  +- software.amazon.awssdk:health:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iam:jar:2.16.44:compile
+|  +- software.amazon.awssdk:inspector:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iot:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iot1clickdevices:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iot1clickprojects:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iotanalytics:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iotdataplane:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iotjobsdataplane:jar:2.16.44:compile
+|  +- software.amazon.awssdk:kafka:jar:2.16.44:compile
+|  +- software.amazon.awssdk:kinesis:jar:2.16.44:compile
+|  |  \- software.amazon.awssdk:aws-cbor-protocol:jar:2.16.44:compile
+|  +- software.amazon.awssdk:kinesisanalytics:jar:2.16.44:compile
+|  +- software.amazon.awssdk:kinesisanalyticsv2:jar:2.16.44:compile
+|  +- software.amazon.awssdk:kinesisvideo:jar:2.16.44:compile
+|  +- software.amazon.awssdk:kinesisvideoarchivedmedia:jar:2.16.44:compile
+|  +- software.amazon.awssdk:kinesisvideomedia:jar:2.16.44:compile
+|  +- software.amazon.awssdk:kms:jar:2.16.44:compile
+|  +- software.amazon.awssdk:lambda:jar:2.16.44:compile
+|  +- software.amazon.awssdk:lexmodelbuilding:jar:2.16.44:compile
+|  +- software.amazon.awssdk:lexruntime:jar:2.16.44:compile
+|  +- software.amazon.awssdk:licensemanager:jar:2.16.44:compile
+|  +- software.amazon.awssdk:lightsail:jar:2.16.44:compile
+|  +- software.amazon.awssdk:machinelearning:jar:2.16.44:compile
+|  +- software.amazon.awssdk:macie:jar:2.16.44:compile
+|  +- software.amazon.awssdk:managedblockchain:jar:2.16.44:compile
+|  +- software.amazon.awssdk:marketplacecommerceanalytics:jar:2.16.44:compile
+|  +- software.amazon.awssdk:marketplaceentitlement:jar:2.16.44:compile
+|  +- software.amazon.awssdk:marketplacemetering:jar:2.16.44:compile
+|  +- software.amazon.awssdk:mediaconnect:jar:2.16.44:compile
+|  +- software.amazon.awssdk:mediaconvert:jar:2.16.44:compile
+|  +- software.amazon.awssdk:medialive:jar:2.16.44:compile
+|  +- software.amazon.awssdk:mediapackage:jar:2.16.44:compile
+|  +- software.amazon.awssdk:mediapackagevod:jar:2.16.44:compile
+|  +- software.amazon.awssdk:mediastore:jar:2.16.44:compile
+|  +- software.amazon.awssdk:mediastoredata:jar:2.16.44:compile
+|  +- software.amazon.awssdk:mediatailor:jar:2.16.44:compile
+|  +- software.amazon.awssdk:migrationhub:jar:2.16.44:compile
+|  +- software.amazon.awssdk:mobile:jar:2.16.44:compile
+|  +- software.amazon.awssdk:mq:jar:2.16.44:compile
+|  +- software.amazon.awssdk:mturk:jar:2.16.44:compile
+|  +- software.amazon.awssdk:neptune:jar:2.16.44:compile
+|  +- software.amazon.awssdk:opsworks:jar:2.16.44:compile
+|  +- software.amazon.awssdk:opsworkscm:jar:2.16.44:compile
+|  +- software.amazon.awssdk:organizations:jar:2.16.44:compile
+|  +- software.amazon.awssdk:pi:jar:2.16.44:compile
+|  +- software.amazon.awssdk:pinpoint:jar:2.16.44:compile
+|  +- software.amazon.awssdk:pinpointemail:jar:2.16.44:compile
+|  +- software.amazon.awssdk:pinpointsmsvoice:jar:2.16.44:compile
+|  +- software.amazon.awssdk:polly:jar:2.16.44:compile
+|  +- software.amazon.awssdk:pricing:jar:2.16.44:compile
+|  +- software.amazon.awssdk:quicksight:jar:2.16.44:compile
+|  +- software.amazon.awssdk:ram:jar:2.16.44:compile
+|  +- software.amazon.awssdk:rds:jar:2.16.44:compile
+|  +- software.amazon.awssdk:rdsdata:jar:2.16.44:compile
+|  +- software.amazon.awssdk:redshift:jar:2.16.44:compile
+|  +- software.amazon.awssdk:rekognition:jar:2.16.44:compile
+|  +- software.amazon.awssdk:resourcegroups:jar:2.16.44:compile
+|  +- software.amazon.awssdk:resourcegroupstaggingapi:jar:2.16.44:compile
+|  +- software.amazon.awssdk:robomaker:jar:2.16.44:compile
+|  +- software.amazon.awssdk:route53:jar:2.16.44:compile
+|  +- software.amazon.awssdk:route53domains:jar:2.16.44:compile
+|  +- software.amazon.awssdk:route53resolver:jar:2.16.44:compile
+|  +- software.amazon.awssdk:s3:jar:2.16.44:compile
+|  |  \- software.amazon.awssdk:arns:jar:2.16.44:compile
+|  +- software.amazon.awssdk:s3control:jar:2.16.44:compile
+|  +- software.amazon.awssdk:sagemaker:jar:2.16.44:compile
+|  +- software.amazon.awssdk:sagemakerruntime:jar:2.16.44:compile
+|  +- software.amazon.awssdk:secretsmanager:jar:2.16.44:compile
+|  +- software.amazon.awssdk:securityhub:jar:2.16.44:compile
+|  +- software.amazon.awssdk:serverlessapplicationrepository:jar:2.16.44:compile
+|  +- software.amazon.awssdk:servicecatalog:jar:2.16.44:compile
+|  +- software.amazon.awssdk:servicediscovery:jar:2.16.44:compile
+|  +- software.amazon.awssdk:ses:jar:2.16.44:compile
+|  +- software.amazon.awssdk:sfn:jar:2.16.44:compile
+|  +- software.amazon.awssdk:shield:jar:2.16.44:compile
+|  +- software.amazon.awssdk:signer:jar:2.16.44:compile
+|  +- software.amazon.awssdk:sms:jar:2.16.44:compile
+|  +- software.amazon.awssdk:snowball:jar:2.16.44:compile
+|  +- software.amazon.awssdk:sns:jar:2.16.44:compile
+|  +- software.amazon.awssdk:sqs:jar:2.16.44:compile
+|  +- software.amazon.awssdk:ssm:jar:2.16.44:compile
+|  +- software.amazon.awssdk:storagegateway:jar:2.16.44:compile
+|  +- software.amazon.awssdk:sts:jar:2.16.44:compile
+|  +- software.amazon.awssdk:support:jar:2.16.44:compile
+|  +- software.amazon.awssdk:swf:jar:2.16.44:compile
+|  +- software.amazon.awssdk:textract:jar:2.16.44:compile
+|  +- software.amazon.awssdk:transcribe:jar:2.16.44:compile
+|  +- software.amazon.awssdk:transcribestreaming:jar:2.16.44:compile
+|  +- software.amazon.awssdk:transfer:jar:2.16.44:compile
+|  +- software.amazon.awssdk:translate:jar:2.16.44:compile
+|  +- software.amazon.awssdk:waf:jar:2.16.44:compile
+|  +- software.amazon.awssdk:workdocs:jar:2.16.44:compile
+|  +- software.amazon.awssdk:worklink:jar:2.16.44:compile
+|  +- software.amazon.awssdk:workmail:jar:2.16.44:compile
+|  +- software.amazon.awssdk:workspaces:jar:2.16.44:compile
+|  +- software.amazon.awssdk:xray:jar:2.16.44:compile
+|  +- software.amazon.awssdk:groundstation:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iotthingsgraph:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iotevents:jar:2.16.44:compile
+|  +- software.amazon.awssdk:ioteventsdata:jar:2.16.44:compile
+|  +- software.amazon.awssdk:personalizeruntime:jar:2.16.44:compile
+|  +- software.amazon.awssdk:personalize:jar:2.16.44:compile
+|  +- software.amazon.awssdk:personalizeevents:jar:2.16.44:compile
+|  +- software.amazon.awssdk:servicequotas:jar:2.16.44:compile
+|  +- software.amazon.awssdk:applicationinsights:jar:2.16.44:compile
+|  +- software.amazon.awssdk:ec2instanceconnect:jar:2.16.44:compile
+|  +- software.amazon.awssdk:eventbridge:jar:2.16.44:compile
+|  +- software.amazon.awssdk:lakeformation:jar:2.16.44:compile
+|  +- software.amazon.awssdk:forecast:jar:2.16.44:compile
+|  +- software.amazon.awssdk:forecastquery:jar:2.16.44:compile
+|  +- software.amazon.awssdk:qldb:jar:2.16.44:compile
+|  +- software.amazon.awssdk:qldbsession:jar:2.16.44:compile
+|  +- software.amazon.awssdk:workmailmessageflow:jar:2.16.44:compile
+|  +- software.amazon.awssdk:codestarnotifications:jar:2.16.44:compile
+|  +- software.amazon.awssdk:savingsplans:jar:2.16.44:compile
+|  +- software.amazon.awssdk:sso:jar:2.16.44:compile
+|  +- software.amazon.awssdk:ssooidc:jar:2.16.44:compile
+|  +- software.amazon.awssdk:marketplacecatalog:jar:2.16.44:compile
+|  +- software.amazon.awssdk:sesv2:jar:2.16.44:compile
+|  +- software.amazon.awssdk:dataexchange:jar:2.16.44:compile
+|  +- software.amazon.awssdk:migrationhubconfig:jar:2.16.44:compile
+|  +- software.amazon.awssdk:connectparticipant:jar:2.16.44:compile
+|  +- software.amazon.awssdk:wafv2:jar:2.16.44:compile
+|  +- software.amazon.awssdk:appconfig:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iotsecuretunneling:jar:2.16.44:compile
+|  +- software.amazon.awssdk:elasticinference:jar:2.16.44:compile
+|  +- software.amazon.awssdk:imagebuilder:jar:2.16.44:compile
+|  +- software.amazon.awssdk:schemas:jar:2.16.44:compile
+|  +- software.amazon.awssdk:accessanalyzer:jar:2.16.44:compile
+|  +- software.amazon.awssdk:computeoptimizer:jar:2.16.44:compile
+|  +- software.amazon.awssdk:networkmanager:jar:2.16.44:compile
+|  +- software.amazon.awssdk:kendra:jar:2.16.44:compile
+|  +- software.amazon.awssdk:frauddetector:jar:2.16.44:compile
+|  +- software.amazon.awssdk:codegurureviewer:jar:2.16.44:compile
+|  +- software.amazon.awssdk:codeguruprofiler:jar:2.16.44:compile
+|  +- software.amazon.awssdk:outposts:jar:2.16.44:compile
+|  +- software.amazon.awssdk:sagemakera2iruntime:jar:2.16.44:compile
+|  +- software.amazon.awssdk:ebs:jar:2.16.44:compile
+|  +- software.amazon.awssdk:kinesisvideosignaling:jar:2.16.44:compile
+|  +- software.amazon.awssdk:detective:jar:2.16.44:compile
+|  +- software.amazon.awssdk:codestarconnections:jar:2.16.44:compile
+|  +- software.amazon.awssdk:synthetics:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iotsitewise:jar:2.16.44:compile
+|  +- software.amazon.awssdk:macie2:jar:2.16.44:compile
+|  +- software.amazon.awssdk:codeartifact:jar:2.16.44:compile
+|  +- software.amazon.awssdk:honeycode:jar:2.16.44:compile
+|  +- software.amazon.awssdk:ivs:jar:2.16.44:compile
+|  +- software.amazon.awssdk:braket:jar:2.16.44:compile
+|  +- software.amazon.awssdk:identitystore:jar:2.16.44:compile
+|  +- software.amazon.awssdk:appflow:jar:2.16.44:compile
+|  +- software.amazon.awssdk:redshiftdata:jar:2.16.44:compile
+|  +- software.amazon.awssdk:ssoadmin:jar:2.16.44:compile
+|  +- software.amazon.awssdk:timestreamwrite:jar:2.16.44:compile
+|  +- software.amazon.awssdk:timestreamquery:jar:2.16.44:compile
+|  +- software.amazon.awssdk:s3outposts:jar:2.16.44:compile
+|  +- software.amazon.awssdk:databrew:jar:2.16.44:compile
+|  +- software.amazon.awssdk:servicecatalogappregistry:jar:2.16.44:compile
+|  +- software.amazon.awssdk:networkfirewall:jar:2.16.44:compile
+|  +- software.amazon.awssdk:mwaa:jar:2.16.44:compile
+|  +- software.amazon.awssdk:devopsguru:jar:2.16.44:compile
+|  +- software.amazon.awssdk:sagemakerfeaturestoreruntime:jar:2.16.44:compile
+|  +- software.amazon.awssdk:appintegrations:jar:2.16.44:compile
+|  +- software.amazon.awssdk:ecrpublic:jar:2.16.44:compile
+|  +- software.amazon.awssdk:amplifybackend:jar:2.16.44:compile
+|  +- software.amazon.awssdk:connectcontactlens:jar:2.16.44:compile
+|  +- software.amazon.awssdk:lookoutvision:jar:2.16.44:compile
+|  +- software.amazon.awssdk:customerprofiles:jar:2.16.44:compile
+|  +- software.amazon.awssdk:emrcontainers:jar:2.16.44:compile
+|  +- software.amazon.awssdk:sagemakeredge:jar:2.16.44:compile
+|  +- software.amazon.awssdk:healthlake:jar:2.16.44:compile
+|  +- software.amazon.awssdk:auditmanager:jar:2.16.44:compile
+|  +- software.amazon.awssdk:amp:jar:2.16.44:compile
+|  +- software.amazon.awssdk:greengrassv2:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iotwireless:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iotfleethub:jar:2.16.44:compile
+|  +- software.amazon.awssdk:iotdeviceadvisor:jar:2.16.44:compile
+|  +- software.amazon.awssdk:location:jar:2.16.44:compile
+|  +- software.amazon.awssdk:wellarchitected:jar:2.16.44:compile
+|  +- software.amazon.awssdk:lexruntimev2:jar:2.16.44:compile
+|  +- software.amazon.awssdk:lexmodelsv2:jar:2.16.44:compile
+|  +- software.amazon.awssdk:fis:jar:2.16.44:compile
+|  +- software.amazon.awssdk:lookoutmetrics:jar:2.16.44:compile
+|  +- software.amazon.awssdk:mgn:jar:2.16.44:compile
+|  \- software.amazon.awssdk:lookoutequipment:jar:2.16.44:compile
++- software.amazon.awssdk:sdk-core:jar:2.16.44:compile
+|  +- software.amazon.awssdk:annotations:jar:2.16.44:compile
+|  +- software.amazon.awssdk:http-client-spi:jar:2.16.44:compile
+|  +- software.amazon.awssdk:metrics-spi:jar:2.16.44:compile
+|  +- software.amazon.awssdk:utils:jar:2.16.44:compile
+|  +- software.amazon.awssdk:profiles:jar:2.16.44:compile
+|  +- org.slf4j:slf4j-api:jar:1.7.28:compile
+|  \- org.reactivestreams:reactive-streams:jar:1.0.2:compile
++- com.fasterxml.jackson.core:jackson-databind:jar:2.10.4:compile
+|  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.10.4:compile
++- ch.qos.logback:logback-classic:jar:1.2.3:compile
+|  \- ch.qos.logback:logback-core:jar:1.2.3:compile
++- org.springframework.boot:spring-boot-starter-test:jar:2.3.9.RELEASE:test
+|  +- org.springframework.boot:spring-boot-starter:jar:2.3.9.RELEASE:provided
+|  |  +- org.springframework.boot:spring-boot:jar:2.3.9.RELEASE:provided
+|  |  +- org.springframework.boot:spring-boot-autoconfigure:jar:2.3.9.RELEASE:provided
+|  |  +- org.springframework.boot:spring-boot-starter-logging:jar:2.3.9.RELEASE:provided
+|  |  |  +- org.apache.logging.log4j:log4j-to-slf4j:jar:2.13.3:provided
+|  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.13.3:provided
+|  |  |  \- org.slf4j:jul-to-slf4j:jar:1.7.30:provided
+|  |  +- jakarta.annotation:jakarta.annotation-api:jar:1.3.5:provided
+|  |  \- org.yaml:snakeyaml:jar:1.26:provided
+|  +- org.springframework.boot:spring-boot-test:jar:2.3.9.RELEASE:test
+|  +- org.springframework.boot:spring-boot-test-autoconfigure:jar:2.3.9.RELEASE:test
+|  +- com.jayway.jsonpath:json-path:jar:2.4.0:test
+|  |  \- net.minidev:json-smart:jar:2.3:test
+|  |     \- net.minidev:accessors-smart:jar:1.2:test
+|  |        \- org.ow2.asm:asm:jar:5.0.4:test
+|  +- jakarta.xml.bind:jakarta.xml.bind-api:jar:2.3.3:test
+|  |  \- jakarta.activation:jakarta.activation-api:jar:1.2.2:test
+|  +- org.hamcrest:hamcrest:jar:2.2:test
+|  +- org.junit.jupiter:junit-jupiter:jar:5.6.3:test
+|  |  \- org.junit.jupiter:junit-jupiter-params:jar:5.6.3:test
+|  +- org.mockito:mockito-core:jar:3.3.3:test
+|  |  +- net.bytebuddy:byte-buddy:jar:1.10.5:provided
+|  |  +- net.bytebuddy:byte-buddy-agent:jar:1.10.5:test
+|  |  \- org.objenesis:objenesis:jar:2.6:test
+|  +- org.mockito:mockito-junit-jupiter:jar:3.3.3:test
+|  +- org.skyscreamer:jsonassert:jar:1.5.0:test
+|  |  \- com.vaadin.external.google:android-json:jar:0.0.20131108.vaadin1:test
+|  +- org.springframework:spring-core:jar:5.2.13.RELEASE:provided
+|  |  \- org.springframework:spring-jcl:jar:5.2.13.RELEASE:provided
+|  +- org.springframework:spring-test:jar:5.2.13.RELEASE:test
+|  \- org.xmlunit:xmlunit-core:jar:2.7.0:test
++- org.junit.jupiter:junit-jupiter-engine:jar:5.5.2:test
+|  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+|  +- org.junit.platform:junit-platform-engine:jar:1.5.2:test
+|  |  +- org.opentest4j:opentest4j:jar:1.2.0:test
+|  |  \- org.junit.platform:junit-platform-commons:jar:1.5.2:test
+|  \- org.junit.jupiter:junit-jupiter-api:jar:5.5.2:test
++- org.assertj:assertj-core:jar:3.18.0:test
++- org.testcontainers:localstack:jar:1.15.3:test
+|  \- org.testcontainers:testcontainers:jar:1.15.3:test
+|     +- junit:junit:jar:4.12:test
+|     |  \- org.hamcrest:hamcrest-core:jar:1.3:test
+|     +- org.apache.commons:commons-compress:jar:1.20:provided
+|     +- org.rnorth.duct-tape:duct-tape:jar:1.0.8:test
+|     +- org.rnorth.visible-assertions:visible-assertions:jar:2.1.2:test
+|     |  \- net.java.dev.jna:jna:jar:5.2.0:test
+|     +- com.github.docker-java:docker-java-api:jar:3.2.8:test
+|     \- com.github.docker-java:docker-java-transport-zerodep:jar:3.2.8:test
+|        \- com.github.docker-java:docker-java-transport:jar:3.2.8:test
++- org.testcontainers:junit-jupiter:jar:1.15.3:test
+\- com.amazonaws:aws-java-sdk:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-lookoutequipment:jar:1.11.1000:compile
+   |  \- com.amazonaws:jmespath-java:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-mgn:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-lookoutmetrics:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-fis:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-lexmodelsv2:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-lexruntimev2:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-wellarchitected:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-location:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-iotdeviceadvisor:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-iotfleethub:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-iotwireless:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-greengrassv2:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-prometheus:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-auditmanager:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-healthlake:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-sagemakeredgemanager:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-emrcontainers:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-customerprofiles:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-lookoutforvision:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-connectcontactlens:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-amplifybackend:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-ecrpublic:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-appintegrations:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-sagemakerfeaturestoreruntime:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-devopsguru:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-mwaa:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-networkfirewall:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-appregistry:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-gluedatabrew:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-s3outposts:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-timestreamquery:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-timestreamwrite:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-ssoadmin:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-redshiftdataapi:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-appflow:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-identitystore:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-braket:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-ivs:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-honeycode:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-codeartifact:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-macie2:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-iotsitewise:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-synthetics:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-codestarconnections:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-detective:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-kinesisvideosignalingchannels:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-ebs:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-augmentedairuntime:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-outposts:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-codeguruprofiler:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-codegurureviewer:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-frauddetector:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-kendra:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-networkmanager:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-computeoptimizer:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-accessanalyzer:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-schemas:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-imagebuilder:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-elasticinference:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-iotsecuretunneling:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-appconfig:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-wafv2:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-connectparticipant:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-migrationhubconfig:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-dataexchange:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-sesv2:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-marketplacecatalog:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-ssooidc:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-sso:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-savingsplans:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-codestarnotifications:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-workmailmessageflow:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-qldbsession:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-qldb:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-forecastquery:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-forecast:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-lakeformation:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-eventbridge:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-ec2instanceconnect:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-applicationinsights:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-servicequotas:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-personalizeevents:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-personalize:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-personalizeruntime:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-ioteventsdata:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-iotevents:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-iotthingsgraph:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-groundstation:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-mediapackagevod:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-managedblockchain:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-textract:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-worklink:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-backup:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-docdb:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-apigatewayv2:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-apigatewaymanagementapi:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-kafka:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-appmesh:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-licensemanager:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-securityhub:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-fsx:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-mediaconnect:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-kinesisanalyticsv2:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-comprehendmedical:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-globalaccelerator:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-transfer:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-datasync:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-robomaker:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-amplify:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-quicksight:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-rdsdata:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-route53resolver:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-ram:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-s3control:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-pinpointsmsvoice:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-pinpointemail:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-chime:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-signer:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-dlm:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-macie:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-eks:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-mediatailor:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-neptune:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-pi:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-iot1clickprojects:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-iot1clickdevices:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-iotanalytics:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-acmpca:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-secretsmanager:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-fms:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-connect:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-transcribe:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-autoscalingplans:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-workmail:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-servicediscovery:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-cloud9:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-serverlessapplicationrepository:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-alexaforbusiness:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-resourcegroups:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-comprehend:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-translate:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-sagemaker:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-iotjobsdataplane:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-sagemakerruntime:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-kinesisvideo:jar:1.11.1000:compile
+   |  +- io.netty:netty-codec-http:jar:4.1.61.Final:compile
+   |  \- io.netty:netty-handler:jar:4.1.61.Final:compile
+   |     \- io.netty:netty-resolver:jar:4.1.61.Final:compile
+   +- com.amazonaws:aws-java-sdk-appsync:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-guardduty:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-mq:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-mediaconvert:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-mediastore:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-mediastoredata:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-medialive:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-mediapackage:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-costexplorer:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-pricing:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-mobile:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-cloudhsmv2:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-glue:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-migrationhub:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-dax:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-greengrass:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-athena:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-marketplaceentitlement:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-codestar:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-lexmodelbuilding:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-resourcegroupstaggingapi:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-pinpoint:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-xray:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-opsworkscm:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-support:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-simpledb:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-servicecatalog:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-servermigration:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-simpleworkflow:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-storagegateway:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-route53:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-s3:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-importexport:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-sts:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-sqs:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-rds:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-redshift:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-elasticbeanstalk:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-glacier:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-iam:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-datapipeline:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-elasticloadbalancing:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-elasticloadbalancingv2:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-emr:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-elasticache:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-elastictranscoder:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-ec2:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-dynamodb:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-sns:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-budgets:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-cloudtrail:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-cloudwatch:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-logs:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-events:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-cognitoidentity:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-cognitosync:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-directconnect:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-cloudformation:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-cloudfront:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-clouddirectory:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-kinesis:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-opsworks:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-ses:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-autoscaling:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-cloudsearch:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-cloudwatchmetrics:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-codedeploy:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-codepipeline:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-kms:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-config:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-lambda:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-ecs:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-ecr:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-cloudhsm:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-ssm:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-workspaces:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-machinelearning:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-directory:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-efs:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-codecommit:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-devicefarm:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-elasticsearch:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-waf:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-marketplacecommerceanalytics:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-inspector:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-iot:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-api-gateway:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-acm:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-gamelift:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-dms:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-marketplacemeteringservice:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-cognitoidp:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-discovery:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-applicationautoscaling:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-snowball:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-rekognition:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-polly:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-lightsail:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-stepfunctions:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-health:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-costandusagereport:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-codebuild:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-appstream:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-shield:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-batch:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-lex:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-mechanicalturkrequester:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-organizations:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-workdocs:jar:1.11.1000:compile
+   +- com.amazonaws:aws-java-sdk-core:jar:1.11.1000:compile
+   |  +- commons-logging:commons-logging:jar:1.1.3:compile
+   |  +- commons-codec:commons-codec:jar:1.15:compile
+   |  +- org.apache.httpcomponents:httpclient:jar:4.5.13:compile
+   |  +- software.amazon.ion:ion-java:jar:1.0.2:compile
+   |  +- com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:jar:2.6.7:compile
+   |  \- joda-time:joda-time:jar:2.8.1:compile
+   +- com.amazonaws:aws-java-sdk-models:jar:1.11.1000:compile
+   \- com.amazonaws:aws-java-sdk-swf-libraries:jar:1.11.22:compile

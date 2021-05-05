@@ -15,8 +15,6 @@
  */
 package uk.gov.gchq.palisade.demo;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +28,7 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
-import java.io.IOException;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.rnorth.visibleassertions.VisibleAssertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 
 
@@ -66,10 +61,10 @@ class LocalstackS3JUnit5Test {
 
 
     @Test
-    public void basicLocalStackTest() {
-
-         LOGGER.debug("!!!!!!!!!!Starting the test");
-         assertThat(localstack.isRunning());
+    public void testLocalstackIsRunning() {
+        LOGGER.debug("!!!!!!!!!!Starting the test");
+        assertThat(localstack.isRunning())
+                .isTrue();
     }
 
 
@@ -86,14 +81,15 @@ class LocalstackS3JUnit5Test {
                 .region(Region.of(localstack.getRegion()))
                 .build();
 
-        s3Client.createBucket(b -> b.bucket("bucketname"));
+        s3Client.createBucket(b -> b.bucket("bucketName"));
 
-        s3Client.putObject(b -> b.bucket("bucketname").key("bucketkey"), RequestBody.fromBytes("Now is the time for all good men to come to aide of their country".getBytes()));
+        s3Client.putObject(b -> b.bucket("bucketName").key("bucketKey"), RequestBody.fromBytes("Now is the time for all good men to come to aide of their country".getBytes()));
 
-        assertTrue("bucket was created", s3Client.listBuckets().buckets().stream().anyMatch(b -> b.name().equals("bucketname")));
+        var bucketCreated = s3Client.listBuckets().buckets().stream().anyMatch(b -> b.name().equals("bucketName"));
+        assertThat(bucketCreated)
+                .isTrue();
 
-    //s3Client.getObjectAsBytes(); ??? get text
-
+        //s3Client.getObjectAsBytes(); ??? get text
 
 
     }

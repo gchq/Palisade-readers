@@ -23,9 +23,9 @@ import uk.gov.gchq.palisade.Generated;
 public class S3Properties {
     private String bucketName;
     private String region;
-  ///  private String connectionDetail = "s3-data-service";
-   // private String palisadeTypeHeader = "x-pal-type";
-  //  private String userMetaPrefix = "x-amz-meta-";
+    ///  private String connectionDetail = "s3-data-service";
+    // private String palisadeTypeHeader = "x-pal-type";
+    //  private String userMetaPrefix = "x-amz-meta-";
 
     @Generated
     public String getBucketName() {

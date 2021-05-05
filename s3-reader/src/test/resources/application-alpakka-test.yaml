@@ -91,4 +91,3 @@ alpakka.s3:
 #logging:
 #  level:
 #  org.apache.kafka: WARN
-

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package uk.gov.gchq.palisade.service.data.s3;
 
 //import org.springframework.context.annotation.Bean;
@@ -20,6 +21,6 @@ package uk.gov.gchq.palisade.service.data.s3;
 
 public class S3Configuration {
 
-   // @Bean
-   // public DataReader s3DataReader() { return }
+    // @Bean
+    // public DataReader s3DataReader() { return }
 }

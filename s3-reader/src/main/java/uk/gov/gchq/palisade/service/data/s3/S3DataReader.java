@@ -16,36 +16,24 @@
 package uk.gov.gchq.palisade.service.data.s3;
 
 
-import akka.NotUsed;
-import akka.actor.ActorSystem;
-import akka.japi.Pair;
-import akka.stream.Attributes;
+//import akka.NotUsed;
+//import akka.actor.ActorSystem;
+//import akka.japi.Pair;
+//import akka.stream.Attributes;
+
 import akka.stream.Materializer;
-import akka.stream.alpakka.s3.ApiVersion;
 import akka.stream.alpakka.s3.BucketAccess;
-import akka.stream.alpakka.s3.ObjectMetadata;
-import akka.stream.alpakka.s3.S3Attributes;
-import akka.stream.alpakka.s3.S3Ext;
-import akka.stream.alpakka.s3.S3Settings;
 import akka.stream.alpakka.s3.javadsl.S3;
-import akka.stream.javadsl.Sink;
-import akka.stream.javadsl.Source;
-import akka.util.ByteString;
-import com.typesafe.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader;
 
 import java.io.InputStream;
-import java.util.Optional;
-import java.util.concurrent.CompletionStage;
-import java.util.concurrent.TimeUnit;
-
+//import java.util.Optional;
+//import java.util.concurrent.CompletionStage;
+//import java.util.concurrent.TimeUnit;
 
 /**
  * An S3DataReader is an implementation of {@link SerialisedDataReader} for S3 that opens a file and returns
@@ -59,7 +47,6 @@ public class S3DataReader extends SerialisedDataReader {
     private final Materializer materialiser;
 
     //  ActorSystem system;
-
 
     public S3DataReader(final S3Bucket bucket, final Materializer materialiser) {
         this.bucket = bucket;

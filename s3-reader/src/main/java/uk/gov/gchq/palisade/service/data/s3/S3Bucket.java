@@ -43,8 +43,8 @@ public class S3Bucket {
     @Generated
     public String toString() {
         return new StringJoiner(", ", S3Bucket.class.getSimpleName() + "[", "]")
-                .add("bucketName=                '" + bucketName + "'")
-                .add("bucketKey=                '" + bucketKey + "'")
+                .add("bucketName'" + bucketName + "'")
+                .add("bucketKey='" + bucketKey + "'")
                 .toString();
     }
 }
