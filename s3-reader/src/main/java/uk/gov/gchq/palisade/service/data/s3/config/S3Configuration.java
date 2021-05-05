@@ -25,5 +25,7 @@ package uk.gov.gchq.palisade.service.data.s3.config;
 
 public class S3Configuration {
 
+    // @Bean
+    // public DataReader s3DataReader() { return }
 
 }

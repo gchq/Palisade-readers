@@ -13,8 +13,6 @@
 # limitations under the License.
 
 # See alpakka-s3 reference.conf at https://github.com/akka/alpakka/blob/master/s3/src/main/resources/reference.conf
-
-
 alpakka.s3:
   # whether the buffer request chunks (up to 5MB each) to "memory" or "disk"
   buffer: "memory"
@@ -29,14 +27,12 @@ alpakka.s3:
       #   - credentials file
       #   - EC2 credentials service
       #   - IAM / metadata
-        access-key-id = "testKey"
-        secret-access-key = "testSecretKey"
       provider: default
 
     # If this section is absent, the fallback behavior is
     # to use the same configuration as if region.provider = default
     region:
-      # static# See alpakka-s3 reference.conf at https://github.com/akka/alpakka/blob/master/s3/src/main/resources/reference.conf credentials
+      # static credentials
       #
       # provider = static
       #
@@ -48,7 +44,7 @@ alpakka.s3:
       # attempts to get the region from either:
       #   - environment variables
       #   - system properties
-      #   - progile file
+      #   - profile file
       #   - EC2 metadata
       provider: default
 
@@ -87,7 +83,12 @@ alpakka.s3:
       # Random jitter factor applied to retry delay calculation.
       random-factor: 0.0
 
+resource:
+  implementation: s3
 
-#logging:
-#  level:
-#  org.apache.kafka: WARN
+s3:
+  bucket-name: "test-bucket"
+  region: "EU_WEST_2"
+  connection-detail: "s3-data-service"
+  palisade-type-header: "x-pal-type"
+  user-meta-prefix: "x-amz-meta-"

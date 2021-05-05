@@ -34,18 +34,15 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
-import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.resource.impl.SystemResource;
-
-import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 
 @Testcontainers
-@ActiveProfiles("alpakka-test")
+@ActiveProfiles("s3-test")
 class S3DataReaderTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3DataReaderTest.class);
 
@@ -56,9 +53,8 @@ class S3DataReaderTest {
     private Materializer akkaMaterializer;
 
     @Container
-    private static final LocalStackContainer localstack = new LocalStackContainer(DockerImageName.parse("localstack/localstack:latest"))
+    private final LocalStackContainer localstack = new LocalStackContainer(DockerImageName.parse("localstack/localstack:0.12.9.1"))
             .withServices(S3);
-
 
     @Test
     void testContextLoads() {
@@ -72,8 +68,6 @@ class S3DataReaderTest {
 
         assertThat(akkaMaterializer)
                 .isNotNull();
-
-
     }
 
 
@@ -90,41 +84,41 @@ class S3DataReaderTest {
         // System.setProperty(SECRET_KEY_SYSTEM_PROPERTY, "secretkey");
 
 
-        String TEST_BUCKET_NAME = "testbucketname";
-        String TEST_BUCKET_KEY = "testbucketkey";
-        S3Bucket s3Bucket = new S3Bucket(TEST_BUCKET_NAME, TEST_BUCKET_KEY);
+        var testBucketName = "testBucketName";
+        var testBucketKey = "testBucketKey";
+        var s3Bucket = new S3Bucket(testBucketName, testBucketKey);
 
-        String RESOURCE_ID = "/test/resourceId";
-        String RESOURCE_TYPE = "uk.gov.gchq.palisade.test.TestType";
-        String RESOURCE_FORMAT = "avro";
-        String DATA_SERVICE_NAME = "test-data-service";
-        String RESOURCE_PARENT = "/test";
-        LeafResource LEAF_RESOURCE = new FileResource()
-                .id(RESOURCE_ID)
-                .type(RESOURCE_TYPE)
-                .serialisedFormat(RESOURCE_FORMAT)
-                .connectionDetail(new SimpleConnectionDetail().serviceName(DATA_SERVICE_NAME))
-                .parent(new SystemResource().id(RESOURCE_PARENT));
+        var resourceId = "/test/resourceId";
+        var resourceType = "uk.gov.gchq.palisade.test.TestType";
+        var resourceFormat = "avro";
+        var dataServiceName = "test-data-service";
+        var resourceParent = "/test";
+        var leafResource = new FileResource()
+                .id(resourceId)
+                .type(resourceType)
+                .serialisedFormat(resourceFormat)
+                .connectionDetail(new SimpleConnectionDetail().serviceName(dataServiceName))
+                .parent(new SystemResource().id(resourceParent));
 
 
         //using the Localstack in Testcontainers to set-up the test environment
-        String accessKey = localstack.getAccessKey();
-        String secretKey = localstack.getSecretKey();
-        String region = localstack.getRegion();
+        var accessKey = localstack.getAccessKey();
+        var secretKey = localstack.getSecretKey();
+        var region = localstack.getRegion();
         //old version of provider AWSCredentialsProvider defaultCredentialsProvider= localstack. .getDefaultCredentialsProvider();
         //  AWSCredentials awsCredentials =defaultCredentialsProvider.getCredentials();
-        URI endpointOverride = localstack.getEndpointOverride(LocalStackContainer.Service.S3);
-        AwsBasicCredentials awsBasicCredentials = AwsBasicCredentials.create(accessKey, secretKey);
-        StaticCredentialsProvider staticCredentialsProvider = StaticCredentialsProvider.create(awsBasicCredentials);
+        var endpointOverride = localstack.getEndpointOverride(LocalStackContainer.Service.S3);
+        var awsBasicCredentials = AwsBasicCredentials.create(accessKey, secretKey);
+        var staticCredentialsProvider = StaticCredentialsProvider.create(awsBasicCredentials);
         LOGGER.info("localstack: " + localstack);
         LOGGER.info("accessKey: " + accessKey);
         LOGGER.info("secretKey: " + secretKey);
         LOGGER.info("region: " + region); //change to test
         LOGGER.info("endpointOverride: " + endpointOverride.toString());
-        LOGGER.info("awsBasicCredentials: " + awsBasicCredentials.toString());
-        LOGGER.info("staticCredentialsProvider: " + staticCredentialsProvider.toString());
+        LOGGER.info("awsBasicCredentials: " + awsBasicCredentials);
+        LOGGER.info("staticCredentialsProvider: " + staticCredentialsProvider);
 
-        S3Client s3Client = S3Client
+        var s3Client = S3Client
                 .builder()
                 .endpointOverride(endpointOverride)
                 .credentialsProvider(staticCredentialsProvider)
@@ -133,8 +127,8 @@ class S3DataReaderTest {
 
         // s3Client
         try {
-            s3Client.createBucket(b -> b.bucket(TEST_BUCKET_NAME));
-            s3Client.putObject(b -> b.bucket(TEST_BUCKET_NAME).key(TEST_BUCKET_KEY), RequestBody.fromBytes("Now is the time for all good men to come to aide of their country".getBytes()));
+            s3Client.createBucket(b -> b.bucket(testBucketName));
+            s3Client.putObject(b -> b.bucket(testBucketName).key(testBucketKey), RequestBody.fromBytes("Now is the time for all good men to come to aide of their country".getBytes()));
             LOGGER.info("finished creating bucket: ");
             LOGGER.info("s3Client.listBuckets(): " + s3Client.listBuckets());
 
@@ -147,45 +141,36 @@ class S3DataReaderTest {
         //  BucketAccess bucketAccess = akka.stream.alpakka.s3.javadsl.S3.checkIfBucketExists(s3Bucket.getBucketName(), akkaMaterializer).toCompletableFuture().join();
         //  LOGGER.info("bucketAccess: " +bucketAccess);
 
-        //using the S3DataReader to retrieve the data
-        //under the hood it is using Alpakka connector for S3 to retrieve the data
+        // using the S3DataReader to retrieve the data
+        // under the hood it is using Alpakka connector for S3 to retrieve the data
         //  LOGGER.info("\n\n\n!!!!!!!!!!!!!! Alpakka ");
 
+        //  S3DataReader dataReader = new S3DataReader(s3Bucket, akkaMaterializer);
+        //  InputStream stream = dataReader.readRaw(LEAF_RESOURCE);
 
+//        assertThat(stream.toString())
+//                .as("Check that read will provide data in the output stream")
+//                .isEqualTo("set this later");
+
+
+        //  BasicAWSCredentials awsCreds = new BasicAWSCredentials("access_key_id", "secret_key_id");
+        //  AwsCredentialsProvider credentialsProvider  = S3Ext.get(akkaActorSystem).settings().getCredentialsProvider();
+        //  LOGGER.info("credentialsProvider: " +credentialsProvider);
+        //  AwsCredentialsProvider credentialsProvider  = S3Ext.get(akkaActorSystem).settings().withCredentialsProvider();
+
+        //  ActorSystem actor = ActorSystem.create("S3Tester");
+        //  Materializer materializer = SystemMaterializer.get(actor).materializer();
         //  S3DataReader dataReader = new S3DataReader(s3Bucket, akkaMaterializer);
 
         //  InputStream stream = dataReader.readRaw(LEAF_RESOURCE);
 
-    /*  String outputString = stream.toString();
-        assertThat(outputString)
-                .as("Check that read will provide data in the output stream")
-                .isEqualTo("set this later");
-
-     */
-
-        //  BasicAWSCredentials awsCreds = new BasicAWSCredentials("access_key_id", "secret_key_id");
-        //   AwsCredentialsProvider credentialsProvider  = S3Ext.get(akkaActorSystem).settings().getCredentialsProvider();
-        //   LOGGER.info("credentialsProvider: " +credentialsProvider);
-        // AwsCredentialsProvider credentialsProvider  = S3Ext.get(akkaActorSystem).settings().withCredentialsProvider();
-        //  .
-
-        //  ActorSystem actor = ActorSystem.create("S3Tester");
-        //  Materializer materializer = SystemMaterializer.get(actor).materializer();
-        // S3DataReader dataReader = new S3DataReader(s3Bucket, akkaMaterializer);
-
-        // InputStream stream = dataReader.readRaw(LEAF_RESOURCE);
-
-
-       /* AwsRegionProvider awsRegionProvider = new AwsRegionProvider(){
-            Region region = Region.EU_CENTRAL_1;
-            @Override
-            public Region getRegion() {
-                return region;
-            }
-        };
-
-        */
-
+//        AwsRegionProvider awsRegionProvider = new AwsRegionProvider(){
+//            Region region = Region.EU_CENTRAL_1;
+//            @Override
+//            public Region getRegion() {
+//                return region;
+//            }
+//        };
 
         //    S3Settings s3Settings = S3Ext.get(actor).settings()
         //            .withCredentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)));
@@ -194,14 +179,11 @@ class S3DataReaderTest {
         //  S3DataReader dataReader = new S3DataReader(s3Bucket, materializer);
 
         //  LOGGER.info("actor: " + actor);
-        // LOGGER.info("materializer: " + materializer);
+        //  LOGGER.info("materializer: " + materializer);
         //  LOGGER.info("dataReader: " + dataReader);
 
 
         //  InputStream stream = dataReader.readRaw(LEAF_RESOURCE);
 
-
     }
-
-
 }
