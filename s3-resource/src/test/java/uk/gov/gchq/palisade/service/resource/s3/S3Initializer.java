@@ -22,16 +22,19 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.lang.NonNull;
 import org.springframework.test.context.support.TestPropertySourceUtils;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.SdkSystemSetting;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 
 public class S3Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3Initializer.class);
 
-    static LocalStackContainer lsc;
+    static LocalStackContainer localStackContainer;
 
     @Override
     public void initialize(@NonNull final ConfigurableApplicationContext context) {
@@ -48,24 +51,33 @@ public class S3Initializer implements ApplicationContextInitializer<Configurable
             localstackImageName = DockerImageName.parse(defaultImageName);
         }
 
-        final GenericContainer<?> localStackContainer = new LocalStackContainer(localstackImageName)
+        localStackContainer = new LocalStackContainer(localstackImageName)
                 .withServices(S3)
                 .withReuse(true);
 
         context.getEnvironment().setActiveProfiles("s3");
-        localStackContainer.start();
+
         // Start container
+        localStackContainer.start();
 
-        lsc = (LocalStackContainer) localStackContainer;
+        var bucketKey = "s3.bucketName=";
+        var bucketName = "something";
+        var endpointKey = "alpakka.s3.endpoint-url=";
+        var endpointName = localStackContainer.getEndpointConfiguration(S3).getServiceEndpoint();
 
-        var bucketName = "s3.bucketName=" + "something";
-        var endpointUrl = "alpakka.s3.endpoint-url=" + lsc.getEndpointConfiguration(S3).getServiceEndpoint();
+        System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), localStackContainer.getAccessKey());
+        System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), localStackContainer.getSecretKey());
+        System.setProperty(SdkSystemSetting.AWS_REGION.property(), localStackContainer.getRegion());
 
-        System.setProperty("aws.accessKeyId", lsc.getAccessKey());
-        System.setProperty("aws.secretAccessKey", lsc.getSecretKey());
-        System.setProperty("aws.region", lsc.getRegion());
+        TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context, endpointKey + endpointName, bucketKey + bucketName);
 
-        TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context, endpointUrl, bucketName);
+        var s3Client = S3Client
+                .builder()
+                .endpointOverride(localStackContainer.getEndpointOverride(S3))
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localStackContainer.getAccessKey(), localStackContainer.getSecretKey())))
+                .build();
 
+        // Build the bucket
+        s3Client.createBucket(b -> b.bucket(bucketName));
     }
 }

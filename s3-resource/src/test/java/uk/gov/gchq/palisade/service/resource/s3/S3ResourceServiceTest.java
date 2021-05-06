@@ -43,7 +43,7 @@ import java.util.Arrays;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
-import static uk.gov.gchq.palisade.service.resource.s3.S3Initializer.lsc;
+import static uk.gov.gchq.palisade.service.resource.s3.S3Initializer.localStackContainer;
 
 @SpringBootTest(classes = {S3Configuration.class, AkkaSystemConfig.class})
 @ContextConfiguration(initializers = {S3Initializer.class})
@@ -58,10 +58,13 @@ class S3ResourceServiceTest {
 
     private Path testFile;
 
+    @Autowired
+    S3Properties s3Properties;
+
     @Test
     @Order(1)
     void testAutowiring() {
-        assertThat(lsc)
+        assertThat(localStackContainer)
                 .as("Check that the service has been started successfully")
                 .isNotNull();
     }
@@ -72,8 +75,8 @@ class S3ResourceServiceTest {
         // AWS SDK v2
         var s3 = S3Client
                 .builder()
-                .endpointOverride(lsc.getEndpointOverride(S3))
-                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(lsc.getAccessKey(), lsc.getSecretKey())))
+                .endpointOverride(localStackContainer.getEndpointOverride(S3))
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localStackContainer.getAccessKey(), localStackContainer.getSecretKey())))
                 .build();
 
         // Create a test file and add some text to it
@@ -82,8 +85,8 @@ class S3ResourceServiceTest {
         Files.write(testFile, lines);
 
         // Create the bucket, and add the object
-        s3.createBucket(b -> b.bucket("foo"));
-        s3.putObject(b -> b.bucket("foo").key(testFile.toString()), testFile);
+        var bucketName = s3Properties.getBucketName();
+        s3.putObject(b -> b.bucket(bucketName).key(testFile.toString()), testFile);
 
         assertThat(s3.listBuckets().buckets())
                 .as("Check one bucket exists")
@@ -91,7 +94,7 @@ class S3ResourceServiceTest {
                 .hasSize(1)
                 .first()
                 .extracting("name")
-                .isEqualTo("foo");
+                .isEqualTo(bucketName);
 
 
         var x = service.getResourcesById(testFile.toString());
@@ -99,7 +102,7 @@ class S3ResourceServiceTest {
                 .as("Check the iterator has an item in")
                 .isNotNull();
 
-        var lOR = ListObjectsRequest.builder().bucket("foo").build();
+        var lOR = ListObjectsRequest.builder().bucket(bucketName).build();
         assertThat(s3.listObjects(lOR).contents())
                 .as("Check one object is returned")
                 .asList()
@@ -109,7 +112,7 @@ class S3ResourceServiceTest {
                 .isEqualTo(testFile.toString());
 
         // Getting the object using the getObjectRequest saves the file to the tempPathDirectory
-        var gOR = GetObjectRequest.builder().bucket("foo").key(testFile.toString()).build();
+        var gOR = GetObjectRequest.builder().bucket(bucketName).key(testFile.toString()).build();
         s3.getObject(gOR, tempPathDirectory.resolve("testFileFromS3.txt"));
 
         // Get the file from the temp directory
@@ -120,11 +123,11 @@ class S3ResourceServiceTest {
                 .isEqualTo(Files.readAllLines(testFile.toAbsolutePath()));
 
         // Getting the object should throw an exception as it no longer exists
-        var dOR = DeleteObjectRequest.builder().bucket("foo").key(testFile.toString()).build();
+        var dOR = DeleteObjectRequest.builder().bucket(bucketName).key(testFile.toString()).build();
         s3.deleteObject(dOR);
         assertThrows(NoSuchKeyException.class, () -> s3.getObject(gOR), "Test should throw an exception");
 
         // Finally delete the object
-        s3.deleteBucket(DeleteBucketRequest.builder().bucket("foo").build());
+        s3.deleteBucket(DeleteBucketRequest.builder().bucket(bucketName).build());
     }
 }
