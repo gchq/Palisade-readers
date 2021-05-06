@@ -57,20 +57,15 @@ public class S3Initializer implements ApplicationContextInitializer<Configurable
         // Start container
 
         lsc = (LocalStackContainer) localStackContainer;
+
         var bucketName = "s3.bucketName=" + "something";
-
-        var accessKey = "aws.access-key-id=" + lsc.getAccessKey();
-        var secretKey = "aws.secret-access-key=" + lsc.getSecretKey();
-
-        var region = "aws.region=" + lsc.getRegion();
-
         var endpointUrl = "alpakka.s3.endpoint-url=" + lsc.getEndpointConfiguration(S3).getServiceEndpoint();
 
-        LOGGER.info("Starting LocalStack S3 with accessKey: {}, secretKey: {}, endpoint: {}, and region: {}, and bucketName: {}", accessKey, secretKey, endpointUrl, region, bucketName);
         System.setProperty("aws.accessKeyId", lsc.getAccessKey());
         System.setProperty("aws.secretAccessKey", lsc.getSecretKey());
         System.setProperty("aws.region", lsc.getRegion());
-        TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context, accessKey, secretKey, region, endpointUrl, bucketName);
+
+        TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context, endpointUrl, bucketName);
 
     }
 }
