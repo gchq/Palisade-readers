@@ -59,17 +59,15 @@ public class S3Initializer implements ApplicationContextInitializer<Configurable
         lsc = (LocalStackContainer) localStackContainer;
         var bucketName = "s3.bucketName=" + "something";
 
-        var staticCredentials = "alpakka.s3.aws.credentials.provider=static";
-        var accessKey = "alpakka.s3.aws.credentials.access-key-id=" + lsc.getDefaultCredentialsProvider().getCredentials().getAWSAccessKeyId();
-        var secretKey = "alpakka.s3.aws.credentials.secret-access-key=" + lsc.getDefaultCredentialsProvider().getCredentials().getAWSSecretKey();
+        var accessKey = "aws.access-key-id=" + lsc.getDefaultCredentialsProvider().getCredentials().getAWSAccessKeyId();
+        var secretKey = "aws.secret-access-key=" + lsc.getDefaultCredentialsProvider().getCredentials().getAWSSecretKey();
 
-        var staticRegion = "alpakka.s3.aws.region.provider=static";
-        var region = "alpakka.s3.aws.default-region=" + lsc.getEndpointConfiguration(S3).getSigningRegion();
+        var region = "aws.region=" + lsc.getEndpointConfiguration(S3).getSigningRegion();
 
         var endpointUrl = "alpakka.s3.endpoint-url=" + lsc.getEndpointConfiguration(S3).getServiceEndpoint();
 
         LOGGER.info("Starting LocalStack S3 with accessKey: {}, secretKey: {}, endpoint: {}, and region: {}, and bucketName: {}", accessKey, secretKey, endpointUrl, region, bucketName);
-        TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context, staticCredentials, accessKey, secretKey, staticRegion, region, endpointUrl, bucketName);
+        TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context, accessKey, secretKey, region, endpointUrl, bucketName);
 
     }
 }
