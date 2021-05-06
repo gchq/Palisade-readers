@@ -18,7 +18,6 @@ package uk.gov.gchq.palisade.service.resource.s3;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.lang.NonNull;
@@ -32,15 +31,12 @@ import static org.testcontainers.containers.localstack.LocalStackContainer.Servi
 public class S3Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3Initializer.class);
 
-    @Value("${testcontainers.localstack.image}")
-    private String fullImageName;
-    @Value("${testcontainers.localstack.default.image}")
-    private String defaultImageName;
-
-    static LocalStackContainer lcs;
+    static LocalStackContainer lsc;
 
     @Override
     public void initialize(@NonNull final ConfigurableApplicationContext context) {
+        final String fullImageName = context.getEnvironment().getRequiredProperty("testcontainers.localstack.image");
+        final String defaultImageName = context.getEnvironment().getRequiredProperty("testcontainers.localstack.default.image");
 
         DockerImageName localstackImageName;
         try {
@@ -57,16 +53,23 @@ public class S3Initializer implements ApplicationContextInitializer<Configurable
                 .withReuse(true);
 
         context.getEnvironment().setActiveProfiles("s3");
-        // Start container
         localStackContainer.start();
+        // Start container
 
-        lcs = (LocalStackContainer) localStackContainer;
-        var accessKey = "aws.accessKeyId=" + lcs.getDefaultCredentialsProvider().getCredentials().getAWSAccessKeyId();
-        var secretKey = "aws.secretKey=" + lcs.getDefaultCredentialsProvider().getCredentials().getAWSSecretKey();
-        var endpoint = "aws.endpoint=" + lcs.getEndpointConfiguration(S3).getServiceEndpoint();
-        var region = "aws.region=" + lcs.getEndpointConfiguration(S3).getSigningRegion();
+        lsc = (LocalStackContainer) localStackContainer;
+        var bucketName = "s3.bucketName=" + "something";
 
-        LOGGER.info("Starting LocalStack S3 with accessKey: {}, secretKey: {}, endpoint: {}, and region: {}", accessKey, secretKey, endpoint, region);
-        TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context, accessKey, secretKey, endpoint, region);
+        var staticCredentials = "alpakka.s3.aws.credentials.provider=static";
+        var accessKey = "alpakka.s3.aws.credentials.access-key-id=" + lsc.getDefaultCredentialsProvider().getCredentials().getAWSAccessKeyId();
+        var secretKey = "alpakka.s3.aws.credentials.secret-access-key=" + lsc.getDefaultCredentialsProvider().getCredentials().getAWSSecretKey();
+
+        var staticRegion = "alpakka.s3.aws.region.provider=static";
+        var region = "alpakka.s3.aws.default-region=" + lsc.getEndpointConfiguration(S3).getSigningRegion();
+
+        var endpointUrl = "alpakka.s3.endpoint-url=" + lsc.getEndpointConfiguration(S3).getServiceEndpoint();
+
+        LOGGER.info("Starting LocalStack S3 with accessKey: {}, secretKey: {}, endpoint: {}, and region: {}, and bucketName: {}", accessKey, secretKey, endpointUrl, region, bucketName);
+        TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context, staticCredentials, accessKey, secretKey, staticRegion, region, endpointUrl, bucketName);
+
     }
 }

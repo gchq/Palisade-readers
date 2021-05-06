@@ -53,11 +53,17 @@ import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
 public class S3ResourceService implements ResourceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3ResourceService.class);
     private static final int PARALLELISM = 1;
-    private static final URI ROOT_URI = URI.create("s3:");
+    private static final URI ROOT_URI = URI.create("s3");
 
     private final S3Properties properties;
     private final Materializer materialiser;
 
+    /**
+     * Constructor for the S3ResourceService, taking in S3Properties and a materaliser
+     * @param properties S3Properties, containing bucketName etc.
+     * @param materialiser the materaliser
+     * @throws IOException if there was an exception thrown when checking if the bucket exists
+     */
     public S3ResourceService(final S3Properties properties, final Materializer materialiser) throws IOException {
         this.properties = properties;
         this.materialiser = materialiser;

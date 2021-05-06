@@ -24,7 +24,6 @@ import uk.gov.gchq.palisade.Generated;
 @ConfigurationProperties(prefix = "s3")
 public class S3Properties {
     private String bucketName;
-    private String region;
     private String connectionDetail = "s3-data-service";
     private String palisadeTypeHeader = "x-pal-type";
     private String userMetaPrefix = "x-amz-meta-";
@@ -39,16 +38,6 @@ public class S3Properties {
     @Generated
     public void setBucketName(final String bucketName) {
         this.bucketName = bucketName;
-    }
-
-    @Generated
-    public String getRegion() {
-        return region;
-    }
-
-    @Generated
-    public void setRegion(final String region) {
-        this.region = region;
     }
 
     @Generated

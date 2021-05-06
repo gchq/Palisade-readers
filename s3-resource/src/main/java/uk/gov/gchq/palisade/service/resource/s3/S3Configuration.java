@@ -44,7 +44,7 @@ public class S3Configuration {
      * @throws IOException ioException
      */
     @Bean
-    @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = S3_PREFIX)
+    @ConditionalOnProperty(prefix = "resource", name = "implementation", havingValue = S3_PREFIX)
     ResourceService s3ResourceService(final S3Properties properties, final Materializer materialiser) throws IOException {
         return new S3ResourceService(properties, materialiser);
     }

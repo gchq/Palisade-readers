@@ -21,18 +21,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
+
+import uk.gov.gchq.palisade.service.resource.stream.config.AkkaSystemConfig;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -42,13 +43,9 @@ import java.util.Arrays;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
-import static uk.gov.gchq.palisade.service.resource.s3.S3Initializer.lcs;
+import static uk.gov.gchq.palisade.service.resource.s3.S3Initializer.lsc;
 
-@Testcontainers
-@SpringBootTest(
-        classes = {S3Configuration.class},
-        webEnvironment = WebEnvironment.RANDOM_PORT
-)
+@SpringBootTest(classes = {S3Configuration.class, AkkaSystemConfig.class})
 @ContextConfiguration(initializers = {S3Initializer.class})
 @ActiveProfiles({"s3", "testcontainers"})
 class S3ResourceServiceTest {
@@ -59,27 +56,24 @@ class S3ResourceServiceTest {
     @TempDir
     Path tempPathDirectory;
 
-    private S3Client s3;
     private Path testFile;
 
     @Test
     @Order(1)
     void testAutowiring() {
-        assertThat(service)
-                .as("Check that the service has been started successfully")
-                .isNotNull();
-        assertThat(lcs)
+        assertThat(lsc)
                 .as("Check that the service has been started successfully")
                 .isNotNull();
     }
 
     @Test
+    @Order(2)
     void testV2() throws IOException {
         // AWS SDK v2
-        s3 = S3Client
+        var s3 = S3Client
                 .builder()
-                .endpointOverride(lcs.getEndpointOverride(S3))
-                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(lcs.getAccessKey(), lcs.getSecretKey())))
+                .endpointOverride(lsc.getEndpointOverride(S3))
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(lsc.getAccessKey(), lsc.getSecretKey())))
                 .build();
 
         // Create a test file and add some text to it
@@ -129,5 +123,8 @@ class S3ResourceServiceTest {
         var dOR = DeleteObjectRequest.builder().bucket("foo").key(testFile.toString()).build();
         s3.deleteObject(dOR);
         assertThrows(NoSuchKeyException.class, () -> s3.getObject(gOR), "Test should throw an exception");
+
+        // Finally delete the object
+        s3.deleteBucket(DeleteBucketRequest.builder().bucket("foo").build());
     }
 }
