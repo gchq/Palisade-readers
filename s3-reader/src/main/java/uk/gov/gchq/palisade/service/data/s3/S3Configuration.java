@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.data.s3.config;
+package uk.gov.gchq.palisade.service.data.s3;
 
-//import akka.stream.Materializer;
-//import org.springframework.context.annotation.Bean;
-//import uk.gov.gchq.palisade.service.data.s3.S3Bucket;
-//import uk.gov.gchq.palisade.service.data.s3.S3DataReader;
-//
-//import java.io.IOException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class S3Configuration {
 
-    // @Bean
-    // public DataReader s3DataReader() { return }
+    @Bean
+    @ConditionalOnMissingBean
+    S3Properties getS3Properties() {
+        return new S3Properties();
+    }
 
 }

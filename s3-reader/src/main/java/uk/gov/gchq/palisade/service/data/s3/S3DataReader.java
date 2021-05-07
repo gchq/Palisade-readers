@@ -15,15 +15,7 @@
  */
 package uk.gov.gchq.palisade.service.data.s3;
 
-
-//import akka.NotUsed;
-//import akka.actor.ActorSystem;
-//import akka.japi.Pair;
-//import akka.stream.Attributes;
-
 import akka.stream.Materializer;
-import akka.stream.alpakka.s3.BucketAccess;
-import akka.stream.alpakka.s3.javadsl.S3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,9 +23,7 @@ import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader;
 
 import java.io.InputStream;
-//import java.util.Optional;
-//import java.util.concurrent.CompletionStage;
-//import java.util.concurrent.TimeUnit;
+
 
 /**
  * An S3DataReader is an implementation of {@link SerialisedDataReader} for S3 that opens a file and returns
@@ -43,13 +33,13 @@ public class S3DataReader extends SerialisedDataReader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(S3DataReader.class);
 
-    private final S3Bucket bucket;
+    private final S3Properties s3Properties;
     private final Materializer materialiser;
 
     //  ActorSystem system;
 
-    public S3DataReader(final S3Bucket bucket, final Materializer materialiser) {
-        this.bucket = bucket;
+    public S3DataReader(final S3Properties s3Properties, final Materializer materialiser) {
+        this.s3Properties = s3Properties;
         this.materialiser = materialiser;
         //?? could tests to validate, see if the bucket exists
         // at least non-null
@@ -62,8 +52,8 @@ public class S3DataReader extends SerialisedDataReader {
         // LOGGER.info( "materializer: " +materializer);
         // LOGGER.info( "bucket: " +bucket);
 
-        BucketAccess bucketAccess = S3.checkIfBucketExists(bucket.getBucketName(), materialiser).toCompletableFuture().join();
-        LOGGER.info("bucketAccess: " + bucketAccess);
+       // BucketAccess bucketAccess = S3.checkIfBucketExists(bucket.getBucketName(), materialiser).toCompletableFuture().join();
+       // LOGGER.info("bucketAccess: " + bucketAccess);
 
 
         // ActorSystem actorSystem = materializer.system();

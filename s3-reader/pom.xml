@@ -39,13 +39,14 @@
         <jackson.version>2.10.4</jackson.version>
         <logback.version>1.2.3</logback.version>
 
-        <!--double check to see if these are needed -->
-        <akka.version>2.6.10</akka.version>
-        <alpakka.version>2.1.0-M1</alpakka.version>
-
         <!-- Test dependency versions -->
-        <springboot-test.version>2.3.1.RELEASE</springboot-test.version>
-        <testcontainers.version>1.15.3</testcontainers.version>
+        <spring-boot-testing.version>2.3.1.RELEASE</spring-boot-testing.version>
+        <junit.version>5.5.2</junit.version>
+        <assertj.version>3.18.0</assertj.version>
+        <localstack.version>1.15.3</localstack.version>
+
+        <!-- Testcontainers images -->
+        <testcontainers.localstack.image>localstack/localstack:0.12.9.1</testcontainers.localstack.image>
     </properties>
 
     <dependencies>
@@ -55,15 +56,15 @@
         <dependency>
             <!-- Readers, Request & Response types -->
             <groupId>uk.gov.gchq.palisade</groupId>
-            <artifactId>resource-service</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.gchq.palisade</groupId>
             <artifactId>data-service</artifactId>
             <version>${project.parent.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- Alpakka S3 dependency-->
+        <dependency>
+            <groupId>com.lightbend.akka</groupId>
+            <artifactId>akka-stream-alpakka-s3_2.13</artifactId>
+            <version>${alpakka-s3.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -71,19 +72,17 @@
             <version>2.2.6.RELEASE</version>
             <optional>true</optional>
         </dependency>
-
-        <!-- Alpakka S3 dependency-->
-        <dependency>
-            <groupId>com.lightbend.akka</groupId>
-            <artifactId>akka-stream-alpakka-s3_2.13</artifactId>
-            <version>${alpakka-s3.version}</version>
-        </dependency>
-
         <!--
        ~ Amazon S3 Dependencies
        -->
         <dependency>
-            <!-- AWS SDK Java v2 -->
+            <!-- AWS SDK v1 -->
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>${amazonaws-sdk.version}</version>
+        </dependency>
+        <dependency>
+            <!-- AWS SDK v2 -->
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>aws-sdk-java</artifactId>
             <version>${aws-sdk.version}</version>
@@ -94,7 +93,6 @@
             <artifactId>sdk-core</artifactId>
             <version>${aws-sdk.version}</version>
         </dependency>
-
         <dependency>
             <!-- Json Dependency -->
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -115,22 +113,20 @@
             <!-- JUnit, Jupiter, SpringBootTest etc... -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>${springboot-test.version}</version>
+            <version>${spring-boot-testing.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--
-        ~ S3 TestContainers Dependencies
-         -->
         <dependency>
+            <!-- S3 TestContainers Dependency -->
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>${testcontainers.version}</version>
+            <version>${localstack.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${testcontainers.version}</version>
+            <version>${localstack.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
