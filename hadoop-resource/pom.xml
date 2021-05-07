@@ -55,7 +55,7 @@
             <!-- Readers, Request & Response types -->
             <groupId>uk.gov.gchq.palisade</groupId>
             <artifactId>resource-service</artifactId>
-            <version>${project.parent.version}</version>
+            <version>0.5.0-${services.revision}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -48,7 +48,7 @@ public class HadoopDataReader extends SerialisedDataReader {
     private FileSystem fs;
 
     /**
-     * Create a new HadoopDataReader and with a file system configuration
+     * Create a new HadoopDataReader and with a file system configuration.
      *
      * @param configuration a hadoop configuration specifying the target cluster
      * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
@@ -58,7 +58,7 @@ public class HadoopDataReader extends SerialisedDataReader {
     }
 
     /**
-     * Creates a new {@link HadoopDataReader} object
+     * Creates a new {@link HadoopDataReader} object.
      *
      * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
@@ -67,7 +67,7 @@ public class HadoopDataReader extends SerialisedDataReader {
     }
 
     /**
-     * Creates a new {@link HadoopDataReader} object
+     * Creates a new {@link HadoopDataReader} object.
      *
      * @param conf A {@link Map} of {@link String}s used as the configuration
      * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the created {@link Configuration}
@@ -87,7 +87,7 @@ public class HadoopDataReader extends SerialisedDataReader {
     }
 
     /**
-     * Creates a {@link Configuration} using the {@link Map} of {@link String}s
+     * Creates a {@link Configuration} using the {@link Map} of {@link String}s.
      *
      * @param conf A {@link Map} of {@link String}s used as the configuration
      * @return the current {@link HadoopDataReader} object
@@ -99,7 +99,7 @@ public class HadoopDataReader extends SerialisedDataReader {
     }
 
     /**
-     * Sets the {@link FileSystem} value
+     * Sets the {@link FileSystem} value.
      *
      * @param conf A Hadoop {@link Configuration} object
      * @return the current {@link HadoopDataReader} object
@@ -112,7 +112,7 @@ public class HadoopDataReader extends SerialisedDataReader {
     }
 
     /**
-     * Sets the {@link FileSystem} value
+     * Sets the {@link FileSystem} value.
      *
      * @param fs the {@link FileSystem} value
      * @return the current {@link HadoopDataReader} object
