@@ -45,6 +45,7 @@ import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.service.resource.stream.config.AkkaSystemConfig;
 import uk.gov.gchq.palisade.util.FileResourceBuilder;
+import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -99,7 +100,7 @@ class S3ResourceServiceTest {
         s3.putObject(b -> b.bucket(s3Properties.getBucketName()).key(testFile.toString()), testFile);
 
         ConnectionDetail connectionDetail = new SimpleConnectionDetail().serviceName("s3-data-service");
-        resource1 = ((LeafResource) FileResourceBuilder.filesystemSchema(testFile.toUri()))
+        resource1 = ((LeafResource) ResourceBuilder.create(testFile.toUri()))
                 .type(TYPE_CLASSNAME)
                 .serialisedFormat(FORMAT_VALUE)
                 .connectionDetail(connectionDetail);

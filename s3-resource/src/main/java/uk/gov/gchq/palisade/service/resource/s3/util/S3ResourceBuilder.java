@@ -30,17 +30,10 @@ import java.util.LinkedList;
 import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PATH_SEP;
 import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
 
-/**
- *
- */
-public class S3ResourceBuilder {
+public class S3ResourceBuilder extends ResourceBuilder {
 
-    private S3ResourceBuilder() {
+    public S3ResourceBuilder() {
         // Empty Constructor
-    }
-
-    static {
-        ResourceBuilder.registerBuilder(S3_PREFIX, S3ResourceBuilder::s3Scheme);
     }
 
     private static String parentPrefix(final String path) {
@@ -69,5 +62,16 @@ public class S3ResourceBuilder {
     private static Resource s3Scheme(final URI uri) {
         // Things in S3 are only files, even if the PATH_SEP or prefixes makes it look like directories
         return fileResource(uri.getSchemeSpecificPart());
+    }
+
+
+    @Override
+    public Resource build(final URI resourceUri) {
+        return s3Scheme(resourceUri);
+    }
+
+    @Override
+    public boolean accepts(final URI resourceUri) {
+        return resourceUri.getScheme().equals(S3_PREFIX);
     }
 }
