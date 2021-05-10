@@ -16,18 +16,14 @@
 
 package uk.gov.gchq.palisade.service.resource.s3;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.io.TempDir;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,16 +37,17 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 
+import uk.gov.gchq.palisade.resource.LeafResource;
+import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.service.resource.stream.config.AkkaSystemConfig;
 import uk.gov.gchq.palisade.util.ResourceBuilder;
 
-import java.io.IOException;
 import java.net.URI;
-import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 import static uk.gov.gchq.palisade.service.resource.s3.S3Initializer.localStackContainer;
 
@@ -65,16 +62,13 @@ class S3ResourceServiceTest {
     @Autowired
     S3ResourceService service;
 
-    @TempDir
-    Path tempPathDirectory;
-
     @Autowired
     S3Properties s3Properties;
 
     private S3Client s3;
 
     @BeforeAll
-    void setup() throws IOException {
+    void setup() {
         s3 = S3Client
                 .builder()
                 .endpointOverride(localStackContainer.getEndpointOverride(S3))
@@ -115,10 +109,13 @@ class S3ResourceServiceTest {
                 .stream()
                 .filter(b -> b.name().equals(s3Properties.getBucketName()))
                 .collect(Collectors.toList());
+
         assertThat(bucketsMatchingPropertiesBucketName)
                 .as("Check one the bucket has been created in the Initializer")
                 .asList()
-                .hasSize(1);
+                .hasSize(1)
+                .extracting("name")
+                .containsOnly(s3Properties.getBucketName());
 
         assertThat(service.bucketExists().toCompletableFuture().join())
                 .as("Check that the S3ResourceService knows the bucket: %s, exists", s3Properties.getBucketName())
@@ -129,9 +126,17 @@ class S3ResourceServiceTest {
     @Order(3)
     void testGetResourcesById() {
         // Add a test file to the bucket
-        var s3ResourceId = "s3:/testFile.txt";
-        s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE).bucket(s3Properties.getBucketName()).key(URI.create(s3ResourceId).getSchemeSpecificPart()), RequestBody.fromString("Test Body"));
-        var s3Resource = ((S3Resource) ResourceBuilder.create(s3ResourceId));
+        var s3Resource = ((S3Resource) ((LeafResource) ResourceBuilder.create("s3:/testFile.txt"))
+                .type(s3Properties.getPalisadeTypeHeader())
+                .serialisedFormat("text/plain; charset=UTF-8")
+                .connectionDetail(new SimpleConnectionDetail().serviceName(s3Properties.getConnectionDetail())))
+                .userMetadata(Map.of(s3Properties.getUserMetaPrefix(), s3Properties.getPalisadeTypeHeader()))
+                .systemMetadata(Map.of());
+
+        s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE)
+                .bucket(s3Properties.getBucketName())
+                .metadata(Map.of(s3Properties.getUserMetaPrefix(), s3Properties.getPalisadeTypeHeader()))
+                .key(URI.create(s3Resource.getId()).getSchemeSpecificPart()), RequestBody.fromString("Test Body"));
 
         // Given an empty list
         var resultList = new ArrayList<>();
@@ -140,9 +145,12 @@ class S3ResourceServiceTest {
         var resourcesById = service.getResourcesById(s3Resource.getId());
         resourcesById.forEachRemaining(resultList::add);
 
-        Assertions.assertThat(resultList)
+        assertThat(resultList)
                 .as("Check that when I get a resource by its Id, the correct resource is returned")
-                .containsOnly(s3Resource);
+                .first()
+                .usingRecursiveComparison()
+                .ignoringFields("systemMetadata")
+                .isEqualTo(s3Resource);
     }
 
 //    @Test
