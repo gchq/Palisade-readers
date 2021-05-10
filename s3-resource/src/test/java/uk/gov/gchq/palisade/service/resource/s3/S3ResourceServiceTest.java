@@ -127,15 +127,15 @@ class S3ResourceServiceTest {
     void testGetResourcesById() {
         // Add a test file to the bucket
         var s3Resource = ((S3Resource) ((LeafResource) ResourceBuilder.create("s3:/testFile.txt"))
-                .type(s3Properties.getPalisadeTypeHeader())
+                .type("text")
                 .serialisedFormat("text/plain; charset=UTF-8")
                 .connectionDetail(new SimpleConnectionDetail().serviceName(s3Properties.getConnectionDetail())))
-                .userMetadata(Map.of(s3Properties.getUserMetaPrefix(), s3Properties.getPalisadeTypeHeader()))
+                .userMetadata(Map.of(s3Properties.getPalisadeTypeHeader(), "text"))
                 .systemMetadata(Map.of());
 
         s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE)
                 .bucket(s3Properties.getBucketName())
-                .metadata(Map.of(s3Properties.getUserMetaPrefix(), s3Properties.getPalisadeTypeHeader()))
+                .metadata(Map.of(s3Properties.getUserMetaPrefix() + s3Properties.getPalisadeTypeHeader(), "text"))
                 .key(URI.create(s3Resource.getId()).getSchemeSpecificPart()), RequestBody.fromString("Test Body"));
 
         // Given an empty list
