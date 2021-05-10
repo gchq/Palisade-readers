@@ -47,8 +47,8 @@ import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
 
 /**
  * An implementation of the ResourceService.
- * This service is for the retrieval of Resources only. Resources cannot be added via this service, they should be added
- * through the actual real filing system.
+ * This service is for the retrieval of Resources only. Resources cannot be added via this Service, they should be added
+ * through S3.
  */
 public class S3ResourceService implements ResourceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3ResourceService.class);
@@ -60,15 +60,16 @@ public class S3ResourceService implements ResourceService {
 
     /**
      * Constructor for the S3ResourceService, taking in S3Properties and a materaliser
-     * @param properties S3Properties, containing bucketName etc.
-     * @param materialiser the materaliser
+     *
+     * @param properties   S3Properties, containing bucketName, connection detail and headers.
+     * @param materialiser The Materializer is responsible for turning a stream blueprint into a running stream.
      * @throws IOException if there was an exception thrown when checking if the bucket exists
      */
     public S3ResourceService(final S3Properties properties, final Materializer materialiser) throws IOException {
         this.properties = properties;
         this.materialiser = materialiser;
 
-        // Check bucket exists, or throw
+        // Check bucket exists, or throw an exception
         this.checkBucketExists();
     }
 
@@ -85,7 +86,7 @@ public class S3ResourceService implements ResourceService {
     }
 
     public Source<LeafResource, NotUsed> getResourcesByIdSource(final String resourceId) {
-        URI resourceUri = URI.create(resourceId);
+        var resourceUri = URI.create(resourceId);
 
         if (!resourceUri.getScheme().equals(S3_PREFIX)) {
             throw new UnsupportedOperationException(String.format(
@@ -93,7 +94,6 @@ public class S3ResourceService implements ResourceService {
                     S3ResourceService.class.getSimpleName(), resourceUri.getScheme(), S3_PREFIX
             ));
         }
-
         return getResourceObjects(resourceUri);
     }
 
@@ -128,10 +128,10 @@ public class S3ResourceService implements ResourceService {
     }
 
     private Source<LeafResource, NotUsed> getResourceObjects(final URI resourceUri) {
-        return listBucketWithMetadata(resourceUri.getSchemeSpecificPart())
+        return listBucketWithMetadata(resourceUri.toString())
                 .map((Pair<ListBucketResultContents, ObjectMetadata> resourceMetaPair) -> {
                     // Create a uri of the format 's3:resource-key'
-                    URI fileUri = UriBuilder.create()
+                    var fileUri = UriBuilder.create()
                             .withScheme(S3_PREFIX)
                             .withoutAuthority()
                             .withPath(resourceMetaPair.first().getKey())
@@ -164,7 +164,7 @@ public class S3ResourceService implements ResourceService {
      *
      * @return a {@link Boolean} true if access is granted to the bucket
      */
-    private CompletionStage<Boolean> bucketExists() {
+    public CompletionStage<Boolean> bucketExists() {
         return S3.checkIfBucketExists(properties.getBucketName(), materialiser)
                 .thenApply(bucketAccess -> bucketAccess.equals(BucketAccess.accessGranted()));
     }

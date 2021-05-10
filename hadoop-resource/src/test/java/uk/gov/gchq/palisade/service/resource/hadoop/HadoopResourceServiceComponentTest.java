@@ -231,7 +231,7 @@ class HadoopResourceServiceComponentTest {
 
         assertThat(dir.resolve("folder1/folder2/").toString())
                 .as("Check the URI of the parent is the correct URI")
-                .isEqualTo(parent1.getId());
+                .hasToString(parent1.getId());
 
         assertThat(parent1)
                 .as("Check that the ParentResource has been instantiated correctly")
@@ -243,7 +243,7 @@ class HadoopResourceServiceComponentTest {
 
         assertThat(dir.resolve("folder1/").toString())
                 .as("Check that the URI of the parent is the correct URI")
-                .isEqualTo(parent2.getId());
+                .hasToString(parent2.getId());
 
         assertThat(parent2)
                 .as("Check that the ParentResource has been instantiated correctly")
@@ -256,7 +256,7 @@ class HadoopResourceServiceComponentTest {
 
         assertThat(dir.toString())
                 .as("Check that the URI returned is the correct parent id")
-                .isEqualTo(parent3.getId());
+                .hasToString(parent3.getId());
 
         assertThat(parent3)
                 .as("Check that the ParentResource has been instantiated correctly")
@@ -269,7 +269,7 @@ class HadoopResourceServiceComponentTest {
 
         assertThat(root.toString())
                 .as("Check the URI of the root is correct")
-                .isEqualTo(parent4.getId());
+                .hasToString(parent4.getId());
     }
 
     private Configuration createConf(final String fsDefaultName) {
