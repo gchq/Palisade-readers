@@ -49,7 +49,7 @@ public class S3ResourceBuilder extends ResourceBuilder {
     }
 
     private static ParentResource parentResource(final String prefix) {
-        if (prefix.equals(S3_PREFIX + ":")) {
+        if ((S3_PREFIX + ":").equals(prefix)) {
             return new SystemResource()
                     .id(prefix);
         } else {

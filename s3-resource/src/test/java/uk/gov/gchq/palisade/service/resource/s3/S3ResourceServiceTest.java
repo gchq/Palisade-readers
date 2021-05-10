@@ -65,6 +65,8 @@ class S3ResourceServiceTest {
     @Autowired
     S3Properties s3Properties;
 
+    S3Resource s3Resource;
+
     private S3Client s3;
 
     @BeforeAll
@@ -74,6 +76,13 @@ class S3ResourceServiceTest {
                 .endpointOverride(localStackContainer.getEndpointOverride(S3))
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localStackContainer.getAccessKey(), localStackContainer.getSecretKey())))
                 .build();
+
+        s3Resource = ((S3Resource) ((LeafResource) ResourceBuilder.create("s3:/testFile.txt"))
+                .type("text")
+                .serialisedFormat("text/plain; charset=UTF-8")
+                .connectionDetail(new SimpleConnectionDetail().serviceName(s3Properties.getConnectionDetail())))
+                .userMetadata(Map.of(s3Properties.getPalisadeTypeHeader(), "text"))
+                .systemMetadata(Map.of());
     }
 
     @AfterAll
@@ -126,13 +135,6 @@ class S3ResourceServiceTest {
     @Order(3)
     void testGetResourcesById() {
         // Add a test file to the bucket
-        var s3Resource = ((S3Resource) ((LeafResource) ResourceBuilder.create("s3:/testFile.txt"))
-                .type("text")
-                .serialisedFormat("text/plain; charset=UTF-8")
-                .connectionDetail(new SimpleConnectionDetail().serviceName(s3Properties.getConnectionDetail())))
-                .userMetadata(Map.of(s3Properties.getPalisadeTypeHeader(), "text"))
-                .systemMetadata(Map.of());
-
         s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE)
                 .bucket(s3Properties.getBucketName())
                 .metadata(Map.of(s3Properties.getUserMetaPrefix() + s3Properties.getPalisadeTypeHeader(), "text"))
@@ -147,42 +149,36 @@ class S3ResourceServiceTest {
 
         assertThat(resultList)
                 .as("Check that when I get a resource by its Id, the correct resource is returned")
+                .hasSize(1)
                 .first()
                 .usingRecursiveComparison()
                 .ignoringFields("systemMetadata")
                 .isEqualTo(s3Resource);
     }
 
-//    @Test
-//    @Order(3)
-//    @Disabled
-//    void testV2() throws IOException {
-//        // AWS SDK v2
-//
-//        var bucketName = s3Properties.getBucketName();
-//        var lOR = ListObjectsRequest.builder().bucket(bucketName).build();
-//        assertThat(s3.listObjects(lOR).contents())
-//                .as("Check one object is returned")
-//                .asList()
-//                .hasSize(1)
-//                .first()
-//                .extracting("key")
-//                .isEqualTo(testFile.toString());
-//
-//        // Getting the object using the getObjectRequest saves the file to the tempPathDirectory
-//        var gOR = GetObjectRequest.builder().bucket(bucketName).key(testFile.toString()).build();
-//        s3.getObject(gOR, tempPathDirectory.resolve("testFileFromS3.txt"));
-//
-//        // Get the file from the temp directory
-//        var fileFromS3 = FileUtils.getFile(String.valueOf(tempPathDirectory), "testFileFromS3.txt");
-//
-//        assertThat(Files.readAllLines(fileFromS3.toPath()))
-//                .as("Check that the lines are the same and the file has not been modified")
-//                .isEqualTo(Files.readAllLines(testFile.toAbsolutePath()));
-//
-//        // Getting the object should throw an exception as it no longer exists
-//        var dOR = DeleteObjectRequest.builder().bucket(bucketName).key(testFile.toString()).build();
-//        s3.deleteObject(dOR);
-//        assertThrows(NoSuchKeyException.class, () -> s3.getObject(gOR), "Test should throw an exception");
-//    }
+    @Test
+    @Order(4)
+    void testGetResourcesByType() {
+        // Add a test file to the bucket
+        s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE)
+                .bucket(s3Properties.getBucketName())
+                .metadata(Map.of(s3Properties.getUserMetaPrefix() + s3Properties.getPalisadeTypeHeader(), "text"))
+                .key(URI.create(s3Resource.getId()).getSchemeSpecificPart()), RequestBody.fromString("Test Body"));
+
+        // Given an empty list
+        var resultList = new ArrayList<>();
+
+        // When getting the resource from the S3 Resource Service using the resources Id
+        var resourcesById = service.getResourcesByType(s3Resource.getType());
+        resourcesById.forEachRemaining(resultList::add);
+
+        assertThat(resultList)
+                .as("Check that when I get a resource by its Id, the correct resource is returned")
+                .hasSize(1)
+                .first()
+                .usingRecursiveComparison()
+                .ignoringFields("systemMetadata")
+                .isEqualTo(s3Resource);
+    }
+
 }

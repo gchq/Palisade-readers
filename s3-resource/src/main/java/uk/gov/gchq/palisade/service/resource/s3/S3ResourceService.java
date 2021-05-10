@@ -53,7 +53,7 @@ import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
 public class S3ResourceService implements ResourceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3ResourceService.class);
     private static final int PARALLELISM = 1;
-    private static final URI ROOT_URI = URI.create("s3");
+    private static final URI ROOT_URI = URI.create("s3:/");
 
     private final S3Properties properties;
     private final Materializer materialiser;
