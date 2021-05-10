@@ -44,7 +44,6 @@ import uk.gov.gchq.palisade.resource.ConnectionDetail;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.service.resource.stream.config.AkkaSystemConfig;
-import uk.gov.gchq.palisade.util.FileResourceBuilder;
 import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.io.IOException;
