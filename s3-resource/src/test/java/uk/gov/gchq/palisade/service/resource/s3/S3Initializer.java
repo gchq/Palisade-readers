@@ -63,7 +63,7 @@ public class S3Initializer implements ApplicationContextInitializer<Configurable
         var bucketKey = "s3.bucketName=";
         var bucketName = "something";
         var endpointKey = "alpakka.s3.endpoint-url=";
-        var endpointName = localStackContainer.getEndpointConfiguration(S3).getServiceEndpoint();
+        var endpointName = localStackContainer.getEndpointConfiguration(S3).getServiceEndpoint() + "/{bucket}";
 
         System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), localStackContainer.getAccessKey());
         System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), localStackContainer.getSecretKey());

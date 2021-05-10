@@ -53,6 +53,7 @@ alpakka.s3:
   # eg. endpoint-url = "http://{bucket}.s3minio.alpakka:9000"
   endpoint-url: https://{bucket}.amazonaws.com
 
+  path-style-access: false
   list-bucket-api-version: 2
 
   # Object keys are validated to NOT use sub-directory selection with `..` to improve security.

@@ -128,7 +128,7 @@ public class S3ResourceService implements ResourceService {
     }
 
     private Source<LeafResource, NotUsed> getResourceObjects(final URI resourceUri) {
-        return listBucketWithMetadata(resourceUri.toString())
+        return listBucketWithMetadata(resourceUri.getSchemeSpecificPart())
                 .map((Pair<ListBucketResultContents, ObjectMetadata> resourceMetaPair) -> {
                     // Create a uri of the format 's3:resource-key'
                     var fileUri = UriBuilder.create()
@@ -147,6 +147,8 @@ public class S3ResourceService implements ResourceService {
                     Map<String, String> systemMetadata = resourceMetaPair.second().headers().stream()
                             .filter(header -> !header.name().startsWith(properties.getUserMetaPrefix()))
                             .map(header -> Map.entry(header.name(), header.value()))
+                            .collect(Collectors.toSet())
+                            .stream()
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
                     // Build the S3Resource object

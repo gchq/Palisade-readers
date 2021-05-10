@@ -18,7 +18,9 @@ package uk.gov.gchq.palisade.service.resource.s3;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -37,13 +39,16 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 
 import uk.gov.gchq.palisade.service.resource.stream.config.AkkaSystemConfig;
 import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
@@ -68,7 +73,7 @@ class S3ResourceServiceTest {
 
     private S3Client s3;
 
-    @BeforeEach
+    @BeforeAll
     void setup() throws IOException {
         s3 = S3Client
                 .builder()
@@ -105,13 +110,15 @@ class S3ResourceServiceTest {
     @Test
     @Order(2)
     void testBucketExits() {
-        assertThat(s3.listBuckets().buckets())
+        var bucketsMatchingPropertiesBucketName = s3.listBuckets()
+                .buckets()
+                .stream()
+                .filter(b -> b.name().equals(s3Properties.getBucketName()))
+                .collect(Collectors.toList());
+        assertThat(bucketsMatchingPropertiesBucketName)
                 .as("Check one the bucket has been created in the Initializer")
                 .asList()
-                .hasSize(1)
-                .first()
-                .extracting("name")
-                .isEqualTo(s3Properties.getBucketName());
+                .hasSize(1);
 
         assertThat(service.bucketExists().toCompletableFuture().join())
                 .as("Check that the S3ResourceService knows the bucket: %s, exists", s3Properties.getBucketName())
@@ -123,9 +130,8 @@ class S3ResourceServiceTest {
     void testGetResourcesById() {
         // Add a test file to the bucket
         var s3ResourceId = "s3:/testFile.txt";
-        s3.putObject(b -> b.bucket(s3Properties.getBucketName()).key(s3ResourceId), RequestBody.fromString("Test Body"));
+        s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE).bucket(s3Properties.getBucketName()).key(URI.create(s3ResourceId).getSchemeSpecificPart()), RequestBody.fromString("Test Body"));
         var s3Resource = ((S3Resource) ResourceBuilder.create(s3ResourceId));
-
 
         // Given an empty list
         var resultList = new ArrayList<>();
