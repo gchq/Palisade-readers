@@ -42,16 +42,16 @@ public class S3ResourceBuilder extends ResourceBuilder {
         return String.join(S3_PATH_SEP, pathComponents);
     }
 
-    private static S3Resource fileResource(final String key) {
+    private static S3Resource s3ObjectResource(final String key) {
         return (S3Resource) new S3Resource()
                 .id(key)
                 .parent(parentResource(parentPrefix(key)));
     }
 
     private static ParentResource parentResource(final String prefix) {
-        if (prefix.isEmpty()) {
+        if (prefix.equals(S3_PREFIX + ":")) {
             return new SystemResource()
-                    .id("/");
+                    .id(prefix);
         } else {
             return new DirectoryResource()
                     .id(prefix)
@@ -61,7 +61,7 @@ public class S3ResourceBuilder extends ResourceBuilder {
 
     private static Resource s3Scheme(final URI uri) {
         // Things in S3 are only files, even if the PATH_SEP or prefixes makes it look like directories
-        return fileResource(uri.getSchemeSpecificPart());
+        return s3ObjectResource(uri.toString());
     }
 
 

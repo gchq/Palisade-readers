@@ -38,6 +38,9 @@ class S3ResourceBuilderTest {
         // Then
         assertThat(resource)
                 .isInstanceOf(S3Resource.class);
+        System.out.println(resource.toString());
+        assertThat(resource.getId())
+                .isEqualTo(resourceUri);
     }
 
     @Test
@@ -51,5 +54,7 @@ class S3ResourceBuilderTest {
         // Then
         assertThat(resource)
                 .isInstanceOf(FileResource.class);
+        assertThat(resource.getId())
+                .isEqualTo(resourceUri);
     }
 }
