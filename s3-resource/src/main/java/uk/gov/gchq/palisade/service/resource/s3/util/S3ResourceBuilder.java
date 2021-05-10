@@ -61,7 +61,7 @@ public class S3ResourceBuilder extends ResourceBuilder {
 
     private static Resource s3Scheme(final URI uri) {
         // Things in S3 are only files, even if the PATH_SEP or prefixes makes it look like directories
-        return fileResource(uri.getSchemeSpecificPart());
+        return fileResource(uri.toString());
     }
 
 

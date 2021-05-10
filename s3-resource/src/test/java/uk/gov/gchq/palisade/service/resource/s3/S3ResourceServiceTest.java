@@ -100,7 +100,7 @@ class S3ResourceServiceTest {
         s3.putObject(b -> b.bucket(s3Properties.getBucketName()).key(testFile.toString()), testFile);
 
         ConnectionDetail connectionDetail = new SimpleConnectionDetail().serviceName("s3-data-service");
-        resource1 = ((LeafResource) ResourceBuilder.create(testFile.toUri()))
+        resource1 = ((LeafResource) ResourceBuilder.create("s3:/testFile.txt"))
                 .type(TYPE_CLASSNAME)
                 .serialisedFormat(FORMAT_VALUE)
                 .connectionDetail(connectionDetail);

@@ -37,7 +37,10 @@ class S3ResourceBuilderTest {
 
         // Then
         assertThat(resource)
-                .isInstanceOf(S3Resource.class);
+                .as("Check that when building a resource with a s3 prefix, it is an instance of a S3Resource")
+                .isInstanceOf(S3Resource.class)
+                .extracting(Resource::getId)
+                .isEqualTo(resourceUri);
     }
 
     @Test
@@ -50,6 +53,9 @@ class S3ResourceBuilderTest {
 
         // Then
         assertThat(resource)
-                .isInstanceOf(FileResource.class);
+                .as("Check that when building a resource with a file prefix, it is an instance of a FileResource")
+                .isInstanceOf(FileResource.class)
+                .extracting(Resource::getId)
+                .isEqualTo(resourceUri);
     }
 }
