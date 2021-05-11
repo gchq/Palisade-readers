@@ -1,5 +1,4 @@
 uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
-+- com.google.code.gson:gson:jar:2.8.6:compile
 +- uk.gov.gchq.palisade:data-service:jar:0.5.0-SNAPSHOT:provided
 |  +- uk.gov.gchq.palisade:common:jar:0.5.0-SNAPSHOT:provided
 |  +- com.typesafe.akka:akka-stream_2.13:jar:2.6.10:provided
@@ -91,6 +90,7 @@ uk.gov.gchq.palisade:hadoop-reader:jar:0.5.0-SNAPSHOT
 |        |  \- io.netty:netty-codec:jar:4.1.50.Final:provided
 |        +- io.netty:netty-transport:jar:4.1.50.Final:provided
 |        \- io.projectreactor:reactor-core:jar:3.3.6.RELEASE:provided
++- com.google.code.gson:gson:jar:2.8.6:compile
 +- com.fasterxml.jackson.core:jackson-databind:jar:2.11.0:compile
 |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.11.0:compile
 |  \- com.fasterxml.jackson.core:jackson-core:jar:2.11.0:compile

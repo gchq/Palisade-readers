@@ -64,7 +64,7 @@ public class HadoopResourceDetails {
     }
 
     /**
-     * Adds a valid type and type class to a {@link Map} of supported types
+     * Adds a valid type and type class to a {@link Map} of supported types.
      *
      * @param type          A {@link String} value of the type that will be in the resource file name
      * @param classString   A {@link String} value of the fully qualified class of the type
@@ -99,7 +99,7 @@ public class HadoopResourceDetails {
     }
 
     /**
-     * Checks that the {@link URI} file name value matches a defined regex expression
+     * Checks that the {@link URI} file name value matches a defined regex expression.
      *
      * @param fileURI  the {@link URI} value of the file
      * @return          a {@link Boolean} value

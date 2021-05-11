@@ -41,6 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.ThreadLocalRandom;
@@ -54,7 +55,7 @@ import static java.util.Objects.requireNonNull;
  * An implementation of the ResourceService.
  * <p>
  * This service is for the retrieval of Resources only. Resources cannot be added via this service, they should be added
- * through the actual real filing system.
+ * to the backing hadoop filesystem.
  */
 
 public class HadoopResourceService implements ResourceService {
@@ -67,13 +68,13 @@ public class HadoopResourceService implements ResourceService {
     private Configuration config;
     private FileSystem fileSystem;
 
-    private List<ConnectionDetail> dataServices = new ArrayList<>();
+    private final List<ConnectionDetail> dataServices = new ArrayList<>();
 
     /**
-     * Creates a new {@link HadoopResourceService} object from a {@link Configuration} object
+     * Creates a new {@link HadoopResourceService} object from a {@link Configuration} object.
      *
-     * @param config        A Hadoop {@link Configuration} object
-     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
+     * @param config A Hadoop {@link Configuration} object
+     * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     public HadoopResourceService(final Configuration config) throws IOException {
         requireNonNull(config, "Hadoop Configuration");
@@ -82,7 +83,7 @@ public class HadoopResourceService implements ResourceService {
     }
 
     /**
-     * Creates a new {@link HadoopResourceService} object from a {@link Map} of {@link String}s
+     * Creates a new {@link HadoopResourceService} object from a {@link Map} of {@link String}s.
      *
      * @param conf A {@link Map} of {@link String}s used as the configuration
      * @throws IOException the {@link Exception} thrown when there is an issue creating a {@link HadoopResourceService} using the provided {@link Map} of {@link String}s.
@@ -111,7 +112,7 @@ public class HadoopResourceService implements ResourceService {
     /**
      * Get a list of resources based on a specific resource. This allows for the retrieval of the appropriate {@link
      * ConnectionDetail}s for a given resource. It may also be used to retrieve the details all the resources that are
-     * notionally children of another resource. For example, in a standard hierarchical filing system the files in a
+     * notionally children of another resource. For example, in a standard hierarchical filing system, the files in a
      * directory could be considered child resources and calling this method on the directory resource would fetch the
      * details on the contained files.
      *
@@ -181,11 +182,10 @@ public class HadoopResourceService implements ResourceService {
 
     /**
      * Informs Palisade about a specific resource that it may return to users. This lets Palisade clients request access
-     * to that resource and allows Palisade to provide policy controlled access to it via the other methods in this
-     * interface.
-     * This is not permitted by the HadoopResourceService, so will always return failure (false)
+     * to a resource and allows Palisade to provide policy controlled access to it via the other methods in this interface.
+     * This is not permitted by the HadoopResourceService, so it will always return failure (false).
      *
-     * @param leafResource         the resource that Palisade can manage access to
+     * @param leafResource the resource that Palisade can manage access to
      * @return whether or not the addResource call completed successfully, always false
      */
     @Override
@@ -196,7 +196,7 @@ public class HadoopResourceService implements ResourceService {
 
     private static <T> Iterator<T> wrapRemoteIterator(final RemoteIterator<T> remote) {
         return new Iterator<>() {
-            RemoteIterator<T> delegate = remote;
+            private final RemoteIterator<T> delegate = remote;
 
             @Override
             public boolean hasNext() {
@@ -211,9 +211,11 @@ public class HadoopResourceService implements ResourceService {
             public T next() {
                 try {
                     return delegate.next();
+                } catch (NoSuchElementException exception) {
+                    LOGGER.error("NoSuchElementException thrown with", exception);
+                    throw new NoSuchElementException();
                 } catch (IOException e) {
                     throw new IteratorException(e);
-
                 }
             }
         };
@@ -246,11 +248,11 @@ public class HadoopResourceService implements ResourceService {
     }
 
     /**
-     * Sets the {@link Configuration} and {@link FileSystem} values
+     * Sets the {@link Configuration} and {@link FileSystem} values.
      *
-     * @param conf          A Hadoop {@link Configuration} object
-     * @return              the current {@link HadoopResourceService} object
-     * @throws IOException  the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
+     * @param conf A Hadoop {@link Configuration} object
+     * @return the current {@link HadoopResourceService} object
+     * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
      */
     @Generated
     public HadoopResourceService conf(final Configuration conf) throws IOException {
@@ -261,10 +263,10 @@ public class HadoopResourceService implements ResourceService {
     }
 
     /**
-     * Adds a {@link ConnectionDetail} value to the {@link List} of data-services
+     * Adds a {@link ConnectionDetail} value to the {@link List} of Data Services.
      *
-     * @param detail    A {@link ConnectionDetail} object to be added
-     * @return          the current {@link HadoopResourceService} object
+     * @param detail A {@link ConnectionDetail} object to be added
+     * @return the current {@link HadoopResourceService} object
      */
     @Generated
     public HadoopResourceService addDataService(final ConnectionDetail detail) {
@@ -309,7 +311,7 @@ public class HadoopResourceService implements ResourceService {
         this.conf(conf);
     }
 
-    private Map<String, String> getPlainJobConfWithoutResolvingValues() {
+    private static Map<String, String> getPlainJobConfWithoutResolvingValues() {
         Map<String, String> plainMapWithoutResolvingValues = new HashMap<>();
         for (Entry<String, String> entry : new Configuration()) {
             plainMapWithoutResolvingValues.put(entry.getKey(), entry.getValue());

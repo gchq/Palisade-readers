@@ -1,9 +1,9 @@
 List of third-party dependencies grouped by their license type
 
 ### [Apache Software License 2.0](./licenses/apache_software_license_2.0.txt):
-* AWS SDK For Java ([com.amazonaws:aws-java-sdk:1.11.1000](https://aws.amazon.com/sdkforjava))
-* jackson-databind ([com.fasterxml.jackson.core:jackson-databind:2.10.4](http://github.com/FasterXML/jackson))
+* jackson-databind ([com.fasterxml.jackson.core:jackson-databind:2.11.0](http://github.com/FasterXML/jackson))
 * Gson ([com.google.code.gson:gson:2.8.6](https://github.com/google/gson/gson))
+* AWS SDK For Java ([com.amazonaws:aws-java-sdk:1.11.1000](https://aws.amazon.com/sdkforjava))
 * Apache Hadoop Common ([org.apache.hadoop:hadoop-common:3.2.1](no url defined))
 * AssertJ fluent assertions ([org.assertj:assertj-core:3.18.0](https://assertj.github.io/doc/assertj-core/))
 * JetBrains Java Annotations ([org.jetbrains:annotations:20.1.0](https://github.com/JetBrains/java-annotations))

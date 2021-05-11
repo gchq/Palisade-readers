@@ -51,8 +51,13 @@ class HadoopResourceServiceTest {
         LeafResource resource = service.addConnectionDetail(details);
 
         // Then
-        assertThat(resource.getConnectionDetail()).isEqualTo(dataService);
-        assertThat(resource).isEqualTo(details.getResource().connectionDetail(dataService));
+        assertThat(resource.getConnectionDetail())
+                .as("Check that the connection detail has been set correctly")
+                .isEqualTo(dataService);
+
+        assertThat(resource)
+                .as("Check that resource has been retrieved successfully")
+                .isEqualTo(details.getResource().connectionDetail(dataService));
     }
 
     @Test
@@ -65,6 +70,7 @@ class HadoopResourceServiceTest {
 
         // Then
         assertThat(success)
+                .as("Check that you cant add files to the HadoopResourceService")
                 .isFalse();
     }
 
