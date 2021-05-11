@@ -11,8 +11,8 @@ List of third-party dependencies grouped by their license type
 * spring-boot-starter-test ([org.springframework.boot:spring-boot-starter-test:2.3.1.RELEASE](https://spring.io/projects/spring-boot))
 * AWS SDK for Java ([software.amazon.awssdk:aws-sdk-java:2.16.44](https://aws.amazon.com/sdkforjava))
 * AWS Java SDK :: SDK Core ([software.amazon.awssdk:sdk-core:2.16.44](https://aws.amazon.com/sdkforjava))
-* data-service ([uk.gov.gchq.palisade:data-service:0.5.0-20210430.155226-167](no url defined))
-* resource-service ([uk.gov.gchq.palisade:resource-service:0.5.0-20210430.155452-164](https://github.com/gchq/Palisade-services/tree/develop/resource-service))
+* data-service ([uk.gov.gchq.palisade:data-service:0.5.0-SNAPSHOT](https://github.com/gchq/Palisade-services/tree/develop/data-service))
+* resource-service ([uk.gov.gchq.palisade:resource-service:0.5.0-SNAPSHOT](https://github.com/gchq/Palisade-services/tree/develop/resource-service))
 
 ### [Apache-2.0](./licenses/not recognised):
 * akka-stream-alpakka-s3 ([com.lightbend.akka:akka-stream-alpakka-s3_2.13:2.0.2](https://doc.akka.io/docs/alpakka/current))
