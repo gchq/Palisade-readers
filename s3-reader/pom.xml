@@ -94,6 +94,12 @@
             <version>${aws-sdk.version}</version>
         </dependency>
         <dependency>
+            <!-- AWS Protocol Core v2 -->
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>protocol-core</artifactId>
+            <version>${aws-sdk.version}</version>
+        </dependency>
+        <dependency>
             <!-- Json Dependency -->
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

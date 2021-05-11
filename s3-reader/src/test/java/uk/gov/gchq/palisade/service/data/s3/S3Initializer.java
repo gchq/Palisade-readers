@@ -71,24 +71,10 @@ public class S3Initializer implements ApplicationContextInitializer<Configurable
 
         TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context, endpointKey + endpointName, bucketKey + bucketName);
 
-/*
-        var s3Client = S3Client
-                .builder()
-                .endpointOverride(localStackContainer.getEndpointOverride(S3))
-                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localStackContainer.getAccessKey(), localStackContainer.getSecretKey())))
-                .region(Region.of(localStackContainer.getRegion()))
-                .build();
 
- */
 
 
     }
 
-    /*
-    @Generated
-    public static LocalStackContainer getLocalStackContainer() {
-        return localStackContainer;
-    }
 
-     */
 }
