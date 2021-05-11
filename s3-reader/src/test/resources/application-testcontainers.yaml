@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+alpakka.s3:
+  path-style-access: true
+
 # Substitute maven properties for testcontainers image names
 testcontainers:
   localstack.image: "@testcontainers.localstack.image@"
