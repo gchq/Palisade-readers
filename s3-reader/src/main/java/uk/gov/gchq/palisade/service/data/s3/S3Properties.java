@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.palisade.service.data.s3.config;
+
+package uk.gov.gchq.palisade.service.data.s3;
+
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -22,10 +24,11 @@ import uk.gov.gchq.palisade.Generated;
 @ConfigurationProperties(prefix = "s3")
 public class S3Properties {
     private String bucketName;
-    private String region;
-    ///  private String connectionDetail = "s3-data-service";
-    // private String palisadeTypeHeader = "x-pal-type";
-    //  private String userMetaPrefix = "x-amz-meta-";
+    private String connectionDetail = "s3-data-service";
+    private String palisadeTypeHeader = "x-pal-type";
+    private String userMetaPrefix = "x-amz-meta-";
+    public static final String S3_PREFIX = "s3";
+    public static final String S3_PATH_SEP = "/";
 
     @Generated
     public String getBucketName() {
@@ -38,14 +41,32 @@ public class S3Properties {
     }
 
     @Generated
-    public String getRegion() {
-        return region;
+    public String getConnectionDetail() {
+        return connectionDetail;
     }
 
     @Generated
-    public void setRegion(final String region) {
-        this.region = region;
+    public void setConnectionDetail(final String connectionDetail) {
+        this.connectionDetail = connectionDetail;
     }
 
+    @Generated
+    public String getPalisadeTypeHeader() {
+        return palisadeTypeHeader;
+    }
 
+    @Generated
+    public void setPalisadeTypeHeader(final String palisadeTypeHeader) {
+        this.palisadeTypeHeader = palisadeTypeHeader;
+    }
+
+    @Generated
+    public String getUserMetaPrefix() {
+        return userMetaPrefix;
+    }
+
+    @Generated
+    public void setUserMetaPrefix(final String userMetaPrefix) {
+        this.userMetaPrefix = userMetaPrefix;
+    }
 }

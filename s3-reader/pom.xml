@@ -28,110 +28,105 @@
 
     <!--  *********** Artifact ID ***********    -->
     <artifactId>s3-reader</artifactId>
-    <url>https://github.com/gchq/Palisade-readers/tree/develop/s3-reader</url>
+    <url>https://github.com/gchq/Palisade-readers/tree/develop/s3-resource</url>
     <!--  *********** Artifact ID ***********    -->
 
     <properties>
         <!-- Dependency versions -->
+        <scala.version>2.13</scala.version>
         <alpakka-s3.version>2.0.2</alpakka-s3.version>
-        <amazonaws-sdk.version>1.11.1000</amazonaws-sdk.version>
-        <aws-sdk.version>2.16.44</aws-sdk.version>
-        <jackson.version>2.10.4</jackson.version>
-        <logback.version>1.2.3</logback.version>
-
-        <!--double check to see if these are needed -->
-        <akka.version>2.6.10</akka.version>
-        <alpakka.version>2.1.0-M1</alpakka.version>
+        <aws.s3.v1.version>1.11.1016</aws.s3.v1.version>
+        <aws.s3.v2.version>2.16.60</aws.s3.v2.version>
 
         <!-- Test dependency versions -->
-        <springboot-test.version>2.3.1.RELEASE</springboot-test.version>
-        <testcontainers.version>1.15.3</testcontainers.version>
+        <localstack.version>1.15.3</localstack.version>
+
+        <!-- Testcontainers images -->
+        <testcontainers.localstack.image>localstack/localstack:0.12.9.1</testcontainers.localstack.image>
     </properties>
 
     <dependencies>
         <!--
-       ~ Palisade
-       -->
+        ~ Palisade
+        -->
         <dependency>
             <!-- Readers, Request & Response types -->
-            <groupId>uk.gov.gchq.palisade</groupId>
-            <artifactId>resource-service</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>uk.gov.gchq.palisade</groupId>
             <artifactId>data-service</artifactId>
             <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <version>2.2.6.RELEASE</version>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- Alpakka S3 dependency-->
+        <!-- Alpakka S3 dependency -->
         <dependency>
             <groupId>com.lightbend.akka</groupId>
-            <artifactId>akka-stream-alpakka-s3_2.13</artifactId>
+            <artifactId>akka-stream-alpakka-s3_${scala.version}</artifactId>
             <version>${alpakka-s3.version}</version>
-        </dependency>
-
-        <!--
-       ~ Amazon S3 Dependencies
-       -->
-        <dependency>
-            <!-- AWS SDK Java v2 -->
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>aws-sdk-java</artifactId>
-            <version>${aws-sdk.version}</version>
-        </dependency>
-        <dependency>
-            <!-- AWS SDK Core v2 -->
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>sdk-core</artifactId>
-            <version>${aws-sdk.version}</version>
-        </dependency>
-
-        <dependency>
-            <!-- Json Dependency -->
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <!-- Logging Dependency -->
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
         </dependency>
 
         <!--
         ~ Test Dependencies
         -->
         <dependency>
-            <!-- JUnit, Jupiter, SpringBootTest etc... -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>${springboot-test.version}</version>
+            <version>2.3.1.RELEASE</version>
             <scope>test</scope>
         </dependency>
-        <!--
-        ~ S3 TestContainers Dependencies
-         -->
         <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>${aws.s3.v1.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>${aws.s3.v2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- S3 TestContainers Dependency -->
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>${testcontainers.version}</version>
+            <version>${localstack.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${testcontainers.version}</version>
+            <version>${localstack.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <!-- Substitute maven properties in values.yaml -->
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/values.yaml</include>
+                </includes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/values.yaml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <!-- Substitute maven properties in tests yaml -->
+                <filtering>true</filtering>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*.yaml</include>
+                </includes>
+            </testResource>
+        </testResources>
+    </build>
+
 </project>

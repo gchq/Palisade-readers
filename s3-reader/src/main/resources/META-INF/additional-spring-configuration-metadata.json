@@ -1,19 +1,24 @@
 {
   "properties": [
     {
-      "name": "s3-resource-service.bucket-name",
+      "name": "s3-data-reader.bucket-name",
       "type": "java.lang.String",
-      "description": "Description for s3-resource-service.bucket-name."
+      "description": "Description for s3-data-reader.bucket-name."
     },
     {
-      "name": "s3-resource-service.region",
+      "name": "s3-data-reader.region",
       "type": "java.lang.String",
-      "description": "Description for s3-resource-service.region."
+      "description": "Description for s3-data-reader.region."
     },
     {
-      "name": "s3-resource-service.connection-detail",
+      "name": "s3-data-reader.connection-detail",
       "type": "java.lang.String",
-      "description": "Description for s3-resource-service.connection-detail."
+      "description": "Description for s3-data-reader.connection-detail."
+    },
+    {
+      "name": "s3-data-reader.palisade-type-header",
+      "type": "java.lang.String",
+      "description": "Description for s3-data-reader.palisade-type-header."
     }
   ]
 }
