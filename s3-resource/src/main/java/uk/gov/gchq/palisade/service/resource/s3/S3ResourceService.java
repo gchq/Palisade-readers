@@ -85,7 +85,7 @@ public class S3ResourceService implements ResourceService {
                 .runWith(StreamConverters.asJavaStream(), materialiser).iterator();
     }
 
-    public Source<LeafResource, NotUsed> getResourcesByIdSource(final String resourceId) {
+    private Source<LeafResource, NotUsed> getResourcesByIdSource(final String resourceId) {
         var resourceUri = URI.create(resourceId);
 
         if (!resourceUri.getScheme().equals(S3_PREFIX)) {
@@ -104,7 +104,7 @@ public class S3ResourceService implements ResourceService {
                 .runWith(StreamConverters.asJavaStream(), materialiser).iterator();
     }
 
-    public Source<LeafResource, NotUsed> getResourcesByTypeSource(final String type) {
+    private Source<LeafResource, NotUsed> getResourcesByTypeSource(final String type) {
         return getResourceObjects(ROOT_URI)
                 .filter(resource -> resource.getType().equals(type));
     }
@@ -116,7 +116,7 @@ public class S3ResourceService implements ResourceService {
                 .runWith(StreamConverters.asJavaStream(), materialiser).iterator();
     }
 
-    public Source<LeafResource, NotUsed> getResourcesBySerialisedFormatSource(final String serialisedFormat) {
+    private Source<LeafResource, NotUsed> getResourcesBySerialisedFormatSource(final String serialisedFormat) {
         return getResourceObjects(ROOT_URI)
                 .filter(resource -> resource.getSerialisedFormat().equals(serialisedFormat));
     }
@@ -152,9 +152,10 @@ public class S3ResourceService implements ResourceService {
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
                     // Build the S3Resource object
+                    var serialisedFormat = Optional.ofNullable(userMetadata.get(properties.getPalisadeFormatHeader())).orElseGet(resourceMetaPair.second().contentType()::get);
                     return ((S3Resource) ((LeafResource) ResourceBuilder.create(fileUri))
                             .type(userMetadata.get(properties.getPalisadeTypeHeader()))
-                            .serialisedFormat(resourceMetaPair.second().contentType().get())
+                            .serialisedFormat(serialisedFormat)
                             .connectionDetail(new SimpleConnectionDetail().serviceName(properties.getConnectionDetail())))
                             .userMetadata(userMetadata)
                             .systemMetadata(systemMetadata);

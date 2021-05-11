@@ -18,6 +18,7 @@ package uk.gov.gchq.palisade.service.resource.s3;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -65,7 +66,9 @@ class S3ResourceServiceTest {
     @Autowired
     S3Properties s3Properties;
 
-    S3Resource s3Resource;
+    S3Resource s3ResourceText;
+    S3Resource s3ResourceAvro;
+    S3Resource s3ResourceFormatText;
 
     private S3Client s3;
 
@@ -77,12 +80,53 @@ class S3ResourceServiceTest {
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localStackContainer.getAccessKey(), localStackContainer.getSecretKey())))
                 .build();
 
-        s3Resource = ((S3Resource) ((LeafResource) ResourceBuilder.create("s3:/testFile.txt"))
+        s3ResourceText = ((S3Resource) ((LeafResource) ResourceBuilder.create("s3:/testFile.txt"))
                 .type("text")
                 .serialisedFormat("text/plain; charset=UTF-8")
                 .connectionDetail(new SimpleConnectionDetail().serviceName(s3Properties.getConnectionDetail())))
-                .userMetadata(Map.of(s3Properties.getPalisadeTypeHeader(), "text"))
+                .userMetadata(Map.of(s3Properties.getPalisadeTypeHeader(), "text",
+                        s3Properties.getPalisadeFormatHeader(), "text/plain; charset=UTF-8"))
                 .systemMetadata(Map.of());
+
+        s3ResourceAvro = ((S3Resource) ((LeafResource) ResourceBuilder.create("s3:/testAvroFile.avro"))
+                .type("avro")
+                .serialisedFormat("avro/plain; charset=UTF-8")
+                .connectionDetail(new SimpleConnectionDetail().serviceName(s3Properties.getConnectionDetail())))
+                .userMetadata(Map.of(s3Properties.getPalisadeTypeHeader(), "avro",
+                        s3Properties.getPalisadeFormatHeader(), "avro/plain; charset=UTF-8"))
+                .systemMetadata(Map.of());
+
+        s3ResourceFormatText = ((S3Resource) ((LeafResource) ResourceBuilder.create("s3:/testFormatTextFile.txt"))
+                .type("text")
+                .serialisedFormat("randomFormat")
+                .connectionDetail(new SimpleConnectionDetail().serviceName(s3Properties.getConnectionDetail())))
+                .userMetadata(Map.of(s3Properties.getPalisadeTypeHeader(), "text",
+                        s3Properties.getPalisadeFormatHeader(), "randomFormat"))
+                .systemMetadata(Map.of());
+    }
+
+    @BeforeEach
+    void addFilesToBucket() {
+        // Add a test file to the bucket
+        s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE)
+                .bucket(s3Properties.getBucketName())
+                .metadata(Map.of(s3Properties.getUserMetaPrefix() + s3Properties.getPalisadeTypeHeader(), s3ResourceText.getType(),
+                        s3Properties.getUserMetaPrefix() + s3Properties.getPalisadeFormatHeader(), s3ResourceText.getSerialisedFormat()))
+                .key(URI.create(s3ResourceText.getId()).getSchemeSpecificPart()), RequestBody.fromString("Test Body"));
+
+        // Add an avro file to the bucket
+        s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE)
+                .bucket(s3Properties.getBucketName())
+                .metadata(Map.of(s3Properties.getUserMetaPrefix() + s3Properties.getPalisadeTypeHeader(), s3ResourceAvro.getType(),
+                        s3Properties.getUserMetaPrefix() + s3Properties.getPalisadeFormatHeader(), s3ResourceAvro.getSerialisedFormat()))
+                .key(URI.create(s3ResourceAvro.getId()).getSchemeSpecificPart()), RequestBody.fromString("Test Body"));
+
+        // Add a text file with a different serialised format to the bucket
+        s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE)
+                .bucket(s3Properties.getBucketName())
+                .metadata(Map.of(s3Properties.getUserMetaPrefix() + s3Properties.getPalisadeTypeHeader(), s3ResourceFormatText.getType(),
+                        s3Properties.getUserMetaPrefix() + s3Properties.getPalisadeFormatHeader(), s3ResourceFormatText.getSerialisedFormat()))
+                .key(URI.create(s3ResourceFormatText.getId()).getSchemeSpecificPart()), RequestBody.fromString("Test Body"));
     }
 
     @AfterAll
@@ -90,7 +134,7 @@ class S3ResourceServiceTest {
         // List all of the objects in the bucket and then delete each one
         var objectListing = s3.listObjects(builder -> builder.bucket(s3Properties.getBucketName()));
         for (var os : objectListing.contents()) {
-            LOGGER.info("Resource {}, is in the bucket", os.key());
+            LOGGER.debug("Resource {}, is in the bucket", os.key());
             s3.deleteObject(builder -> builder.bucket(s3Properties.getBucketName()).key(os.key()));
         }
 
@@ -134,17 +178,11 @@ class S3ResourceServiceTest {
     @Test
     @Order(3)
     void testGetResourcesById() {
-        // Add a test file to the bucket
-        s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE)
-                .bucket(s3Properties.getBucketName())
-                .metadata(Map.of(s3Properties.getUserMetaPrefix() + s3Properties.getPalisadeTypeHeader(), "text"))
-                .key(URI.create(s3Resource.getId()).getSchemeSpecificPart()), RequestBody.fromString("Test Body"));
-
         // Given an empty list
         var resultList = new ArrayList<>();
 
         // When getting the resource from the S3 Resource Service using the resources Id
-        var resourcesById = service.getResourcesById(s3Resource.getId());
+        var resourcesById = service.getResourcesById(s3ResourceText.getId());
         resourcesById.forEachRemaining(resultList::add);
 
         assertThat(resultList)
@@ -153,32 +191,45 @@ class S3ResourceServiceTest {
                 .first()
                 .usingRecursiveComparison()
                 .ignoringFields("systemMetadata")
-                .isEqualTo(s3Resource);
+                .isEqualTo(s3ResourceText);
     }
 
     @Test
     @Order(4)
     void testGetResourcesByType() {
-        // Add a test file to the bucket
-        s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE)
-                .bucket(s3Properties.getBucketName())
-                .metadata(Map.of(s3Properties.getUserMetaPrefix() + s3Properties.getPalisadeTypeHeader(), "text"))
-                .key(URI.create(s3Resource.getId()).getSchemeSpecificPart()), RequestBody.fromString("Test Body"));
-
         // Given an empty list
         var resultList = new ArrayList<>();
 
         // When getting the resource from the S3 Resource Service using the resources Id
-        var resourcesById = service.getResourcesByType(s3Resource.getType());
-        resourcesById.forEachRemaining(resultList::add);
+        var resourcesByType = service.getResourcesByType(s3ResourceAvro.getType());
+        resourcesByType.forEachRemaining(resultList::add);
 
         assertThat(resultList)
-                .as("Check that when I get a resource by its Id, the correct resource is returned")
+                .as("Check that when I get a resource by its type, the correct resource is returned")
                 .hasSize(1)
                 .first()
                 .usingRecursiveComparison()
                 .ignoringFields("systemMetadata")
-                .isEqualTo(s3Resource);
+                .isEqualTo(s3ResourceAvro);
+    }
+
+    @Test
+    @Order(5)
+    void testGetResourcesBySerialisedFormat() {
+        // Given an empty list
+        var resultList = new ArrayList<>();
+
+        // When getting the resource from the S3 Resource Service using the resources Id
+        var resourcesBySerialisedFormat = service.getResourcesBySerialisedFormat(s3ResourceFormatText.getSerialisedFormat());
+        resourcesBySerialisedFormat.forEachRemaining(resultList::add);
+
+        assertThat(resultList)
+                .as("Check that when I get a resource by its serialisedFormat, the correct resource is returned")
+                .hasSize(1)
+                .first()
+                .usingRecursiveComparison()
+                .ignoringFields("systemMetadata")
+                .isEqualTo(s3ResourceFormatText);
     }
 
 }

@@ -30,6 +30,9 @@ import java.util.LinkedList;
 import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PATH_SEP;
 import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
 
+/**
+ * Builds a S3Resource, by extending the {@link ResourceBuilder}
+ */
 public class S3ResourceBuilder extends ResourceBuilder {
 
     public S3ResourceBuilder() {
@@ -63,7 +66,6 @@ public class S3ResourceBuilder extends ResourceBuilder {
         // Things in S3 are only files, even if the PATH_SEP or prefixes makes it look like directories
         return s3ObjectResource(uri.toString());
     }
-
 
     @Override
     public Resource build(final URI resourceUri) {

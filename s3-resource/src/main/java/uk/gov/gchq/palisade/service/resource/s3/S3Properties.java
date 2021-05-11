@@ -21,14 +21,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import uk.gov.gchq.palisade.Generated;
 
+/**
+ * S3 Properties class, containing default information about resources added to S3.
+ */
 @ConfigurationProperties(prefix = "s3")
 public class S3Properties {
+    public static final String S3_PREFIX = "s3";
+    public static final String S3_PATH_SEP = "/";
     private String bucketName;
     private String connectionDetail = "s3-data-service";
     private String palisadeTypeHeader = "x-pal-type";
+    private String palisadeFormatHeader = "x-pal-format";
     private String userMetaPrefix = "x-amz-meta-";
-    public static final String S3_PREFIX = "s3";
-    public static final String S3_PATH_SEP = "/";
 
     @Generated
     public String getBucketName() {
@@ -58,6 +62,16 @@ public class S3Properties {
     @Generated
     public void setPalisadeTypeHeader(final String palisadeTypeHeader) {
         this.palisadeTypeHeader = palisadeTypeHeader;
+    }
+
+    @Generated
+    public String getPalisadeFormatHeader() {
+        return palisadeFormatHeader;
+    }
+
+    @Generated
+    public void setPalisadeFormatHeader(final String palisadeFormatHeader) {
+        this.palisadeFormatHeader = palisadeFormatHeader;
     }
 
     @Generated

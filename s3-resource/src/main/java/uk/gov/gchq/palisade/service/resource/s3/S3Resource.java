@@ -24,6 +24,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+/**
+ * A resource specific for S3, that extends a FileResource.
+ * If the resource prefix begins with "S3", then a S3Resource is created, which contains additional system and user sourced metadata
+ */
 public class S3Resource extends FileResource {
     private static final long serialVersionUID = 1L;
 
