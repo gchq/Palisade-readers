@@ -627,8 +627,8 @@ uk.gov.gchq.palisade:s3-resource:jar:0.5.0-SNAPSHOT
 |  +- software.amazon.awssdk:profiles:jar:2.16.44:compile
 |  +- org.slf4j:slf4j-api:jar:1.7.28:compile
 |  \- org.reactivestreams:reactive-streams:jar:1.0.2:compile
-+- com.fasterxml.jackson.core:jackson-databind:jar:2.10.4:compile
-|  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.10.4:compile
++- com.fasterxml.jackson.core:jackson-databind:jar:2.11.0:compile
+|  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.11.0:compile
 +- ch.qos.logback:logback-classic:jar:1.2.3:compile
 |  \- ch.qos.logback:logback-core:jar:1.2.3:compile
 +- org.jetbrains:annotations:jar:20.1.0:compile
