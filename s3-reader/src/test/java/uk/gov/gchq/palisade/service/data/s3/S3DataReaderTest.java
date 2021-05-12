@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package uk.gov.gchq.palisade.service.data.s3;
 
-
-import akka.actor.ActorSystem;
-import akka.stream.Materializer;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,106 +33,122 @@ import org.springframework.test.context.ContextConfiguration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 
 import uk.gov.gchq.palisade.resource.LeafResource;
-import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
-import uk.gov.gchq.palisade.resource.impl.SystemResource;
-import uk.gov.gchq.palisade.service.data.s3.config.AkkaSystemConfig;
+import uk.gov.gchq.palisade.service.data.stream.config.AkkaSystemConfig;
+import uk.gov.gchq.palisade.util.ResourceBuilder;
 
-import java.io.InputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
-import static uk.gov.gchq.palisade.service.data.s3.S3Initializer.localStackContainer;
+import static uk.gov.gchq.palisade.service.data.s3.S3Initializer.LOCALSTACK_CONTAINER;
 
 @SpringBootTest(classes = {S3Configuration.class, AkkaSystemConfig.class})
 @ContextConfiguration(initializers = {S3Initializer.class})
 @ActiveProfiles({"s3", "testcontainers"})
+@TestMethodOrder(OrderAnnotation.class)
+@TestInstance(Lifecycle.PER_CLASS)
 class S3DataReaderTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3DataReaderTest.class);
 
     @Autowired
-    private S3Properties s3Properties;
+    S3DataReader reader;
 
     @Autowired
-    private ActorSystem akkaActorSystem;
+    S3Properties s3Properties;
 
-    @Autowired
-    private Materializer akkaMaterialiser;
-    private String bucketName = "testbucketname";
-
-    private static String resourceId = "/test/resourceId";
-
-    private static LeafResource leafResource;
-
+    private S3Client s3;
 
     @BeforeAll
-    static void setup() {
-
-        var resourceType = "uk.gov.gchq.palisade.test.TestType";
-        var resourceFormat = "avro";
-        var dataServiceName = "test-data-service";
-        var resourceParent = "/test";
-        leafResource = new FileResource()
-                .id(resourceId)
-                .type(resourceType)
-                .serialisedFormat(resourceFormat)
-                .connectionDetail(new SimpleConnectionDetail().serviceName(dataServiceName))
-                .parent(new SystemResource().id(resourceParent));
-
-
-
-    }
-
-
-    @Test
-    void testContextLoads() {
-
-        assertThat(localStackContainer)
-                .as("Check that the LocalStackContainer has been started successfully")
-                .isNotNull();
-
-        assertThat(akkaActorSystem)
-                .as("Check that the ActorSystem bean has been created successfully")
-                .isNotNull();
-
-        assertThat(s3Properties)
-                .as("Check that the s3Properties has been created successfully")
-                .isNotNull();
-
-    }
-
-
-    @Test
-    public void testReadingS3Bucket() {
-
-        //gotta come up wit a better way
-        s3Properties.setBucketName(bucketName);
-
-
-        //using AWS and LocalStackContainer create and populate the S3 bucket
-
-        S3Client s3Client = S3Client
+    void setup() {
+        s3 = S3Client
                 .builder()
-                .endpointOverride(localStackContainer.getEndpointOverride(S3))
-                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localStackContainer.getAccessKey(), localStackContainer.getSecretKey())))
-                .region(Region.of(localStackContainer.getRegion()))
+                .endpointOverride(LOCALSTACK_CONTAINER.getEndpointOverride(S3))
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(LOCALSTACK_CONTAINER.getAccessKey(), LOCALSTACK_CONTAINER.getSecretKey())))
                 .build();
 
-        s3Client.createBucket(b -> b.bucket(bucketName));
-        s3Client.putObject(b -> b.bucket(bucketName).key(resourceId), RequestBody.fromBytes("Now is the time for all good men to come to aide of their country".getBytes()));
-
-        // use the S3DataReader to retrieve the data
-        // under the hood it is using Alpakka connector for S3 to retrieve the data
-
-        S3DataReader dataReader = new S3DataReader(s3Properties, akkaMaterialiser);
-        InputStream stream = dataReader.readRaw(leafResource);
-
-
     }
 
+    @AfterAll
+    void cleanup() {
+        // List all of the objects in the bucket and then delete each one
+        var objectListing = s3.listObjects(b -> b.bucket(s3Properties.getBucketName()));
+        for (var os : objectListing.contents()) {
+            LOGGER.info("Resource {}, is in the bucket", os.key());
+            s3.deleteObject(b -> b.bucket(s3Properties.getBucketName()).key(os.key()));
+        }
 
+        // Finally delete the bucket
+        s3.deleteBucket(b -> b.bucket(s3Properties.getBucketName()));
+    }
+
+    @Test
+    @Order(1)
+    void testAutowiring() {
+        assertThat(reader)
+                .as("Check that the service has been started successfully")
+                .isNotNull();
+
+        assertThat(LOCALSTACK_CONTAINER)
+                .as("Check that the localstack container has been started successfully")
+                .isNotNull();
+    }
+
+    @Test
+    @Order(2)
+    void testBucketExits() {
+        var bucketsMatchingPropertiesBucketName = s3.listBuckets()
+                .buckets()
+                .stream()
+                .filter(b -> b.name().equals(s3Properties.getBucketName()))
+                .collect(Collectors.toList());
+
+        assertThat(bucketsMatchingPropertiesBucketName)
+                .as("Check one the bucket has been created in the Initializer")
+                .asList()
+                .hasSize(1)
+                .extracting("name")
+                .containsOnly(s3Properties.getBucketName());
+
+        assertThat(reader.bucketExists().toCompletableFuture().join())
+                .as("Check that the S3ResourceService knows the bucket: %s, exists", s3Properties.getBucketName())
+                .isTrue();
+    }
+
+    @Test
+    @Order(3)
+    void readResource() throws IOException {
+        // We will add a test file to the bucket
+        var s3Resource = ((S3Resource) ((LeafResource) ResourceBuilder.create("s3:/testFile.txt"))
+                .type("text")
+                .serialisedFormat("text/plain; charset=UTF-8")
+                .connectionDetail(new SimpleConnectionDetail().serviceName(s3Properties.getConnectionDetail())))
+                .userMetadata(Map.of(s3Properties.getPalisadeTypeHeader(), "text"))
+                .systemMetadata(Map.of());
+
+        // Given we write some test data to an object in a bucket
+        String testData = "Test data";
+
+        s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE)
+                .bucket(s3Properties.getBucketName())
+                .metadata(Map.of(s3Properties.getUserMetaPrefix() + s3Properties.getPalisadeTypeHeader(), "text"))
+                .key(URI.create(s3Resource.getId()).getSchemeSpecificPart()), RequestBody.fromString(testData));
+
+        // When we read the data back
+        var inputStream = reader.readRaw(s3Resource);
+        var readData = new String(inputStream.readAllBytes());
+
+        // Then it is equal to what was written
+        assertThat(readData)
+                .as("Check that the data read from S3 is equal to what was written")
+                .isEqualTo(testData);
+    }
 }

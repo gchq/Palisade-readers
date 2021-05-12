@@ -24,57 +24,60 @@ import org.springframework.lang.NonNull;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.SdkSystemSetting;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 
 public class S3Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3Initializer.class);
 
-     static LocalStackContainer localStackContainer;
+    static LocalStackContainer LOCALSTACK_CONTAINER;
 
     @Override
     public void initialize(@NonNull final ConfigurableApplicationContext context) {
         final String fullImageName = context.getEnvironment().getRequiredProperty("testcontainers.localstack.image");
         final String defaultImageName = context.getEnvironment().getRequiredProperty("testcontainers.localstack.default.image");
 
-        LOGGER.info("fullImageName: " + fullImageName);
-        LOGGER.info("defaultImageName: " + defaultImageName);
-
         DockerImageName localstackImageName;
         try {
-            localstackImageName = DockerImageName.parse(defaultImageName);
-            //  .asCompatibleSubstituteFor(defaultImageName);
+            localstackImageName = DockerImageName.parse(fullImageName)
+                    .asCompatibleSubstituteFor(defaultImageName);
             localstackImageName.assertValid();
         } catch (IllegalArgumentException ex) {
             LOGGER.warn("Image name {} was invalid, falling back to default name {}", fullImageName, defaultImageName, ex);
             localstackImageName = DockerImageName.parse(defaultImageName);
         }
 
-        localStackContainer = new LocalStackContainer(localstackImageName)
+        LOCALSTACK_CONTAINER = new LocalStackContainer(localstackImageName)
                 .withServices(S3)
                 .withReuse(true);
 
         context.getEnvironment().setActiveProfiles("s3");
 
         // Start container
-        localStackContainer.start();
+        LOCALSTACK_CONTAINER.start();
 
         var bucketKey = "s3.bucketName=";
         var bucketName = "testBucketName";
         var endpointKey = "alpakka.s3.endpoint-url=";
-        var endpointName = localStackContainer.getEndpointConfiguration(S3).getServiceEndpoint();
+        var endpointName = LOCALSTACK_CONTAINER.getEndpointConfiguration(S3).getServiceEndpoint() + "/{bucket}";
 
-        System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), localStackContainer.getAccessKey());
-        System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), localStackContainer.getSecretKey());
-        System.setProperty(SdkSystemSetting.AWS_REGION.property(), localStackContainer.getRegion());
+        System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), LOCALSTACK_CONTAINER.getAccessKey());
+        System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), LOCALSTACK_CONTAINER.getSecretKey());
+        System.setProperty(SdkSystemSetting.AWS_REGION.property(), LOCALSTACK_CONTAINER.getRegion());
 
         TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context, endpointKey + endpointName, bucketKey + bucketName);
 
+        var s3Client = S3Client
+                .builder()
+                .endpointOverride(LOCALSTACK_CONTAINER.getEndpointOverride(S3))
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(LOCALSTACK_CONTAINER.getAccessKey(), LOCALSTACK_CONTAINER.getSecretKey())))
+                .build();
 
-
-
+        // Build the bucket
+        s3Client.createBucket(b -> b.bucket(bucketName));
     }
-
-
 }
