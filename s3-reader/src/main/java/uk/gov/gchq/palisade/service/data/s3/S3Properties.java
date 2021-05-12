@@ -28,7 +28,7 @@ public class S3Properties {
 
     //?region
     //TODO this is not the way to populate the bucket name, fix later
-    private String bucketName = "tempBucket";
+    private String bucketName;
     private String connectionDetail = "s3-data-service";
     private String palisadeTypeHeader = "x-pal-type";
     private String userMetaPrefix = "x-amz-meta-";
