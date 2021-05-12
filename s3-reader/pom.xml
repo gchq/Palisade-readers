@@ -35,12 +35,19 @@
         <!-- Dependency versions -->
         <scala.version>2.13</scala.version>
         <alpakka-s3.version>2.0.2</alpakka-s3.version>
-        <aws.s3.v1.version>1.11.1016</aws.s3.v1.version>
-        <aws.s3.v2.version>2.16.60</aws.s3.v2.version>
+        <amazonaws-sdk.version>1.11.1000</amazonaws-sdk.version>
+        <aws-sdk.version>2.16.44</aws-sdk.version>
+        <jackson.version>2.10.4</jackson.version>
+        <logback.version>1.2.3</logback.version>
 
         <!-- Test dependency versions -->
-        <springboot-test.version>2.3.1.RELEASE</springboot-test.version>
-        <testcontainers.version>1.15.3</testcontainers.version>
+        <spring-boot-testing.version>2.3.1.RELEASE</spring-boot-testing.version>
+        <junit.version>5.5.2</junit.version>
+        <assertj.version>3.18.0</assertj.version>
+        <localstack.version>1.15.3</localstack.version>
+
+        <!-- Testcontainers images -->
+        <testcontainers.localstack.image>localstack/localstack:0.12.9.1</testcontainers.localstack.image>
     </properties>
 
     <dependencies>
@@ -50,9 +57,6 @@
         <dependency>
             <!-- Readers, Request & Response types -->
             <groupId>uk.gov.gchq.palisade</groupId>
-            <artifactId>data-service</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>provided</scope>
             <artifactId>data-service</artifactId>
             <version>${project.parent.version}</version>
             <scope>provided</scope>
@@ -123,7 +127,7 @@
             <!-- JUnit, Jupiter, SpringBootTest etc... -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>${springboot-test.version}</version>
+            <version>${spring-boot-testing.version}</version>
             <scope>test</scope>
         </dependency>
         <!--
