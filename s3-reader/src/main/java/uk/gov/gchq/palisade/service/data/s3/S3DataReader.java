@@ -87,7 +87,7 @@ public class S3DataReader extends SerialisedDataReader {
     }
 
     /**
-     * Check if the bucket exists in S3
+     * Check if the bucket exists in S3.
      *
      * @return a {@link Boolean} true if access is granted to the bucket
      */
