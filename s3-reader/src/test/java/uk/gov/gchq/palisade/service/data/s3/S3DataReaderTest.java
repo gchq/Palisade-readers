@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
-import static uk.gov.gchq.palisade.service.data.s3.S3Initializer.LOCALSTACK_CONTAINER;
+import static uk.gov.gchq.palisade.service.data.s3.S3Initializer.localStackContainer;
 
 @SpringBootTest(classes = {S3Configuration.class, AkkaSystemConfig.class})
 @ContextConfiguration(initializers = {S3Initializer.class})
@@ -70,8 +70,8 @@ class S3DataReaderTest {
     void setup() {
         s3 = S3Client
                 .builder()
-                .endpointOverride(LOCALSTACK_CONTAINER.getEndpointOverride(S3))
-                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(LOCALSTACK_CONTAINER.getAccessKey(), LOCALSTACK_CONTAINER.getSecretKey())))
+                .endpointOverride(localStackContainer.getEndpointOverride(S3))
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localStackContainer.getAccessKey(), localStackContainer.getSecretKey())))
                 .build();
 
     }
@@ -96,7 +96,7 @@ class S3DataReaderTest {
                 .as("Check that the service has been started successfully")
                 .isNotNull();
 
-        assertThat(LOCALSTACK_CONTAINER)
+        assertThat(localStackContainer)
                 .as("Check that the localstack container has been started successfully")
                 .isNotNull();
     }

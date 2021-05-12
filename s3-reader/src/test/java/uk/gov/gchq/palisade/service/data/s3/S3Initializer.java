@@ -34,7 +34,7 @@ import static org.testcontainers.containers.localstack.LocalStackContainer.Servi
 public class S3Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3Initializer.class);
 
-    static LocalStackContainer LOCALSTACK_CONTAINER;
+    static LocalStackContainer localStackContainer;
 
     @Override
     public void initialize(@NonNull final ConfigurableApplicationContext context) {
@@ -51,30 +51,30 @@ public class S3Initializer implements ApplicationContextInitializer<Configurable
             localstackImageName = DockerImageName.parse(defaultImageName);
         }
 
-        LOCALSTACK_CONTAINER = new LocalStackContainer(localstackImageName)
+        localStackContainer = new LocalStackContainer(localstackImageName)
                 .withServices(S3)
                 .withReuse(true);
 
         context.getEnvironment().setActiveProfiles("s3");
 
         // Start container
-        LOCALSTACK_CONTAINER.start();
+        localStackContainer.start();
 
         var bucketKey = "s3.bucketName=";
         var bucketName = "testbucketname";
         var endpointKey = "alpakka.s3.endpoint-url=";
-        var endpointName = LOCALSTACK_CONTAINER.getEndpointConfiguration(S3).getServiceEndpoint() + "/{bucket}";
+        var endpointName = localStackContainer.getEndpointConfiguration(S3).getServiceEndpoint() + "/{bucket}";
 
-        System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), LOCALSTACK_CONTAINER.getAccessKey());
-        System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), LOCALSTACK_CONTAINER.getSecretKey());
-        System.setProperty(SdkSystemSetting.AWS_REGION.property(), LOCALSTACK_CONTAINER.getRegion());
+        System.setProperty(SdkSystemSetting.AWS_ACCESS_KEY_ID.property(), localStackContainer.getAccessKey());
+        System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), localStackContainer.getSecretKey());
+        System.setProperty(SdkSystemSetting.AWS_REGION.property(), localStackContainer.getRegion());
 
         TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context, endpointKey + endpointName, bucketKey + bucketName);
 
         var s3Client = S3Client
                 .builder()
-                .endpointOverride(LOCALSTACK_CONTAINER.getEndpointOverride(S3))
-                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(LOCALSTACK_CONTAINER.getAccessKey(), LOCALSTACK_CONTAINER.getSecretKey())))
+                .endpointOverride(localStackContainer.getEndpointOverride(S3))
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localStackContainer.getAccessKey(), localStackContainer.getSecretKey())))
                 .build();
 
         // Build the bucket
