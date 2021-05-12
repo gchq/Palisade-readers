@@ -11,11 +11,11 @@ uk.gov.gchq.palisade:hadoop-resource:jar:0.5.0-SNAPSHOT
 |  |  +- org.reactivestreams:reactive-streams:jar:1.0.3:provided
 |  |  \- com.typesafe:ssl-config-core_2.13:jar:0.4.2:provided
 |  |     \- org.scala-lang.modules:scala-parser-combinators_2.13:jar:1.1.2:provided
-|  +- com.typesafe.akka:akka-stream-kafka_2.13:jar:2.0.4:provided
-|  |  +- org.apache.kafka:kafka-clients:jar:2.4.1:provided
-|  |  |  +- com.github.luben:zstd-jni:jar:1.4.3-1:provided
-|  |  |  \- org.lz4:lz4-java:jar:1.6.0:provided
-|  |  \- org.scala-lang.modules:scala-collection-compat_2.13:jar:2.1.6:provided
+|  +- com.typesafe.akka:akka-stream-kafka_2.13:jar:2.1.0-M1:provided
+|  |  +- org.apache.kafka:kafka-clients:jar:2.6.0:provided
+|  |  |  +- com.github.luben:zstd-jni:jar:1.4.4-7:provided
+|  |  |  \- org.lz4:lz4-java:jar:1.7.1:provided
+|  |  \- org.scala-lang.modules:scala-collection-compat_2.13:jar:2.2.0:provided
 |  +- com.typesafe.akka:akka-slf4j_2.13:jar:2.6.10:provided
 |  +- com.typesafe.akka:akka-discovery_2.13:jar:2.6.10:provided
 |  +- org.springframework.boot:spring-boot-starter-actuator:jar:2.3.1.RELEASE:provided
@@ -76,9 +76,9 @@ uk.gov.gchq.palisade:hadoop-resource:jar:0.5.0-SNAPSHOT
 |           |  +- io.netty:netty-buffer:jar:4.1.50.Final:provided
 |           |  \- io.netty:netty-codec:jar:4.1.50.Final:provided
 |           \- io.netty:netty-transport:jar:4.1.50.Final:provided
-+- com.fasterxml.jackson.core:jackson-databind:jar:2.10.4:compile
-|  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.10.4:compile
-|  \- com.fasterxml.jackson.core:jackson-core:jar:2.10.4:compile
++- com.fasterxml.jackson.core:jackson-databind:jar:2.11.0:compile
+|  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.11.0:compile
+|  \- com.fasterxml.jackson.core:jackson-core:jar:2.11.0:compile
 +- org.apache.hadoop:hadoop-common:jar:3.2.1:compile
 |  +- org.apache.hadoop:hadoop-annotations:jar:3.2.1:compile
 |  +- com.google.guava:guava:jar:27.0-jre:compile

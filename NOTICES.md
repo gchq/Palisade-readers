@@ -1,7 +1,7 @@
 List of third-party dependencies grouped by their license type
 
 ### [Apache Software License 2.0](./licenses/apache_software_license_2.0.txt):
-* jackson-databind ([com.fasterxml.jackson.core:jackson-databind:2.10.4](http://github.com/FasterXML/jackson))
+* jackson-databind ([com.fasterxml.jackson.core:jackson-databind:2.11.0](http://github.com/FasterXML/jackson))
 * Gson ([com.google.code.gson:gson:2.8.6](https://github.com/google/gson/gson))
 * Apache Hadoop Common ([org.apache.hadoop:hadoop-common:3.2.1](no url defined))
 * AssertJ fluent assertions ([org.assertj:assertj-core:3.18.0](https://assertj.github.io/doc/assertj-core/))
