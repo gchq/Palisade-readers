@@ -16,17 +16,36 @@
 
 package uk.gov.gchq.palisade.service.data.s3;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import akka.stream.Materializer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import uk.gov.gchq.palisade.service.data.reader.DataReader;
+
+import java.io.IOException;
+
+import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
+
+/**
+ * A Spring S3 Configuration class, creating the necessary beans for an implementation of a {@link S3DataReader}
+ */
 @Configuration
+@EnableConfigurationProperties(S3Properties.class)
 public class S3Configuration {
 
+    /**
+     * Bean implementation for {@link S3DataReader}  and is used for setting s3Configurations and reading available resources.
+     *
+     * @param properties   a s3 configuration specifying the target cluster
+     * @param materialiser the materialiser
+     * @return a new instance of {@link S3DataReader}
+     * @throws IOException ioException
+     */
     @Bean
-    @ConditionalOnMissingBean
-    S3Properties getS3Properties() {
-        return new S3Properties();
+    @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = S3_PREFIX)
+    DataReader s3DataReader(final S3Properties properties, final Materializer materialiser) throws IOException {
+        return new S3DataReader(properties, materialiser);
     }
-
 }
