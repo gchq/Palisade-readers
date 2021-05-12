@@ -31,7 +31,7 @@ import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PATH_SEP;
 import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
 
 /**
- * Builds a S3Resource, by extending the {@link ResourceBuilder}
+ * Builds an S3Resource, by extending the {@link ResourceBuilder}
  */
 public class S3ResourceBuilder extends ResourceBuilder {
 

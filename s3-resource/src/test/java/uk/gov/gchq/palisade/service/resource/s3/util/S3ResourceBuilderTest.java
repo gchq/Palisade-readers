@@ -37,7 +37,7 @@ class S3ResourceBuilderTest {
 
         // Then
         assertThat(resource)
-                .as("Check that when building a resource with a s3 prefix, it is an instance of a S3Resource")
+                .as("Check that when building a resource with an s3 prefix, it is an instance of a S3Resource")
                 .isInstanceOf(S3Resource.class)
                 .as("Check that the resourceId is formatted correctly")
                 .extracting(Resource::getId)

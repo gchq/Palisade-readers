@@ -57,7 +57,6 @@ public class HadoopDataReader extends SerialisedDataReader {
         this.fs = FileSystem.get(configuration);
     }
 
-
     /**
      * Creates a new {@link HadoopDataReader} object.
      *
