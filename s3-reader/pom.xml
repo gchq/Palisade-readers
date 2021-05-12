@@ -33,16 +33,12 @@
 
     <properties>
         <!-- Dependency versions -->
+        <scala.version>2.13</scala.version>
         <alpakka-s3.version>2.0.2</alpakka-s3.version>
-        <amazonaws-sdk.version>1.11.1000</amazonaws-sdk.version>
-        <aws-sdk.version>2.16.44</aws-sdk.version>
-        <jackson.version>2.10.4</jackson.version>
-        <logback.version>1.2.3</logback.version>
+        <aws.s3.v1.version>1.11.1016</aws.s3.v1.version>
+        <aws.s3.v2.version>2.16.60</aws.s3.v2.version>
 
         <!-- Test dependency versions -->
-        <spring-boot-testing.version>2.3.1.RELEASE</spring-boot-testing.version>
-        <junit.version>5.5.2</junit.version>
-        <assertj.version>3.18.0</assertj.version>
         <localstack.version>1.15.3</localstack.version>
 
         <!-- Testcontainers images -->
@@ -51,8 +47,8 @@
 
     <dependencies>
         <!--
-       ~ Palisade
-       -->
+        ~ Palisade
+        -->
         <dependency>
             <!-- Readers, Request & Response types -->
             <groupId>uk.gov.gchq.palisade</groupId>
@@ -60,66 +56,32 @@
             <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Alpakka S3 dependency-->
+        <!-- Alpakka S3 dependency -->
         <dependency>
             <groupId>com.lightbend.akka</groupId>
-            <artifactId>akka-stream-alpakka-s3_2.13</artifactId>
+            <artifactId>akka-stream-alpakka-s3_${scala.version}</artifactId>
             <version>${alpakka-s3.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <version>2.2.6.RELEASE</version>
-            <optional>true</optional>
-        </dependency>
-        <!--
-       ~ Amazon S3 Dependencies
-       -->
-        <dependency>
-            <!-- AWS SDK v1 -->
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
-            <version>${amazonaws-sdk.version}</version>
-        </dependency>
-        <dependency>
-            <!-- AWS SDK v2 -->
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>aws-sdk-java</artifactId>
-            <version>${aws-sdk.version}</version>
-        </dependency>
-        <dependency>
-            <!-- AWS SDK Core v2 -->
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>sdk-core</artifactId>
-            <version>${aws-sdk.version}</version>
-        </dependency>
-        <dependency>
-            <!-- AWS Protocol Core v2 -->
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>protocol-core</artifactId>
-            <version>${aws-sdk.version}</version>
-        </dependency>
-        <dependency>
-            <!-- Json Dependency -->
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <!-- Logging Dependency -->
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
         </dependency>
 
         <!--
         ~ Test Dependencies
         -->
         <dependency>
-            <!-- JUnit, Jupiter, SpringBootTest etc... -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring-boot-testing.version}</version>
+            <version>2.3.1.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>${aws.s3.v1.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>${aws.s3.v2.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -136,4 +98,35 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <!-- Substitute maven properties in values.yaml -->
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/values.yaml</include>
+                </includes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/values.yaml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <!-- Substitute maven properties in tests yaml -->
+                <filtering>true</filtering>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*.yaml</include>
+                </includes>
+            </testResource>
+        </testResources>
+    </build>
+
 </project>
