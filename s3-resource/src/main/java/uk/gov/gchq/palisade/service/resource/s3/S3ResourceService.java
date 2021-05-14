@@ -179,8 +179,10 @@ public class S3ResourceService implements ResourceService {
     }
 
     /**
-     * Check the resource exists in the bucket by calling {@link S3#listBucket(String, Optional)}, if it does, then get the objectMetadata by calling {@link S3#getObjectMetadata(String, String)}.
-     * If the resource exists, return a pair of the contents and metadata, otherwise throw a Runtime Exception with the object key.
+     * Check the resource exists in the bucket by calling {@link S3#listBucket(String, Optional)}, if it does, then get
+     * the objectMetadata by calling {@link S3#getObjectMetadata(String, String)}.
+     * If the resource exists, return a pair of the contents and metadata, otherwise throw a Runtime Exception with the
+     * object key.
      *
      * @param resourcePrefix the (prefix of a) resource the user wants to request from S3
      * @return a Pair of the Contents and metadata for that resource

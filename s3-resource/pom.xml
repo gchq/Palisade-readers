@@ -36,15 +36,12 @@
         <alpakka-s3.version>2.0.2</alpakka-s3.version>
         <amazonaws-sdk.version>1.11.1000</amazonaws-sdk.version>
         <aws-sdk.version>2.16.44</aws-sdk.version>
-        <jackson.version>2.11.0</jackson.version>
-        <logback.version>1.2.3</logback.version>
-        <jetbrains-annotation.version>20.1.0</jetbrains-annotation.version>
+        <akka-stream-alpakka-parameter>s3_2.13</akka-stream-alpakka-parameter>
 
         <!-- Test dependency versions -->
         <spring-boot-testing.version>2.3.1.RELEASE</spring-boot-testing.version>
-        <junit.version>5.5.2</junit.version>
-        <assertj.version>3.18.0</assertj.version>
         <localstack.version>1.15.3</localstack.version>
+
         <!-- Testcontainers images -->
         <testcontainers.localstack.image>localstack/localstack:0.12.9.1</testcontainers.localstack.image>
     </properties>
@@ -63,7 +60,7 @@
         <!-- Alpakka S3 dependency-->
         <dependency>
             <groupId>com.lightbend.akka</groupId>
-            <artifactId>akka-stream-alpakka-s3_2.13</artifactId>
+            <artifactId>akka-stream-alpakka-${akka-stream-alpakka-parameter}</artifactId>
             <version>${alpakka-s3.version}</version>
         </dependency>
         <!--
@@ -74,38 +71,21 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk</artifactId>
             <version>${amazonaws-sdk.version}</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <!-- AWS SDK v2 -->
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>aws-sdk-java</artifactId>
             <version>${aws-sdk.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <!-- AWS SDK v2 -->
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>sdk-core</artifactId>
             <version>${aws-sdk.version}</version>
-        </dependency>
-
-        <dependency>
-            <!-- Json Dependency -->
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <!-- Logging Dependency -->
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-        <dependency>
-            <!-- JetBrains annotations Dependency -->
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>${jetbrains-annotation.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!--
@@ -121,12 +101,6 @@
             <!-- S3 TestContainers Dependency -->
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>${localstack.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
             <version>${localstack.version}</version>
             <scope>test</scope>
         </dependency>

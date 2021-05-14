@@ -229,7 +229,7 @@ class HadoopResourceServiceComponentTest {
 
         final ParentResource parent1 = fileResource.getParent();
 
-        assertThat(dir.resolve("folder1/folder2/").toString())
+        assertThat(dir.resolve("folder1/folder2/"))
                 .as("Check the URI of the parent is the correct URI")
                 .hasToString(parent1.getId());
 
@@ -241,7 +241,7 @@ class HadoopResourceServiceComponentTest {
         final ChildResource child = (ChildResource) parent1;
         final ParentResource parent2 = child.getParent();
 
-        assertThat(dir.resolve("folder1/").toString())
+        assertThat(dir.resolve("folder1/"))
                 .as("Check that the URI of the parent is the correct URI")
                 .hasToString(parent2.getId());
 
@@ -254,7 +254,7 @@ class HadoopResourceServiceComponentTest {
 
         final ParentResource parent3 = child2.getParent();
 
-        assertThat(dir.toString())
+        assertThat(dir)
                 .as("Check that the URI returned is the correct parent id")
                 .hasToString(parent3.getId());
 
@@ -267,7 +267,7 @@ class HadoopResourceServiceComponentTest {
         final ChildResource child3 = (ChildResource) parent3;
         final ParentResource parent4 = child3.getParent();
 
-        assertThat(root.toString())
+        assertThat(root)
                 .as("Check the URI of the root is correct")
                 .hasToString(parent4.getId());
     }

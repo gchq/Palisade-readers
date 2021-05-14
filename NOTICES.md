@@ -7,8 +7,6 @@ List of third-party dependencies grouped by their license type
 * akka-stream-alpakka-s3 ([com.lightbend.akka:akka-stream-alpakka-s3_2.13:2.0.2](https://doc.akka.io/docs/alpakka/current))
 * Apache Hadoop Common ([org.apache.hadoop:hadoop-common:3.2.1](no url defined))
 * AssertJ fluent assertions ([org.assertj:assertj-core:3.18.0](https://assertj.github.io/doc/assertj-core/))
-* JetBrains Java Annotations ([org.jetbrains:annotations:20.1.0](https://github.com/JetBrains/java-annotations))
-* Spring Boot Configuration Processor ([org.springframework.boot:spring-boot-configuration-processor:2.2.6.RELEASE](https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-tools/spring-boot-configuration-processor))
 * spring-boot-starter-test ([org.springframework.boot:spring-boot-starter-test:2.3.1.RELEASE](https://spring.io/projects/spring-boot))
 * AWS SDK for Java ([software.amazon.awssdk:aws-sdk-java:2.16.44](https://aws.amazon.com/sdkforjava))
 * AWS Java SDK :: SDK Core ([software.amazon.awssdk:sdk-core:2.16.44](https://aws.amazon.com/sdkforjava))
@@ -26,5 +24,4 @@ List of third-party dependencies grouped by their license type
 * Logback Classic Module ([ch.qos.logback:logback-classic:1.2.3](http://logback.qos.ch/logback-classic))
 
 ### [MIT License](./licenses/mit_license.html):
-* Testcontainers :: JUnit Jupiter Extension ([org.testcontainers:junit-jupiter:1.15.3](https://testcontainers.org))
 * Testcontainers :: Localstack ([org.testcontainers:localstack:1.15.3](https://testcontainers.org))
