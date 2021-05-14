@@ -34,9 +34,9 @@
     <properties>
         <!-- Dependency versions -->
         <alpakka-s3.version>2.0.2</alpakka-s3.version>
-        <amazonaws-sdk.version>1.11.1000</amazonaws-sdk.version>
-        <aws-sdk.version>2.16.44</aws-sdk.version>
         <akka-stream-alpakka-parameter>s3_2.13</akka-stream-alpakka-parameter>
+        <aws.s3.v1.version>1.11.1016</aws.s3.v1.version>
+        <aws.s3.v2.version>2.16.60</aws.s3.v2.version>
 
         <!-- Test dependency versions -->
         <spring-boot-testing.version>2.3.1.RELEASE</spring-boot-testing.version>
@@ -67,24 +67,15 @@
        ~ Amazon S3 Dependencies
        -->
         <dependency>
-            <!-- AWS SDK v1 -->
             <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
-            <version>${amazonaws-sdk.version}</version>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>${aws.s3.v1.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <!-- AWS SDK v2 -->
             <groupId>software.amazon.awssdk</groupId>
-            <artifactId>aws-sdk-java</artifactId>
-            <version>${aws-sdk.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <!-- AWS SDK v2 -->
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>sdk-core</artifactId>
-            <version>${aws-sdk.version}</version>
+            <artifactId>s3</artifactId>
+            <version>${aws.s3.v2.version}</version>
             <scope>test</scope>
         </dependency>
 
