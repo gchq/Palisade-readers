@@ -47,23 +47,6 @@ class S3ResourceBuilderTest {
     }
 
     @Test
-    void testResourceBuilderAcceptsFailsForAnInvalidScheme() {
-        // Given
-        String resourceUri = "invalid:/some/object";
-
-        // When
-        Resource resource = S3ResourceBuilder.create(resourceUri);
-
-        // Then
-        assertThat(resource)
-                .as("Check that when building a resource with a s3 prefix, it is an instance of a S3Resource")
-                .isInstanceOf(S3Resource.class)
-                .as("Check that the resourceId is formatted correctly")
-                .extracting(Resource::getId)
-                .isEqualTo(resourceUri);
-    }
-
-    @Test
     void testResourceBuilderAlsoAcceptsFileScheme() {
         // Given
         String resourceUri = "file:/some/object";
