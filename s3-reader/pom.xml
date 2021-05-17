@@ -33,16 +33,18 @@
 
     <properties>
         <!-- Dependency versions -->
-        <scala.version>2.13</scala.version>
         <alpakka-s3.version>2.0.2</alpakka-s3.version>
+        <akka-stream-alpakka-parameter>s3_2.13</akka-stream-alpakka-parameter>
         <aws.s3.v1.version>1.11.1016</aws.s3.v1.version>
         <aws.s3.v2.version>2.16.60</aws.s3.v2.version>
 
         <!-- Test dependency versions -->
+        <spring-boot-testing.version>2.3.1.RELEASE</spring-boot-testing.version>
         <localstack.version>1.15.3</localstack.version>
 
         <!-- Testcontainers images -->
         <testcontainers.localstack.image>localstack/localstack:0.12.9.1</testcontainers.localstack.image>
+
     </properties>
 
     <dependencies>
@@ -53,25 +55,18 @@
             <!-- Readers, Request & Response types -->
             <groupId>uk.gov.gchq.palisade</groupId>
             <artifactId>data-service</artifactId>
-            <version>${project.parent.version}</version>
+            <version>0.5.0-${services.revision}</version>
             <scope>provided</scope>
         </dependency>
         <!-- Alpakka S3 dependency -->
         <dependency>
             <groupId>com.lightbend.akka</groupId>
-            <artifactId>akka-stream-alpakka-s3_${scala.version}</artifactId>
+            <artifactId>akka-stream-alpakka-${akka-stream-alpakka-parameter}</artifactId>
             <version>${alpakka-s3.version}</version>
         </dependency>
-
         <!--
-        ~ Test Dependencies
+        ~ Amazon S3 Dependencies
         -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>2.3.1.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
@@ -84,16 +79,20 @@
             <version>${aws.s3.v2.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!--
+        ~ Test Dependencies
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring-boot-testing.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <!-- S3 TestContainers Dependency -->
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>${localstack.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
             <version>${localstack.version}</version>
             <scope>test</scope>
         </dependency>
