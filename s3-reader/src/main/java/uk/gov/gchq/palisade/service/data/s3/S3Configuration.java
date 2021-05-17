@@ -29,16 +29,16 @@ import java.io.IOException;
 import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
 
 /**
- * A Spring S3 Configuration class, creating the necessary beans for an implementation of a {@link S3DataReader}
+ * A Spring S3 Configuration class for creating the Spring Bean used to read resources from a S3 bucket.
  */
 @Configuration
 @EnableConfigurationProperties(S3Properties.class)
 public class S3Configuration {
 
     /**
-     * Bean implementation for {@link S3DataReader}  and is used for setting s3Configurations and reading available resources.
+     * Bean implementation for {@link S3DataReader} which is used for reading an available resources.
      *
-     * @param properties   a s3 configuration specifying the target cluster
+     * @param properties   a S3Properties specifying the target cluster
      * @param materialiser the materialiser
      * @return a new instance of {@link S3DataReader}
      * @throws IOException ioException

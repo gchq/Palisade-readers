@@ -22,12 +22,12 @@ import uk.gov.gchq.palisade.Generated;
 
 import java.util.Optional;
 
-
+/**
+ * Properties used in communicating with the AWS S3 Bucket.
+ */
 @ConfigurationProperties(prefix = "s3")
 public class S3Properties {
 
-    //?region
-    //TODO this is not the way to populate the bucket name, fix later
     private String bucketName;
     private String connectionDetail = "s3-data-service";
     private String palisadeTypeHeader = "x-pal-type";

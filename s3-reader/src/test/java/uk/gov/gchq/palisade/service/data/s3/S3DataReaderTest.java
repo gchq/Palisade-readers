@@ -48,13 +48,16 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
-import static uk.gov.gchq.palisade.service.data.s3.S3Initializer.localStackContainer;
+import static uk.gov.gchq.palisade.service.data.s3.S3Initialiser.localStackContainer;
 
 @SpringBootTest(classes = {S3Configuration.class, AkkaSystemConfig.class})
-@ContextConfiguration(initializers = {S3Initializer.class})
+@ContextConfiguration(initializers = {S3Initialiser.class})
 @ActiveProfiles({"s3", "testcontainers"})
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(Lifecycle.PER_CLASS)
+/**
+ * Contract tests for reading the data from a S3 Bucket.
+ */
 class S3DataReaderTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3DataReaderTest.class);
 

@@ -21,10 +21,12 @@ import org.junit.jupiter.api.Test;
 import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.service.data.s3.S3Resource;
-import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Tests for the {@link S3ResourceBuilder}.
+ */
 class S3ResourceBuilderTest {
 
     @Test
@@ -33,7 +35,24 @@ class S3ResourceBuilderTest {
         String resourceUri = "s3:/some/object";
 
         // When
-        Resource resource = ResourceBuilder.create(resourceUri);
+        Resource resource = S3ResourceBuilder.create(resourceUri);
+
+        // Then
+        assertThat(resource)
+                .as("Check that when building a resource with a s3 prefix, it is an instance of a S3Resource")
+                .isInstanceOf(S3Resource.class)
+                .as("Check that the resourceId is formatted correctly")
+                .extracting(Resource::getId)
+                .isEqualTo(resourceUri);
+    }
+
+    @Test
+    void testResourceBuilderAcceptsFailsForAnInvalidScheme() {
+        // Given
+        String resourceUri = "invalid:/some/object";
+
+        // When
+        Resource resource = S3ResourceBuilder.create(resourceUri);
 
         // Then
         assertThat(resource)
@@ -50,7 +69,7 @@ class S3ResourceBuilderTest {
         String resourceUri = "file:/some/object";
 
         // When
-        Resource resource = ResourceBuilder.create(resourceUri);
+        Resource resource = S3ResourceBuilder.create(resourceUri);
 
         // Then
         assertThat(resource)

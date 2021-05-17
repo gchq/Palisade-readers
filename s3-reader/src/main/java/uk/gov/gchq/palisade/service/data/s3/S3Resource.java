@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+/**
+ * AWS S3 {@code Resource}.
+ */
 public class S3Resource extends FileResource {
     private static final long serialVersionUID = 1L;
 
