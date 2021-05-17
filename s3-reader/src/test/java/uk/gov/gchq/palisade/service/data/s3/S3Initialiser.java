@@ -32,7 +32,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 
 /**
- * Initialiser used to set-up and create an simulated S3 environment suitable for testing.
+ * Initialiser used to create an simulated S3 environment suitable for testing.
  */
 public class S3Initialiser implements ApplicationContextInitializer<ConfigurableApplicationContext> {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3Initialiser.class);
@@ -62,7 +62,6 @@ public class S3Initialiser implements ApplicationContextInitializer<Configurable
 
         // Start container
         localStackContainer.start();
-
         var bucketKey = "s3.bucketName=";
         var bucketName = "testbucketname";
         var endpointKey = "alpakka.s3.endpoint-url=";

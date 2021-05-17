@@ -31,9 +31,9 @@ import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PATH_SEP;
 import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
 
 /**
- * Builder for {@link S3Resource}. Requires the URI for the for the S3 Resource. Creation of an instance of this class
- * is performed by using the {@code ResourceBuilder.create()} method with a String for a valid S3 URI. This will then
- * user this variant of the builder to return an instance of {@code S3Resource} for the specified Resource.
+ * Builder for {@link S3Resource}. Requires the URI for the S3 Resource. Use of this class is initiated by using the
+ * parent class's {@code ResourceBuilder.create()} static method with a String or URI for a valid S3 Resource. This will then
+ * prompt the {@code S3ResourceBuilder} to return an instance of {@code S3Resource} for the specified Resource.
  */
 public class S3ResourceBuilder extends ResourceBuilder {
 
@@ -71,7 +71,7 @@ public class S3ResourceBuilder extends ResourceBuilder {
 
 
     @Override
-    public Resource build(final URI resourceUri) {
+    protected Resource build(final URI resourceUri) {
         return s3Scheme(resourceUri);
     }
 

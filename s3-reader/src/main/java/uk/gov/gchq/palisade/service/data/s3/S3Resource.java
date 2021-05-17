@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
- * AWS S3 {@code Resource}.
+ * AWS S3 {@code Resource}. Defines the information that uniquely identifies the S3 Resource.
  */
 public class S3Resource extends FileResource {
     private static final long serialVersionUID = 1L;

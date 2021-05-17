@@ -40,9 +40,9 @@ import java.util.concurrent.CompletionStage;
 import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
 
 /**
- * An implementation of the {@code DataReader} interface.  It will provide an {@code InputStream} of data corresponding to the resource as specified by the {@code LeafResource}.
- * This  is for the retrieval of Resources only. Resources cannot be added via this Service, they should be added
- * through S3.
+ * An implementation of the {@code DataReader} interface. It will provide an {@code InputStream} of data corresponding
+ * to the resource as specified by the {@code LeafResource} in a S3 Bucket. This class is for the retrieval of Resources
+ * only. Resources cannot be added via this Service.
  */
 public class S3DataReader extends SerialisedDataReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3DataReader.class);
@@ -52,11 +52,10 @@ public class S3DataReader extends SerialisedDataReader {
     private final Materializer materialiser;
 
     /**
-     * Constructor for the S3DataReader, taking in S3Properties and a Materializer.  It will validate the connection as
-     * well as the existence of the S3 bucket.
+     * Constructor
      *
-     * @param properties   S3Properties, containing bucketName, connection detail and headers.
-     * @param materialiser The Materializer is responsible for turning a stream blueprint into a running stream.
+     * @param properties   contains bucketName, connection detail and headers.
+     * @param materialiser is responsible for turning a stream blueprint into a running stream.
      * @throws IOException if there was an exception thrown when checking if the bucket exists
      */
     public S3DataReader(final S3Properties properties, final Materializer materialiser) throws IOException {

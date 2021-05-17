@@ -29,7 +29,7 @@ import java.io.IOException;
 import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
 
 /**
- * A Spring S3 Configuration class for creating the Spring Bean used to read resources from a S3 bucket.
+ * A Spring Configuration class for creating a Spring Bean needed in reading the content of a S3 bucket.
  */
 @Configuration
 @EnableConfigurationProperties(S3Properties.class)

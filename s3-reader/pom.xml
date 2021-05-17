@@ -64,25 +64,25 @@
             <artifactId>akka-stream-alpakka-${akka-stream-alpakka-parameter}</artifactId>
             <version>${alpakka-s3.version}</version>
         </dependency>
+
+
         <!--
-        ~ Amazon S3 Dependencies
+        ~ Test Dependencies
         -->
         <dependency>
+            <!-- AWS v1 dependency -->
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>${aws.s3.v1.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
+            <!-- AWS v2 dependency -->
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
             <version>${aws.s3.v2.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!--
-        ~ Test Dependencies
-        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
