@@ -71,9 +71,9 @@
         <sonar.language>java</sonar.language>
 
         <!-- SCM properties for Release plugin -->
-        <scm.url>https://github.com/gchq/Palisade-common</scm.url>
-        <scm.connection>scm:git:https://github.com/gchq/Palisade-common.git</scm.connection>
-        <scm.developer.connection>scm:git:https://github.com/gchq/Palisade-common.git</scm.developer.connection>
+        <scm.url>https://github.com/gchq/Palisade-readers</scm.url>
+        <scm.connection>scm:git:https://github.com/gchq/Palisade-readers.git</scm.connection>
+        <scm.developer.connection>scm:git:https://github.com/gchq/Palisade-readers.git</scm.developer.connection>
     </properties>
 
     <modules>
