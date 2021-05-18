@@ -37,9 +37,9 @@
         <scala.version>2.13</scala.version>
 
         <!-- Test dependency versions -->
-        <spring-boot-testing.version>2.3.1.RELEASE</spring-boot-testing.version>
         <aws.s3.v1.version>1.11.1016</aws.s3.v1.version>
         <aws.s3.v2.version>2.16.60</aws.s3.v2.version>
+        <spring-boot-testing.version>2.3.1.RELEASE</spring-boot-testing.version>
         <localstack.version>1.15.3</localstack.version>
 
         <!-- Testcontainers images -->

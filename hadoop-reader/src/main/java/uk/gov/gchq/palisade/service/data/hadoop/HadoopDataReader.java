@@ -48,7 +48,7 @@ public class HadoopDataReader extends SerialisedDataReader {
     private FileSystem fs;
 
     /**
-     * Create a new HadoopDataReader and with a file system configuration.
+     * Create a new HadoopDataReader and with a file system configuration
      *
      * @param configuration a hadoop configuration specifying the target cluster
      * @throws IOException the {@link Exception} thrown when there is an issue getting the {@link FileSystem} from the {@link Configuration}
@@ -178,7 +178,7 @@ public class HadoopDataReader extends SerialisedDataReader {
         return rtn;
     }
 
-    private Map<String, String> getPlainJobConfWithoutResolvingValues() {
+    private static Map<String, String> getPlainJobConfWithoutResolvingValues() {
         Map<String, String> plainMapWithoutResolvingValues = new HashMap<>();
         for (Entry<String, String> entry : new Configuration()) {
             plainMapWithoutResolvingValues.put(entry.getKey(), entry.getValue());

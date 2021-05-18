@@ -26,10 +26,29 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <developers>
+        <developer>
+            <name>PalisadeDevelopers</name>
+            <organization>GCHQ</organization>
+            <organizationUrl>https://github.com/gchq</organizationUrl>
+        </developer>
+    </developers>
+
     <!--  *********** Artifact ID ***********    -->
     <artifactId>hadoop-data-reader</artifactId>
     <url>https://github.com/gchq/Palisade-readers/tree/develop/hadoop-reader</url>
+    <name>GCHQ Palisade - Hadoop Data Reader</name>
+    <description>
+        Hadoop HDFS reader implementation for Palisade Data Service
+    </description>
     <!--  *********** Artifact ID ***********    -->
+
+    <scm>
+        <url>${scm.url}</url>
+        <connection>${scm.connection}</connection>
+        <developerConnection>${scm.developer.connection}</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <!-- Dependency versions -->
@@ -47,11 +66,6 @@
        ~ Palisade
        -->
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
-        </dependency>
-        <dependency>
             <!-- Readers, Request & Response types -->
             <groupId>uk.gov.gchq.palisade</groupId>
             <artifactId>data-service</artifactId>
@@ -59,11 +73,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-
         <dependency>
             <!-- Logging Dependency -->
             <groupId>ch.qos.logback</groupId>

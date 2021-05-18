@@ -33,8 +33,8 @@ import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
  * A Spring S3 Configuration class, creating the necessary beans for an implementation of a {@link S3ResourceService}
  */
 @Configuration
-@EnableConfigurationProperties(S3Properties.class)
 @ConditionalOnClass(ResourceService.class)
+@EnableConfigurationProperties(S3Properties.class)
 public class S3Configuration {
 
     /**
