@@ -34,11 +34,11 @@
     <properties>
         <!-- Dependency versions -->
         <alpakka-s3.version>2.0.2</alpakka-s3.version>
-        <akka-stream-alpakka-parameter>s3_2.13</akka-stream-alpakka-parameter>
-        <aws.s3.v1.version>1.11.1016</aws.s3.v1.version>
-        <aws.s3.v2.version>2.16.60</aws.s3.v2.version>
+        <scala.version>2.13</scala.version>
 
         <!-- Test dependency versions -->
+        <aws.s3.v1.version>1.11.1016</aws.s3.v1.version>
+        <aws.s3.v2.version>2.16.60</aws.s3.v2.version>
         <spring-boot-testing.version>2.3.1.RELEASE</spring-boot-testing.version>
         <localstack.version>1.15.3</localstack.version>
 
@@ -60,11 +60,12 @@
         <!-- Alpakka S3 dependency-->
         <dependency>
             <groupId>com.lightbend.akka</groupId>
-            <artifactId>akka-stream-alpakka-${akka-stream-alpakka-parameter}</artifactId>
+            <artifactId>akka-stream-alpakka-s3_${scala.version}</artifactId>
             <version>${alpakka-s3.version}</version>
         </dependency>
+
         <!--
-       ~ Amazon S3 Dependencies
+       ~ Test Dependencies
        -->
         <dependency>
             <groupId>com.amazonaws</groupId>
@@ -78,10 +79,6 @@
             <version>${aws.s3.v2.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!--
-       ~ Test Dependencies
-       -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
