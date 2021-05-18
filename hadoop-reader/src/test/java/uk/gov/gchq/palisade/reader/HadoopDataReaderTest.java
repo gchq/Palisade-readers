@@ -52,7 +52,7 @@ public class HadoopDataReaderTest {
     public TemporaryFolder testFolder = new TemporaryFolder(PathUtils.getTestDir(HadoopDataReaderTest.class));
 
     @Test
-    public void shouldReadTextFileWithNoRules() throws IOException {
+    public void testReadTextFileWithNoRules() throws IOException {
         // Given
         final File tmpFile = testFolder.newFile("file1.txt");
         FileUtils.write(tmpFile, "some data\nsome more data", StandardCharsets.UTF_8);
@@ -81,7 +81,7 @@ public class HadoopDataReaderTest {
     }
 
     @Test
-    public void shouldReadTextFileWithRules() throws IOException {
+    public void testReadTextFileWithRules() throws IOException {
         // Given
         final File tmpFile = testFolder.newFile("file1.txt");
         FileUtils.write(tmpFile, "some data\nsome more data", StandardCharsets.UTF_8);
@@ -111,7 +111,7 @@ public class HadoopDataReaderTest {
     }
 
     @Test
-    public void shouldDecodeURIEncodedFilesCorrectly() throws IOException {
+    public void testDecodeURIEncodedFilesCorrectly() throws IOException {
         // Given
         final File tmpFile = testFolder.newFile("fi le1.txt");
         FileUtils.write(tmpFile, "some data\nsome more data", StandardCharsets.UTF_8);
