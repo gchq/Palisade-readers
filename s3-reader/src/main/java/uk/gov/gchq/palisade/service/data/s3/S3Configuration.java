@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.data.hadoop;
+package uk.gov.gchq.palisade.service.data.s3;
 
+import akka.stream.Materializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,28 +27,27 @@ import uk.gov.gchq.palisade.service.data.reader.DataReader;
 
 import java.io.IOException;
 
+import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
+
 /**
- * A Spring Hadoop Configuration class, creating the necessary beans for a Hadoop data reader
+ * A Spring S3 Configuration class, creating the necessary beans for an implementation of a {@link S3DataReader}
  */
 @Configuration
+@EnableConfigurationProperties(S3Properties.class)
 @ConditionalOnClass(DataReader.class)
-public class HadoopConfiguration {
-
-    @Bean
-    org.apache.hadoop.conf.Configuration hadoopConfiguration() {
-        return new org.apache.hadoop.conf.Configuration();
-    }
+public class S3Configuration {
 
     /**
-     * Bean implementation for {@link HadoopDataReader} which extends {@link uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader} and is used for setting hadoopConfigurations and reading raw data.
+     * Bean implementation for {@link S3DataReader}  and is used for setting s3Configurations and reading available resources.
      *
-     * @param configuration a hadoop configuration specifying the target cluster
-     * @return a new instance of {@link HadoopDataReader}
+     * @param properties   a s3 configuration specifying the target cluster
+     * @param materialiser the materialiser
+     * @return a new instance of {@link S3DataReader}
      * @throws IOException ioException
      */
     @Bean
-    @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = "hadoop")
-    DataReader hadoopDataReader(final org.apache.hadoop.conf.Configuration configuration) throws IOException {
-        return new HadoopDataReader(configuration);
+    @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = S3_PREFIX)
+    DataReader s3DataReader(final S3Properties properties, final Materializer materialiser) throws IOException {
+        return new S3DataReader(properties, materialiser);
     }
 }

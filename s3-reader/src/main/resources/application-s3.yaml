@@ -1,0 +1,98 @@
+# Copyright 2018-2021 Crown Copyright
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+akka.actor:
+  enable-additional-serialization-bindings: off
+
+# See alpakka-s3 reference.conf at https://github.com/akka/alpakka/blob/master/s3/src/main/resources/reference.conf
+alpakka.s3:
+  # whether the buffer request chunks (up to 5MB each) to "memory" or "disk"
+  buffer: "memory"
+  aws:
+    # If this section is absent, the fallback behavior is
+    # to use the same configuration as if credentials.provider = default
+    credentials:
+      # default: as described in software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider docs,
+      # attempts to get the credentials from either:
+      #   - environment variables
+      #   - system properties
+      #   - credentials file
+      #   - EC2 credentials service
+      #   - IAM / metadata
+      provider: default
+
+    # If this section is absent, the fallback behavior is
+    # to use the same configuration as if region.provider = default
+    region:
+      # static credentials
+      #
+      # provider = static
+      #
+      # This can be set to the `id` value of any of the regions defined in
+      # software.amazon.awssdk.regions.Region
+      # default-region = ""
+
+      # default: as described in software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain docs,
+      # attempts to get the region from either:
+      #   - environment variables
+      #   - system properties
+      #   - profile file
+      #   - EC2 metadata
+      provider: default
+
+  # Custom endpoint url, used for alternate s3 implementations
+  # To enable virtual-host-style access with Alpakka S3 use the placeholder `{bucket}` in the URL
+  # eg. endpoint-url = "http://{bucket}.s3minio.alpakka:9000"
+  endpoint-url: https://{bucket}.amazonaws.com
+
+  path-style-access: false
+  list-bucket-api-version: 2
+
+  # Object keys are validated to NOT use sub-directory selection with `..` to improve security.
+  validate-object-key: true
+
+  # Default settings corresponding to automatic retry of requests in an S3 stream.
+  retry-settings:
+    # The maximum number of additional attempts (following transient errors) that will be made to process a given
+    # request before giving up.
+    max-retries: 3
+    # The minimum delay between request retries.
+    min-backoff: 200ms
+    # The maximum delay between request retries.
+    max-backoff: 10s
+    # Random jitter factor applied to retry delay calculation.
+    random-factor: 0.0
+
+  # Settings specific to S3 multipart uploads.
+  multipart-upload:
+    retry-settings:
+      # The maximum number of additional attempts (following transient errors) that will be made to process a given
+      # request before giving up.
+      max-retries: 3
+      # The minimum delay between request retries.
+      min-backoff: 200ms
+      # The maximum delay between request retries.
+      max-backoff: 10s
+      # Random jitter factor applied to retry delay calculation.
+      random-factor: 0.0
+
+data:
+  implementation: s3
+
+s3:
+  bucket-name: "test-bucket"
+  region: "EU_WEST_2"
+  connection-detail: "s3-data-service"
+  palisade-type-header: "x-pal-type"
+  user-meta-prefix: "x-amz-meta-"

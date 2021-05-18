@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.service.resource.hadoop;
+package uk.gov.gchq.palisade.service.resource.s3;
 
+import akka.stream.Materializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,28 +27,27 @@ import uk.gov.gchq.palisade.service.resource.service.ResourceService;
 
 import java.io.IOException;
 
+import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
+
 /**
- * A Spring Hadoop Configuration class, creating the necessary beans for an implementation of a {@link HadoopResourceService}
+ * A Spring S3 Configuration class, creating the necessary beans for an implementation of a {@link S3ResourceService}
  */
 @Configuration
+@EnableConfigurationProperties(S3Properties.class)
 @ConditionalOnClass(ResourceService.class)
-public class HadoopConfiguration {
-
-    @Bean
-    org.apache.hadoop.conf.Configuration hadoopConfiguration() {
-        return new org.apache.hadoop.conf.Configuration();
-    }
+public class S3Configuration {
 
     /**
-     * Bean implementation for {@link HadoopResourceService}  and is used for setting hadoopConfigurations and reading available resources.
+     * Bean implementation for {@link S3ResourceService}  and is used for setting s3Configurations and reading available resources.
      *
-     * @param configuration a hadoop configuration specifying the target cluster
-     * @return a new instance of {@link HadoopResourceService}
+     * @param properties   a s3 configuration specifying the target cluster
+     * @param materialiser the materialiser
+     * @return a new instance of {@link S3ResourceService}
      * @throws IOException ioException
      */
     @Bean
-    @ConditionalOnProperty(prefix = "data", name = "implementation", havingValue = "hadoop")
-    ResourceService hadoopResourceService(final org.apache.hadoop.conf.Configuration configuration) throws IOException {
-        return new HadoopResourceService(configuration);
+    @ConditionalOnProperty(prefix = "resource", name = "implementation", havingValue = S3_PREFIX)
+    ResourceService s3ResourceService(final S3Properties properties, final Materializer materialiser) throws IOException {
+        return new S3ResourceService(properties, materialiser);
     }
 }

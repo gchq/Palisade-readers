@@ -1,4 +1,4 @@
-uk.gov.gchq.palisade:hadoop-resource:jar:0.5.0-SNAPSHOT
+uk.gov.gchq.palisade:hadoop-resource-service:jar:0.5.0-SNAPSHOT
 +- com.google.code.gson:gson:jar:2.8.6:compile
 +- uk.gov.gchq.palisade:resource-service:jar:0.5.0-SNAPSHOT:provided
 |  +- uk.gov.gchq.palisade:common:jar:0.5.0-SNAPSHOT:provided

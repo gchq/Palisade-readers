@@ -27,7 +27,7 @@
     </parent>
 
     <!--  *********** Artifact ID ***********    -->
-    <artifactId>hadoop-resource</artifactId>
+    <artifactId>hadoop-resource-service</artifactId>
     <url>https://github.com/gchq/Palisade-readers/tree/develop/hadoop-resource</url>
     <!--  *********** Artifact ID ***********    -->
 

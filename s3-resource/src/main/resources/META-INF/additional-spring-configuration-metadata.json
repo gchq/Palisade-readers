@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "s3-resource-service.bucket-name",
+      "type": "java.lang.String",
+      "description": "Description for s3-resource-service.bucket-name."
+    },
+    {
+      "name": "s3-resource-service.region",
+      "type": "java.lang.String",
+      "description": "Description for s3-resource-service.region."
+    },
+    {
+      "name": "s3-resource-service.connection-detail",
+      "type": "java.lang.String",
+      "description": "Description for s3-resource-service.connection-detail."
+    },
+    {
+      "name": "s3-resource-service.palisade-type-header",
+      "type": "java.lang.String",
+      "description": "Description for s3-resource-service.palisade-type-header."
+    }
+  ]
+}
