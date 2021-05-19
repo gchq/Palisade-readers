@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-akka.actor:
-  enable-additional-serialization-bindings: off
-
 # See alpakka-s3 reference.conf at https://github.com/akka/alpakka/blob/master/s3/src/main/resources/reference.conf
 alpakka.s3:
   # whether the buffer request chunks (up to 5MB each) to "memory" or "disk"

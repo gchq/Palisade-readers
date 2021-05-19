@@ -26,14 +26,34 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <developers>
+        <developer>
+            <name>PalisadeDevelopers</name>
+            <organization>GCHQ</organization>
+            <organizationUrl>https://github.com/gchq</organizationUrl>
+        </developer>
+    </developers>
+
     <!--  *********** Artifact ID ***********    -->
     <artifactId>s3-resource-service</artifactId>
     <url>https://github.com/gchq/Palisade-readers/tree/develop/s3-resource</url>
+    <name>GCHQ Palisade - S3 Resource Service</name>
+    <description>
+        Implementation of the Resource Service backed by a (provider-agnostic) S3 bucket.
+    </description>
     <!--  *********** Artifact ID ***********    -->
+
+    <scm>
+        <url>${scm.url}</url>
+        <connection>${scm.connection}</connection>
+        <developerConnection>${scm.developer.connection}</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <!-- Dependency versions -->
-        <alpakka-s3.version>2.0.2</alpakka-s3.version>
+        <alpakka-s3.version>3.0.0</alpakka-s3.version>
+        <akka.version>2.6.10</akka.version>
         <scala.version>2.13</scala.version>
 
         <!-- Test dependency versions -->
@@ -138,21 +158,47 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>shade</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+                    <artifactSet>
+                        <includes>
+                            <include>*:*</include>
+                        </includes>
+                    </artifactSet>
+                    <relocations>
+                        <relocation>
+                            <!-- This should leave the external API surface of the uk.gov.gchq.palisade module untouched by shading -->
+                            <pattern>akka</pattern>
+                            <shadedPattern>shade.akka</shadedPattern>
+                            <includes>
+                                <include>akka.shapeless.**</include>
+                                <include>akka.parboiled2.**</include>
+                                <include>akka.macros.**</include>
+                                <include>akka.http.**</include>
+                            </includes>
+                        </relocation>
+                    </relocations>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>akka-http-version.conf</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
             </plugin>
         </plugins>
     </build>

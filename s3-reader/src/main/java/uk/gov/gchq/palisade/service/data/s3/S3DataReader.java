@@ -22,6 +22,7 @@ import akka.stream.Materializer;
 import akka.stream.alpakka.s3.BucketAccess;
 import akka.stream.alpakka.s3.ObjectMetadata;
 import akka.stream.alpakka.s3.javadsl.S3;
+import akka.stream.javadsl.Sink;
 import akka.stream.javadsl.Source;
 import akka.stream.javadsl.StreamConverters;
 import akka.util.ByteString;
@@ -92,7 +93,8 @@ public class S3DataReader extends SerialisedDataReader {
      * @return a {@link Boolean} true if access is granted to the bucket
      */
     public CompletionStage<Boolean> bucketExists() {
-        return S3.checkIfBucketExists(properties.getBucketName(), materialiser)
+        return S3.checkIfBucketExistsSource(properties.getBucketName())
+                .runWith(Sink.head(), materialiser)
                 .thenApply(bucketAccess -> bucketAccess.equals(BucketAccess.accessGranted()));
     }
 

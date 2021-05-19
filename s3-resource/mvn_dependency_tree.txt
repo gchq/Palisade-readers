@@ -62,7 +62,7 @@ uk.gov.gchq.palisade:s3-resource-service:jar:0.5.0-SNAPSHOT
 |        |  +- org.springframework:spring-oxm:jar:5.2.7.RELEASE:provided
 |        |  \- org.springframework:spring-context-support:jar:5.2.7.RELEASE:provided
 |        \- io.lettuce:lettuce-core:jar:5.3.1.RELEASE:provided
-+- com.lightbend.akka:akka-stream-alpakka-s3_2.13:jar:2.0.2:compile
++- com.lightbend.akka:akka-stream-alpakka-s3_2.13:jar:3.0.0:compile
 |  +- org.scala-lang:scala-library:jar:2.13.3:compile
 |  +- com.typesafe.akka:akka-http_2.13:jar:10.1.11:compile
 |  |  \- com.typesafe.akka:akka-http-core_2.13:jar:10.1.11:compile
@@ -71,9 +71,9 @@ uk.gov.gchq.palisade:s3-resource-service:jar:0.5.0-SNAPSHOT
 |  |  \- org.scala-lang.modules:scala-xml_2.13:jar:1.2.0:compile
 |  +- software.amazon.awssdk:auth:jar:2.11.14:compile
 |  |  \- software.amazon.eventstream:eventstream:jar:1.0.1:compile
-|  +- com.fasterxml.jackson.core:jackson-core:jar:2.10.5:compile
-|  \- com.fasterxml.jackson.core:jackson-databind:jar:2.10.5:compile
-|     \- com.fasterxml.jackson.core:jackson-annotations:jar:2.10.5:compile
+|  +- com.fasterxml.jackson.core:jackson-core:jar:2.11.4:compile
+|  \- com.fasterxml.jackson.core:jackson-databind:jar:2.11.4:compile
+|     \- com.fasterxml.jackson.core:jackson-annotations:jar:2.11.4:compile
 +- com.amazonaws:aws-java-sdk-s3:jar:1.11.1016:test
 |  +- com.amazonaws:aws-java-sdk-kms:jar:1.11.1016:test
 |  +- com.amazonaws:aws-java-sdk-core:jar:1.11.1016:test

@@ -29,12 +29,17 @@
     <!--  *********** Artifact ID ***********    -->
     <artifactId>s3-data-reader</artifactId>
     <url>https://github.com/gchq/Palisade-readers/tree/develop/s3-reader</url>
+    <name>GCHQ Palisade - S3 Data Reader</name>
+    <description>
+        Implementation of the Data Reader backed by a (provider-agnostic) S3 bucket.
+    </description>
     <!--  *********** Artifact ID ***********    -->
 
     <properties>
         <!-- Dependency versions -->
-        <alpakka-s3.version>2.0.2</alpakka-s3.version>
+        <alpakka-s3.version>3.0.0</alpakka-s3.version>
         <scala.version>2.13</scala.version>
+        <akka.version>2.6.10</akka.version>
 
         <!-- Test dependency versions -->
         <spring-boot-testing.version>2.3.1.RELEASE</spring-boot-testing.version>
@@ -69,6 +74,13 @@
                     <artifactId>akka-stream_${scala.version}</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <!-- Use services provided akka version -->
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-stream_${scala.version}</artifactId>
+            <version>${akka.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!--
@@ -138,21 +150,47 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>shade</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+                    <artifactSet>
+                        <includes>
+                            <include>*:*</include>
+                        </includes>
+                    </artifactSet>
+                    <relocations>
+                        <relocation>
+                            <!-- This should leave the uk.gov.gchq.palisade module entirely (incl. imports) untouched by shading -->
+                            <pattern>akka</pattern>
+                            <shadedPattern>shade.akka</shadedPattern>
+                            <includes>
+                                <include>akka.shapeless.**</include>
+                                <include>akka.parboiled2.**</include>
+                                <include>akka.macros.**</include>
+                                <include>akka.http.**</include>
+                            </includes>
+                        </relocation>
+                    </relocations>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>akka-http-version.conf</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
             </plugin>
         </plugins>
     </build>
