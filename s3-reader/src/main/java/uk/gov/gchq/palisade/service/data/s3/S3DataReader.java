@@ -28,6 +28,7 @@ import akka.util.ByteString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.service.data.exception.ForbiddenException;
 import uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader;
@@ -35,6 +36,7 @@ import uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Objects;
 import java.util.concurrent.CompletionStage;
 
 import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
@@ -68,6 +70,7 @@ public class S3DataReader extends SerialisedDataReader {
 
     @Override
     protected InputStream readRaw(final LeafResource resource) {
+        LOGGER.debug("Invoking readRaw with resource: {}", resource);
         return readRawSource(resource)
                 .runWith(StreamConverters.asInputStream(), materialiser);
     }
@@ -109,4 +112,26 @@ public class S3DataReader extends SerialisedDataReader {
                 .map(foundObject -> foundObject.orElseThrow(() -> new ForbiddenException("Resource access was denied, or the object no longer exists, for key " + resourceKey)));
     }
 
+    @Override
+    @Generated
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof S3DataReader)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        S3DataReader that = (S3DataReader) o;
+        return properties.equals(that.properties) &&
+                materialiser.equals(that.materialiser);
+    }
+
+    @Override
+    @Generated
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), properties, materialiser);
+    }
 }
