@@ -229,9 +229,9 @@ class HadoopResourceServiceComponentTest {
 
         final ParentResource parent1 = fileResource.getParent();
 
-        assertThat(dir.resolve("folder1/folder2/").toString())
+        assertThat(dir.resolve("folder1/folder2/"))
                 .as("Check the URI of the parent is the correct URI")
-                .isEqualTo(parent1.getId());
+                .hasToString(parent1.getId());
 
         assertThat(parent1)
                 .as("Check that the ParentResource has been instantiated correctly")
@@ -241,9 +241,9 @@ class HadoopResourceServiceComponentTest {
         final ChildResource child = (ChildResource) parent1;
         final ParentResource parent2 = child.getParent();
 
-        assertThat(dir.resolve("folder1/").toString())
+        assertThat(dir.resolve("folder1/"))
                 .as("Check that the URI of the parent is the correct URI")
-                .isEqualTo(parent2.getId());
+                .hasToString(parent2.getId());
 
         assertThat(parent2)
                 .as("Check that the ParentResource has been instantiated correctly")
@@ -254,9 +254,9 @@ class HadoopResourceServiceComponentTest {
 
         final ParentResource parent3 = child2.getParent();
 
-        assertThat(dir.toString())
+        assertThat(dir)
                 .as("Check that the URI returned is the correct parent id")
-                .isEqualTo(parent3.getId());
+                .hasToString(parent3.getId());
 
         assertThat(parent3)
                 .as("Check that the ParentResource has been instantiated correctly")
@@ -267,9 +267,9 @@ class HadoopResourceServiceComponentTest {
         final ChildResource child3 = (ChildResource) parent3;
         final ParentResource parent4 = child3.getParent();
 
-        assertThat(root.toString())
+        assertThat(root)
                 .as("Check the URI of the root is correct")
-                .isEqualTo(parent4.getId());
+                .hasToString(parent4.getId());
     }
 
     private Configuration createConf(final String fsDefaultName) {

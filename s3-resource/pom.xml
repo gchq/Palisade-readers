@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2018-2021 Crown Copyright
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>uk.gov.gchq.palisade</groupId>
+        <artifactId>readers</artifactId>
+        <version>0.5.0-${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <!--  *********** Artifact ID ***********    -->
+    <artifactId>s3-resource</artifactId>
+    <url>https://github.com/gchq/Palisade-readers/tree/develop/s3-resource</url>
+    <!--  *********** Artifact ID ***********    -->
+
+    <properties>
+        <!-- Dependency versions -->
+        <alpakka-s3.version>2.0.2</alpakka-s3.version>
+        <scala.version>2.13</scala.version>
+
+        <!-- Test dependency versions -->
+        <aws.s3.v1.version>1.11.1016</aws.s3.v1.version>
+        <aws.s3.v2.version>2.16.60</aws.s3.v2.version>
+        <spring-boot-testing.version>2.3.1.RELEASE</spring-boot-testing.version>
+        <localstack.version>1.15.3</localstack.version>
+
+        <!-- Testcontainers images -->
+        <testcontainers.localstack.image>localstack/localstack:0.12.9.1</testcontainers.localstack.image>
+    </properties>
+
+    <dependencies>
+        <!--
+       ~ Palisade
+       -->
+        <dependency>
+            <!-- Readers, Request & Response types -->
+            <groupId>uk.gov.gchq.palisade</groupId>
+            <artifactId>resource-service</artifactId>
+            <version>0.5.0-${services.revision}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Alpakka S3 dependency-->
+        <dependency>
+            <groupId>com.lightbend.akka</groupId>
+            <artifactId>akka-stream-alpakka-s3_${scala.version}</artifactId>
+            <version>${alpakka-s3.version}</version>
+        </dependency>
+
+        <!--
+       ~ Test Dependencies
+       -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>${aws.s3.v1.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>${aws.s3.v2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring-boot-testing.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- S3 TestContainers Dependency -->
+            <groupId>org.testcontainers</groupId>
+            <artifactId>localstack</artifactId>
+            <version>${localstack.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <!-- Substitute maven properties in values.yaml -->
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/values.yaml</include>
+                </includes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/values.yaml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <!-- Substitute maven properties in tests yaml -->
+                <filtering>true</filtering>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*.yaml</include>
+                </includes>
+            </testResource>
+        </testResources>
+    </build>
+
+</project>
