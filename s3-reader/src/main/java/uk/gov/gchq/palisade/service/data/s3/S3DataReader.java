@@ -46,7 +46,6 @@ import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
  * through S3.
  */
 public class S3DataReader extends SerialisedDataReader {
-    private static final Logger LOGGER = LoggerFactory.getLogger(S3DataReader.class);
     private static final int PARALLELISM = 1;
 
     private final S3Properties properties;

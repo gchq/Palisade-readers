@@ -88,8 +88,7 @@ resource:
   implementation: s3
 
 s3:
-  bucket-name: "test-bucket"
-  region: "EU_WEST_2"
+  bucket-name: null
   connection-detail: "s3-data-service"
   palisade-type-header: "x-pal-type"
   palisade-format-header: "x-pal-format"

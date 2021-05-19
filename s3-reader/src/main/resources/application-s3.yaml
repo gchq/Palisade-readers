@@ -88,8 +88,5 @@ data:
   implementation: s3
 
 s3:
-  bucket-name: "test-bucket"
+  bucket-name: null
   region: "EU_WEST_2"
-  connection-detail: "s3-data-service"
-  palisade-type-header: "x-pal-type"
-  user-meta-prefix: "x-amz-meta-"

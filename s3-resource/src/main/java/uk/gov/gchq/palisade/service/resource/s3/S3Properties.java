@@ -16,7 +16,6 @@
 
 package uk.gov.gchq.palisade.service.resource.s3;
 
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import uk.gov.gchq.palisade.Generated;

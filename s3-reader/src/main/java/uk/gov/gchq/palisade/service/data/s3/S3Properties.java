@@ -20,20 +20,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import uk.gov.gchq.palisade.Generated;
 
-import java.util.Optional;
-
-
+/**
+ * S3 Properties class, containing default information about resources added to S3.
+ */
 @ConfigurationProperties(prefix = "s3")
 public class S3Properties {
-
-    //?region
-    //TODO this is not the way to populate the bucket name, fix later
-    private String bucketName;
-    private String connectionDetail = "s3-data-service";
-    private String palisadeTypeHeader = "x-pal-type";
-    private String userMetaPrefix = "x-amz-meta-";
     public static final String S3_PREFIX = "s3";
     public static final String S3_PATH_SEP = "/";
+    private String bucketName;
 
     @Generated
     public String getBucketName() {
@@ -42,40 +36,6 @@ public class S3Properties {
 
     @Generated
     public void setBucketName(final String bucketName) {
-        this.bucketName = Optional.ofNullable(bucketName)
-                .orElseThrow(() -> new IllegalArgumentException("bucketName cannot be null"));
-    }
-
-    @Generated
-    public String getConnectionDetail() {
-        return connectionDetail;
-    }
-
-    @Generated
-    public void setConnectionDetail(final String connectionDetail) {
-        this.connectionDetail = Optional.ofNullable(connectionDetail)
-                .orElseThrow(() -> new IllegalArgumentException("connectionDetail cannot be null"));
-    }
-
-    @Generated
-    public String getPalisadeTypeHeader() {
-        return palisadeTypeHeader;
-    }
-
-    @Generated
-    public void setPalisadeTypeHeader(final String palisadeTypeHeader) {
-        this.palisadeTypeHeader = Optional.ofNullable(palisadeTypeHeader)
-                .orElseThrow(() -> new IllegalArgumentException("palisadeTypeHeader cannot be null"));
-    }
-
-    @Generated
-    public String getUserMetaPrefix() {
-        return userMetaPrefix;
-    }
-
-    @Generated
-    public void setUserMetaPrefix(final String userMetaPrefix) {
-        this.userMetaPrefix = Optional.ofNullable(userMetaPrefix)
-                .orElseThrow(() -> new IllegalArgumentException("userMetaPrefix cannot be null"));
+        this.bucketName = bucketName;
     }
 }
