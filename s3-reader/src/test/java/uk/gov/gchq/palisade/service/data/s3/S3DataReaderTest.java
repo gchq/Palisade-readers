@@ -127,7 +127,7 @@ class S3DataReaderTest {
 
     @Test
     @Order(3)
-    void readResource() throws IOException {
+    void testReadResource() throws IOException {
         // We will add a test file to the bucket
         var s3Resource = ((S3Resource) ((LeafResource) ResourceBuilder.create("s3:/testFile.txt"))
                 .type("text")
