@@ -28,12 +28,13 @@ import java.util.Optional;
 @ConfigurationProperties(prefix = "s3")
 public class S3Properties {
 
+    public static final String S3_PREFIX = "s3";
+    public static final String S3_PATH_SEP = "/";
     private String bucketName;
     private String connectionDetail = "s3-data-service";
     private String palisadeTypeHeader = "x-pal-type";
     private String userMetaPrefix = "x-amz-meta-";
-    public static final String S3_PREFIX = "s3";
-    public static final String S3_PATH_SEP = "/";
+
 
     @Generated
     public String getBucketName() {
