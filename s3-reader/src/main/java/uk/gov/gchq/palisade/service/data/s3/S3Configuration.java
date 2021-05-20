@@ -33,7 +33,7 @@ import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
  * A Spring Configuration class for creating a Spring Bean needed in reading the content of a S3 bucket.
  */
 @Configuration
-@ConditionalOnClass(S3DataReader.class)
+@ConditionalOnClass(DataReader.class)
 @EnableConfigurationProperties(S3Properties.class)
 public class S3Configuration {
 
