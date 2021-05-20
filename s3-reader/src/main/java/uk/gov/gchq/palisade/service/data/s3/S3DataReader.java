@@ -111,27 +111,4 @@ public class S3DataReader extends SerialisedDataReader {
         return S3.download(properties.getBucketName(), resourceKey)
                 .map(foundObject -> foundObject.orElseThrow(() -> new ForbiddenException("Resource access was denied, or the object no longer exists, for key " + resourceKey)));
     }
-
-    @Override
-    @Generated
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof S3DataReader)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        S3DataReader that = (S3DataReader) o;
-        return properties.equals(that.properties) &&
-                materialiser.equals(that.materialiser);
-    }
-
-    @Override
-    @Generated
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), properties, materialiser);
-    }
 }
