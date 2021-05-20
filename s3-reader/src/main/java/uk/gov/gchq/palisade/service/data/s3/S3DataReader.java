@@ -28,7 +28,6 @@ import akka.util.ByteString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.service.data.exception.ForbiddenException;
 import uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader;
@@ -36,7 +35,6 @@ import uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Objects;
 import java.util.concurrent.CompletionStage;
 
 import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
