@@ -51,9 +51,9 @@ alpakka.s3:
   # Custom endpoint url, used for alternate s3 implementations
   # To enable virtual-host-style access with Alpakka S3 use the placeholder `{bucket}` in the URL
   # eg. endpoint-url = "http://{bucket}.s3minio.alpakka:9000"
-  endpoint-url: https://{bucket}.amazonaws.com
+  # endpoint-url: https://{bucket}.amazonaws.com
 
-  path-style-access: false
+  # path-style-access: false
   list-bucket-api-version: 2
 
   # Object keys are validated to NOT use sub-directory selection with `..` to improve security.
@@ -88,7 +88,6 @@ resource:
   implementation: s3
 
 s3:
-  bucket-name: null
   connection-detail: "s3-data-service"
   palisade-type-header: "x-pal-type"
   palisade-format-header: "x-pal-format"

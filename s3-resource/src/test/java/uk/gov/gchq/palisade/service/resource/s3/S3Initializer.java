@@ -24,10 +24,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.SdkSystemSetting;
-import software.amazon.awssdk.services.s3.S3Client;
 
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 
@@ -60,8 +57,6 @@ public class S3Initializer implements ApplicationContextInitializer<Configurable
         // Start container
         localStackContainer.start();
 
-        var bucketKey = "s3.bucketName=";
-        var bucketName = "testbucket";
         var endpointKey = "alpakka.s3.endpoint-url=";
         var endpointName = localStackContainer.getEndpointConfiguration(S3).getServiceEndpoint() + "/{bucket}";
 
@@ -69,15 +64,6 @@ public class S3Initializer implements ApplicationContextInitializer<Configurable
         System.setProperty(SdkSystemSetting.AWS_SECRET_ACCESS_KEY.property(), localStackContainer.getSecretKey());
         System.setProperty(SdkSystemSetting.AWS_REGION.property(), localStackContainer.getRegion());
 
-        TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context, endpointKey + endpointName, bucketKey + bucketName);
-
-        var s3Client = S3Client
-                .builder()
-                .endpointOverride(localStackContainer.getEndpointOverride(S3))
-                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localStackContainer.getAccessKey(), localStackContainer.getSecretKey())))
-                .build();
-
-        // Build the bucket
-        s3Client.createBucket(b -> b.bucket(bucketName));
+        TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context, endpointKey + endpointName);
     }
 }

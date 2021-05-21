@@ -27,21 +27,10 @@ import uk.gov.gchq.palisade.Generated;
 public class S3Properties {
     public static final String S3_PREFIX = "s3";
     public static final String S3_PATH_SEP = "/";
-    private String bucketName;
     private String connectionDetail = "s3-data-service";
     private String palisadeTypeHeader = "x-pal-type";
     private String palisadeFormatHeader = "x-pal-format";
     private String userMetaPrefix = "x-amz-meta-";
-
-    @Generated
-    public String getBucketName() {
-        return bucketName;
-    }
-
-    @Generated
-    public void setBucketName(final String bucketName) {
-        this.bucketName = bucketName;
-    }
 
     @Generated
     public String getConnectionDetail() {

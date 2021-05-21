@@ -33,7 +33,6 @@ import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.service.data.exception.ForbiddenException;
 import uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.CompletionStage;
@@ -46,24 +45,18 @@ import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
  * through S3.
  */
 public class S3DataReader extends SerialisedDataReader {
+    private static final Logger LOGGER = LoggerFactory.getLogger(S3DataReader.class);
     private static final int PARALLELISM = 1;
 
-    private final S3Properties properties;
     private final Materializer materialiser;
 
     /**
      * Constructor for the S3ResourceService, taking in S3Properties and a materaliser
      *
-     * @param properties   S3Properties, containing bucketName, connection detail and headers.
      * @param materialiser The Materializer is responsible for turning a stream blueprint into a running stream.
-     * @throws IOException if there was an exception thrown when checking if the bucket exists
      */
-    public S3DataReader(final S3Properties properties, final Materializer materialiser) throws IOException {
-        this.properties = properties;
+    public S3DataReader(final Materializer materialiser) {
         this.materialiser = materialiser;
-
-        // Check bucket exists, or throw an exception
-        this.checkBucketExists();
     }
 
     @Override
@@ -82,32 +75,52 @@ public class S3DataReader extends SerialisedDataReader {
             ));
         }
 
-        return downloadObject(resourceUri.getSchemeSpecificPart())
+        String bucket = resourceUri.getHost();
+        // Strip leading slash
+        String resourcePrefix = resourceUri.getPath().substring(1);
+        LOGGER.debug("Using bucket '{}' and prefix '{}'", bucket, resourcePrefix);
+
+        return checkBucketAccessible(bucket)
+                .flatMapMerge(PARALLELISM, access -> downloadObject(bucket, resourcePrefix))
                 .flatMapMerge(PARALLELISM, Pair::first);
     }
 
     /**
      * Check if the bucket exists in S3.
      *
+     * @param bucketName the name of the bucket to check, using the configured credentials
      * @return a {@link Boolean} true if access is granted to the bucket
      */
-    public CompletionStage<Boolean> bucketExists() {
-        return S3.checkIfBucketExistsSource(properties.getBucketName())
-                .runWith(Sink.head(), materialiser)
-                .thenApply(bucketAccess -> bucketAccess.equals(BucketAccess.accessGranted()));
+    public CompletionStage<Boolean> canAccess(final String bucketName) {
+        return checkBucketAccessible(bucketName)
+                .map(accessible -> true)
+                .recover(IllegalArgumentException.class, () -> false)
+                .runWith(Sink.head(), materialiser);
     }
 
-    private void checkBucketExists() throws IOException {
-        if (this.bucketExists().toCompletableFuture().join().equals(false)) {
-            throw new IOException(String.format("Bucket %s does not exist", properties.getBucketName()));
-        }
+    private Source<BucketAccess, NotUsed> checkBucketAccessible(final String bucketName) {
+        return S3.checkIfBucketExistsSource(bucketName)
+                .map((BucketAccess access) -> {
+                    LOGGER.debug("Bucket existence check returned {}", access);
+                    if (access == BucketAccess.accessDenied()) {
+                        throw new IllegalArgumentException("Access denied to bucket " + bucketName);
+                    } else if (access == BucketAccess.notExists()) {
+                        throw new IllegalArgumentException("Could not find bucket " + bucketName);
+                    } else {
+                        return access;
+                    }
+                });
     }
 
-    private Source<Pair<Source<ByteString, NotUsed>, ObjectMetadata>, NotUsed> downloadObject(final String resourceKey) {
+    private Source<Pair<Source<ByteString, NotUsed>, ObjectMetadata>, NotUsed> downloadObject(final String bucketName, final String objectKey) {
         // List the contents of the bucket, and if the resource exists, get the metadata for the resource
         // Then return the value as a Pair of Contents and the resources metadata
-        return S3.download(properties.getBucketName(), resourceKey)
-                .map(foundObject -> foundObject.orElseThrow(() -> new ForbiddenException("Resource access was denied, or the object no longer exists, for key " + resourceKey)));
+        return S3.download(bucketName, objectKey)
+                .map(foundObject -> {
+                    LOGGER.debug("Download for object '{}' was present? {}", objectKey, foundObject.isPresent());
+                    foundObject.ifPresent(sourceMetaPair -> LOGGER.trace("Object metadata was '{}'", sourceMetaPair.second().headers()));
+                    return foundObject.orElseThrow(() -> new ForbiddenException("Resource access was denied, or the object no longer exists, for key " + objectKey));
+                });
     }
 
 }

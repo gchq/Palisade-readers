@@ -182,14 +182,12 @@
                             </includes>
                         </relocation>
                     </relocations>
-                    <filters>
-                        <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>akka-http-version.conf</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
+                    <transformers>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>reference.conf</resource>
+                        </transformer>
+                    </transformers>
                 </configuration>
             </plugin>
         </plugins>

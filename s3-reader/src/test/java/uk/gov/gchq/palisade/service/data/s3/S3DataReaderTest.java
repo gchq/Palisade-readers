@@ -16,7 +16,6 @@
 
 package uk.gov.gchq.palisade.service.data.s3;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -24,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -37,13 +34,13 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 
 import uk.gov.gchq.palisade.resource.LeafResource;
+import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.service.data.stream.config.AkkaSystemConfig;
 import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,13 +53,10 @@ import static uk.gov.gchq.palisade.service.data.s3.S3Initializer.localstackConta
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(Lifecycle.PER_CLASS)
 class S3DataReaderTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(S3DataReaderTest.class);
-
     @Autowired
     S3DataReader reader;
 
-    @Autowired
-    S3Properties s3Properties;
+    private static final String BUCKET_NAME = "test-bucket";
 
     private S3Client s3;
 
@@ -74,19 +68,8 @@ class S3DataReaderTest {
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localstackContainer.getAccessKey(), localstackContainer.getSecretKey())))
                 .build();
 
-    }
-
-    @AfterAll
-    void cleanup() {
-        // List all of the objects in the bucket and then delete each one
-        var objectListing = s3.listObjects(b -> b.bucket(s3Properties.getBucketName()));
-        for (var os : objectListing.contents()) {
-            LOGGER.info("Resource {}, is in the bucket", os.key());
-            s3.deleteObject(b -> b.bucket(s3Properties.getBucketName()).key(os.key()));
-        }
-
-        // Finally delete the bucket
-        s3.deleteBucket(b -> b.bucket(s3Properties.getBucketName()));
+        // Build the bucket
+        s3.createBucket(b -> b.bucket(BUCKET_NAME));
     }
 
     @Test
@@ -107,7 +90,7 @@ class S3DataReaderTest {
         var bucketsMatchingPropertiesBucketName = s3.listBuckets()
                 .buckets()
                 .stream()
-                .filter(b -> b.name().equals(s3Properties.getBucketName()))
+                .filter(b -> b.name().equals(BUCKET_NAME))
                 .collect(Collectors.toList());
 
         assertThat(bucketsMatchingPropertiesBucketName)
@@ -115,10 +98,10 @@ class S3DataReaderTest {
                 .asList()
                 .hasSize(1)
                 .extracting("name")
-                .containsOnly(s3Properties.getBucketName());
+                .containsOnly(BUCKET_NAME);
 
-        assertThat(reader.bucketExists().toCompletableFuture().join())
-                .as("Check that the S3ResourceService knows the bucket: %s, exists", s3Properties.getBucketName())
+        assertThat(reader.canAccess(BUCKET_NAME).toCompletableFuture().join())
+                .as("Check that the S3ResourceService knows the bucket: %s, exists", BUCKET_NAME)
                 .isTrue();
     }
 
@@ -126,20 +109,17 @@ class S3DataReaderTest {
     @Order(3)
     void readResource() throws IOException {
         // We will add a test file to the bucket
-        var s3Resource = ((S3Resource) ((LeafResource) ResourceBuilder.create("s3:/testFile.txt"))
+        var s3Resource = (FileResource) ((LeafResource) ResourceBuilder.create("s3://" + BUCKET_NAME + "/testFile.txt"))
                 .type("text")
                 .serialisedFormat("text/plain; charset=UTF-8")
-                .connectionDetail(new SimpleConnectionDetail().serviceName(s3Properties.getConnectionDetail())))
-                .userMetadata(Map.of(s3Properties.getPalisadeTypeHeader(), "text"))
-                .systemMetadata(Map.of());
+                .connectionDetail(new SimpleConnectionDetail().serviceName("s3-data-service"));
 
         // Given we write some test data to an object in a bucket
         String testData = "Test data";
 
         s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE)
-                .bucket(s3Properties.getBucketName())
-                .metadata(Map.of(s3Properties.getUserMetaPrefix() + s3Properties.getPalisadeTypeHeader(), "text"))
-                .key(URI.create(s3Resource.getId()).getSchemeSpecificPart()), RequestBody.fromString(testData));
+                .bucket(BUCKET_NAME)
+                .key(URI.create(s3Resource.getId()).getPath().substring(1)), RequestBody.fromString(testData));
 
         // When we read the data back
         var inputStream = reader.readRaw(s3Resource);

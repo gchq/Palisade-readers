@@ -25,8 +25,6 @@ import org.springframework.context.annotation.Configuration;
 
 import uk.gov.gchq.palisade.service.resource.service.ResourceService;
 
-import java.io.IOException;
-
 import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
 
 /**
@@ -43,11 +41,10 @@ public class S3Configuration {
      * @param properties   a s3 configuration specifying the target cluster
      * @param materialiser the materialiser
      * @return a new instance of {@link S3ResourceService}
-     * @throws IOException ioException
      */
     @Bean
     @ConditionalOnProperty(prefix = "resource", name = "implementation", havingValue = S3_PREFIX)
-    ResourceService s3ResourceService(final S3Properties properties, final Materializer materialiser) throws IOException {
+    ResourceService s3ResourceService(final S3Properties properties, final Materializer materialiser) {
         return new S3ResourceService(properties, materialiser);
     }
 }

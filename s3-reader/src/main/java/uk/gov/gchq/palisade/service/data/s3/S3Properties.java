@@ -16,26 +16,14 @@
 
 package uk.gov.gchq.palisade.service.data.s3;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import uk.gov.gchq.palisade.Generated;
-
 /**
  * S3 Properties class, containing default information about resources added to S3.
  */
-@ConfigurationProperties(prefix = "s3")
 public class S3Properties {
     public static final String S3_PREFIX = "s3";
     public static final String S3_PATH_SEP = "/";
-    private String bucketName;
 
-    @Generated
-    public String getBucketName() {
-        return bucketName;
-    }
-
-    @Generated
-    public void setBucketName(final String bucketName) {
-        this.bucketName = bucketName;
+    private S3Properties() {
+        // Hide constructor
     }
 }

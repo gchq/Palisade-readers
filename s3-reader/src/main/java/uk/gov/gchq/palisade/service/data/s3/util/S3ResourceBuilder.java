@@ -19,8 +19,8 @@ package uk.gov.gchq.palisade.service.data.s3.util;
 import uk.gov.gchq.palisade.resource.ParentResource;
 import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.resource.impl.DirectoryResource;
+import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SystemResource;
-import uk.gov.gchq.palisade.service.data.s3.S3Resource;
 import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import java.net.URI;
@@ -30,33 +30,44 @@ import java.util.LinkedList;
 import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PATH_SEP;
 import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
 
-
 public class S3ResourceBuilder extends ResourceBuilder {
 
     public S3ResourceBuilder() {
         // Empty Constructor
     }
 
+    private static LinkedList<String> splitComponents(final String path) {
+        return new LinkedList<>(Arrays.asList(path.split(S3_PATH_SEP)));
+    }
+
     private static String parentPrefix(final String path) {
-        var pathComponents = new LinkedList<>(Arrays.asList(path.split(S3_PATH_SEP)));
+        var pathComponents = splitComponents(path);
         pathComponents.removeLast();
         return String.join(S3_PATH_SEP, pathComponents);
     }
 
-    private static S3Resource s3ObjectResource(final String key) {
-        return (S3Resource) new S3Resource()
+    private static FileResource s3ObjectResource(final String key) {
+        return new FileResource()
                 .id(key)
                 .parent(parentResource(parentPrefix(key)));
     }
 
     private static ParentResource parentResource(final String prefix) {
-        if ((S3_PREFIX + ":").equals(prefix)) {
-            return new SystemResource()
-                    .id(prefix);
-        } else {
-            return new DirectoryResource()
-                    .id(prefix)
-                    .parent(parentResource(parentPrefix(prefix)));
+        switch (splitComponents(prefix).size()) {
+            case 0:
+            case 1:
+            case 2:
+                // If we got an invalid uri
+                throw new IllegalArgumentException("Prefix '" + prefix + "' was too short, expected at least 's3://<bucketname>'");
+            case 3:
+                // If we got 's3://bucket' - the root resource
+                return new SystemResource()
+                        .id(prefix);
+            default:
+                // If we got 's3://bucket/dir[/other-dir]' - a directory
+                return new DirectoryResource()
+                        .id(prefix)
+                        .parent(parentResource(parentPrefix(prefix)));
         }
     }
 
@@ -64,7 +75,6 @@ public class S3ResourceBuilder extends ResourceBuilder {
         // Things in S3 are only files, even if the PATH_SEP or prefixes makes it look like directories
         return s3ObjectResource(uri.toString());
     }
-
 
     @Override
     public Resource build(final URI resourceUri) {
