@@ -35,6 +35,7 @@ import uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
 import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
@@ -99,7 +100,7 @@ public class S3DataReader extends SerialisedDataReader {
                 .runWith(Sink.head(), materialiser);
     }
 
-    private Source<BucketAccess, NotUsed> checkBucketAccessible(final String bucketName) {
+    private static Source<BucketAccess, NotUsed> checkBucketAccessible(final String bucketName) {
         return S3.checkIfBucketExistsSource(bucketName)
                 .map((BucketAccess access) -> {
                     LOGGER.debug("Bucket existence check returned {}", access);
@@ -113,11 +114,11 @@ public class S3DataReader extends SerialisedDataReader {
                 });
     }
 
-    private Source<Pair<Source<ByteString, NotUsed>, ObjectMetadata>, NotUsed> downloadObject(final String bucketName, final String objectKey) {
+    private static Source<Pair<Source<ByteString, NotUsed>, ObjectMetadata>, NotUsed> downloadObject(final String bucketName, final String objectKey) {
         // List the contents of the bucket, and if the resource exists, get the metadata for the resource
         // Then return the value as a Pair of Contents and the resources metadata
         return S3.download(bucketName, objectKey)
-                .map(foundObject -> {
+                .map((Optional<Pair<Source<ByteString, NotUsed>, ObjectMetadata>> foundObject) -> {
                     LOGGER.debug("Download for object '{}' was present? {}", objectKey, foundObject.isPresent());
                     foundObject.ifPresent(sourceMetaPair -> LOGGER.trace("Object metadata was '{}'", sourceMetaPair.second().headers()));
                     return foundObject.orElseThrow(() -> new ForbiddenException("Resource access was denied, or the object no longer exists, for key " + objectKey));

@@ -26,16 +26,11 @@ import org.springframework.test.context.ContextConfiguration;
 
 import uk.gov.gchq.palisade.service.resource.ResourceApplication;
 import uk.gov.gchq.palisade.service.resource.s3.S3Initializer;
+import uk.gov.gchq.palisade.service.resource.s3.S3ResourceService;
 import uk.gov.gchq.palisade.service.resource.service.ResourceService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * An external requirement of the service is to connect to a pair of kafka topics.
- * The upstream "user" topic is written to by the user-service and read by this service.
- * The downstream "resource" topic is written to by this service and read by the policy-service.
- * Upon writing to the upstream topic, appropriate messages should be written to the downstream topic.
- */
 @SpringBootTest(
         classes = ResourceApplication.class,
         webEnvironment = WebEnvironment.RANDOM_PORT,
@@ -44,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(initializers = S3Initializer.class)
 @Import(KafkaTestConfiguration.class)
 @ActiveProfiles({"db-test", "akka-test", "test-resource", "testcontainers", "s3"})
-class KafkaContractTest {
+class ResourceServiceLoadingTest {
     @Autowired
     ResourceApplication app;
     @Autowired
@@ -52,6 +47,13 @@ class KafkaContractTest {
 
     @Test
     void testContextLoads() {
-        assertThat(app).isNotNull();
+        assertThat(app)
+                .as("The Resource Service should start with the S3ResourceService on the classpath")
+                .isNotNull();
+
+        assertThat(svc)
+                .as("The Resource Service should use the S3ResourceService implementation if specified in config")
+                .isNotNull()
+                .isInstanceOf(S3ResourceService.class);
     }
 }

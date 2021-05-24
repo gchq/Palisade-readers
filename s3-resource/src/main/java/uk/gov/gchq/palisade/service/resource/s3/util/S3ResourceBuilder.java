@@ -34,6 +34,10 @@ import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
  * Builds an S3Resource, by extending the {@link ResourceBuilder}
  */
 public class S3ResourceBuilder extends ResourceBuilder {
+    private static final int NO_COMPONENTS = 0;
+    private static final int SCHEME_ONLY = 1;
+    private static final int SCHEME_AND_PATH_NO_AUTH = 2;
+    private static final int SCHEME_AND_AUTH_ONLY = 3;
 
     public S3ResourceBuilder() {
         // Empty Constructor
@@ -57,12 +61,12 @@ public class S3ResourceBuilder extends ResourceBuilder {
 
     private static ParentResource parentResource(final String prefix) {
         switch (splitComponents(prefix).size()) {
-            case 0:
-            case 1:
-            case 2:
+            case NO_COMPONENTS:
+            case SCHEME_ONLY:
+            case SCHEME_AND_PATH_NO_AUTH:
                 // If we got an invalid uri
                 throw new IllegalArgumentException("Prefix '" + prefix + "' was too short, expected at least 's3://<bucketname>'");
-            case 3:
+            case SCHEME_AND_AUTH_ONLY:
                 // If we got 's3://bucket' - the root resource
                 return new SystemResource()
                         .id(prefix);

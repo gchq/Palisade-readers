@@ -54,7 +54,7 @@ import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
 public class S3ResourceService implements ResourceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3ResourceService.class);
     private static final int PARALLELISM = 1;
-    private static final URI ROOT_URI = URI.create(S3_PREFIX + ":/");
+    private static final URI ROOT_URI = URI.create(S3_PREFIX + "://default/");
     protected static final String USER_META_ATTR_PREFIX = "user/";
     protected static final String SYS_META_ATTR_PREFIX = "system/";
 
@@ -70,7 +70,6 @@ public class S3ResourceService implements ResourceService {
     public S3ResourceService(final S3Properties properties, final Materializer materialiser) {
         this.properties = properties;
         this.materialiser = materialiser;
-
     }
 
     @Override
@@ -101,26 +100,28 @@ public class S3ResourceService implements ResourceService {
 
     @Override
     public Iterator<LeafResource> getResourcesByType(final String type) {
-        LOGGER.warn("No efficient implementation of getResourcesBySerialisedFormat for {}", S3ResourceService.class.getSimpleName());
         return getResourcesByTypeSource(type)
                 .runWith(StreamConverters.asJavaStream(), materialiser)
                 .iterator();
     }
 
     private Source<LeafResource, NotUsed> getResourcesByTypeSource(final String type) {
+        LOGGER.warn("No efficient implementation of getResourcesByType for {}", S3ResourceService.class.getSimpleName());
+        LOGGER.warn("Querying all of {} and filtering by type", ROOT_URI);
         return getResourceObjects(ROOT_URI)
                 .filter(resource -> resource.getType().equals(type));
     }
 
     @Override
     public Iterator<LeafResource> getResourcesBySerialisedFormat(final String serialisedFormat) {
-        LOGGER.warn("No efficient implementation of getResourcesBySerialisedFormat for {}", S3ResourceService.class.getSimpleName());
         return getResourcesBySerialisedFormatSource(serialisedFormat)
                 .runWith(StreamConverters.asJavaStream(), materialiser)
                 .iterator();
     }
 
     private Source<LeafResource, NotUsed> getResourcesBySerialisedFormatSource(final String serialisedFormat) {
+        LOGGER.warn("No efficient implementation of getResourcesBySerialisedFormat for {}", S3ResourceService.class.getSimpleName());
+        LOGGER.warn("Querying all of {} and filtering by serialised format", ROOT_URI);
         return getResourceObjects(ROOT_URI)
                 .filter(resource -> resource.getSerialisedFormat().equals(serialisedFormat));
     }
@@ -195,7 +196,7 @@ public class S3ResourceService implements ResourceService {
                 .runWith(Sink.head(), materialiser);
     }
 
-    private Source<BucketAccess, NotUsed> checkBucketAccessible(final String bucketName) {
+    private static Source<BucketAccess, NotUsed> checkBucketAccessible(final String bucketName) {
         return S3.checkIfBucketExistsSource(bucketName)
                 .map((BucketAccess access) -> {
                     LOGGER.debug("Bucket existence check returned {}", access);
@@ -219,15 +220,15 @@ public class S3ResourceService implements ResourceService {
      * @param objectPrefix the (prefix of a) resource the user wants to request from S3
      * @return a Pair of the Contents and metadata for that resource
      */
-    private Source<Pair<ListBucketResultContents, ObjectMetadata>, NotUsed> listBucketWithMetadata(final String bucketName, final String objectPrefix) {
+    private static Source<Pair<ListBucketResultContents, ObjectMetadata>, NotUsed> listBucketWithMetadata(final String bucketName, final String objectPrefix) {
         // List the contents of the bucket, and if the resource exists, get the metadata for the resource
         // Then return the value as a Pair of Contents and the resources metadata
         LOGGER.debug("Listing bucket '{}' for object prefix '{}'", bucketName, objectPrefix);
         return S3.listBucket(bucketName, Optional.of(objectPrefix))
-                .flatMapMerge(PARALLELISM, bucketContents -> {
+                .flatMapMerge(PARALLELISM, (ListBucketResultContents bucketContents) -> {
                     LOGGER.debug("Getting metadata for object '{}'", bucketContents.getKey());
                     return S3.getObjectMetadata(bucketName, bucketContents.getKey())
-                            .map(objectMetadata -> {
+                            .map((Optional<ObjectMetadata> objectMetadata) -> {
                                 LOGGER.trace("Got metadata '{}'", objectMetadata);
                                 return Pair.create(bucketContents, objectMetadata
                                         .orElseThrow(() -> new RuntimeException(String.format("Lost object '%s' while listing bucket", bucketContents.getKey()))));

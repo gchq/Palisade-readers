@@ -65,7 +65,8 @@ class S3ResourceServiceTest {
     @Autowired
     S3Properties s3Properties;
 
-    private static final String BUCKET_NAME = "testbucket";
+    // Use a 'default' bucket for S3ResourceService getByType/Format methods
+    private static final String BUCKET_NAME = "default";
 
     FileResource s3ResourceText;
     FileResource s3ResourceAvro;
@@ -184,7 +185,6 @@ class S3ResourceServiceTest {
 
     @Test
     @Order(4)
-    @Disabled
     void testGetResourcesByType() {
         // Given an empty list
         var resultList = new ArrayList<>();
@@ -204,7 +204,6 @@ class S3ResourceServiceTest {
 
     @Test
     @Order(5)
-    @Disabled
     void testGetResourcesBySerialisedFormat() {
         // Given an empty list
         var resultList = new ArrayList<>();

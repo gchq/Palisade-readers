@@ -19,7 +19,7 @@ package uk.gov.gchq.palisade.service.data.s3;
 /**
  * S3 Properties class, containing default information about resources added to S3.
  */
-public class S3Properties {
+public final class S3Properties {
     public static final String S3_PREFIX = "s3";
     public static final String S3_PATH_SEP = "/";
 
