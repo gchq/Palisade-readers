@@ -47,6 +47,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 import static uk.gov.gchq.palisade.service.data.s3.S3Initializer.localstackContainer;
 
+/**
+ * Tests for reading the data from a S3 Bucket.
+ */
 @SpringBootTest(classes = {S3Configuration.class, AkkaSystemConfig.class})
 @ContextConfiguration(initializers = {S3Initializer.class})
 @ActiveProfiles({"s3", "testcontainers"})
@@ -117,17 +120,18 @@ class S3DataReaderTest {
         // Given we write some test data to an object in a bucket
         String testData = "Test data";
 
+        // Using AWS client write to the S3 bucket
         s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE)
                 .bucket(BUCKET_NAME)
                 .key(URI.create(s3Resource.getId()).getPath().substring(1)), RequestBody.fromString(testData));
 
-        // When we read the data back
+        // When we read the data back using the S3DataReader
         var inputStream = reader.readRaw(s3Resource);
         var readData = new String(inputStream.readAllBytes());
 
         // Then it is equal to what was written
         assertThat(readData)
-                .as("Check that the data read from S3 is equal to what was written")
+                .as("Check that the S3DataReader reads data from S3 Bucket that is equal to what was written using the AWS S3Client")
                 .isEqualTo(testData);
     }
 }

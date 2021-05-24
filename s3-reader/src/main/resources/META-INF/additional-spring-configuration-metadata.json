@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "s3-data-reader.bucket-name",
+      "type": "java.lang.String",
+      "description": "Description for s3-data-reader.bucket-name."
+    },
+    {
+      "name": "s3-data-reader.region",
+      "type": "java.lang.String",
+      "description": "Description for s3-data-reader.region."
+    },
+    {
+      "name": "s3-data-reader.connection-detail",
+      "type": "java.lang.String",
+      "description": "Description for s3-data-reader.connection-detail."
+    },
+    {
+      "name": "s3-data-reader.palisade-type-header",
+      "type": "java.lang.String",
+      "description": "Description for s3-data-reader.palisade-type-header."
+    }
+  ]
+}

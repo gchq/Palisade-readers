@@ -24,6 +24,9 @@ import uk.gov.gchq.palisade.util.ResourceBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Tests for the {@link S3ResourceBuilder}.
+ */
 class S3ResourceBuilderTest {
 
     @Test
@@ -36,7 +39,7 @@ class S3ResourceBuilderTest {
 
         // Then
         assertThat(resource)
-                .as("Check that when building a resource with a s3 prefix, it is an instance of a S3Resource")
+                .as("Check that when building a resource with a s3 prefix, it is an instance of a FileResource")
                 .isInstanceOf(FileResource.class)
                 .as("Check that the resourceId is formatted correctly")
                 .extracting(Resource::getId)

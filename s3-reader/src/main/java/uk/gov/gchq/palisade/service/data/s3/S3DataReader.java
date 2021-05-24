@@ -40,9 +40,9 @@ import java.util.concurrent.CompletionStage;
 import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
 
 /**
- * An implementation of the ResourceService.
- * This service is for the retrieval of Resources only. Resources cannot be added via this Service, they should be added
- * through S3.
+ * An implementation of the {@code DataReader} interface. It will provide an {@code InputStream} of data corresponding
+ * to the resource as specified by the {@code LeafResource} in a S3 Bucket. This class is for the retrieval of Resources
+ * only. Resources cannot be added via this Service.
  */
 public class S3DataReader extends SerialisedDataReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3DataReader.class);
@@ -61,6 +61,7 @@ public class S3DataReader extends SerialisedDataReader {
 
     @Override
     protected InputStream readRaw(final LeafResource resource) {
+        LOGGER.debug("Invoking readRaw with resource: {}", resource);
         return readRawSource(resource)
                 .runWith(StreamConverters.asInputStream(), materialiser);
     }
