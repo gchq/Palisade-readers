@@ -52,7 +52,7 @@ public class S3DataReader extends SerialisedDataReader {
     private final Materializer materialiser;
 
     /**
-     * Constructor for the S3ResourceService, taking in S3Properties and a materaliser
+     * Default constructor for the S3DataReader, taking in a materaliser
      *
      * @param materialiser The Materializer is responsible for turning a stream blueprint into a running stream.
      */

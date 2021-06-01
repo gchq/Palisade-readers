@@ -34,7 +34,7 @@ import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
 public class S3Configuration {
 
     /**
-     * Bean implementation for {@link S3DataReader}  and is used for setting s3Configurations and reading available resources.
+     * Bean implementation for {@link S3DataReader} which is used for setting s3Configurations and reading available resources.
      *
      * @param materialiser the materialiser
      * @return a new instance of {@link S3DataReader}
