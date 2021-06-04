@@ -53,7 +53,14 @@ alpakka.s3:
   # eg. endpoint-url = "http://{bucket}.s3minio.alpakka:9000"
   # endpoint-url: https://{bucket}.amazonaws.com
 
-  # path-style-access: false
+  # Which access style to use. Prefer to use this setting over path-style-access.
+  # Path-style access has been deprecated by Amazon and will not work on buckets created after September 30, 2020.
+  # For alternative S3 implementations (MinIO, Rados Gateway, etc.), path-style access may continue to be required.
+  # Possible values:
+  #  - virtual: virtual host-style access, i.e. https://<bucket name>.s3.amazonaws.com/file/inside/bucket
+  #  - path: path-style access, i.e. https://<region>.amazonaws.com/<bucket>/file/inside/bucket
+  # access-style: virtual
+
   list-bucket-api-version: 2
 
   # Object keys are validated to NOT use sub-directory selection with `..` to improve security.
