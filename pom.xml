@@ -77,11 +77,12 @@
     </properties>
 
     <modules>
-        <!-- Core reader packages -->
-        <module>hadoop-resource</module>
-        <module>hadoop-reader</module>
-        <module>s3-reader</module>
-        <module>s3-resource</module>
+        <!-- Hadoop implementations -->
+        <module>hadoop-resource-service</module>
+        <module>hadoop-data-reader</module>
+        <!-- S3 implementations -->
+        <module>s3-resource-service</module>
+        <module>s3-data-reader</module>
     </modules>
 
     <profiles>

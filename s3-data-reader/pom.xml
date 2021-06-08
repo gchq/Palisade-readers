@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2018-2021 Crown Copyright
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>uk.gov.gchq.palisade</groupId>
+        <artifactId>readers</artifactId>
+        <version>0.5.0-${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <!--  *********** Artifact ID ***********    -->
+    <artifactId>s3-data-reader</artifactId>
+    <url>https://github.com/gchq/Palisade-readers/tree/develop/s3-reader</url>
+    <name>GCHQ Palisade - S3 Data Reader</name>
+    <description>
+        Implementation of the Data Reader backed by a (provider-agnostic) S3 bucket.
+    </description>
+    <!--  *********** Artifact ID ***********    -->
+
+    <properties>
+        <!-- Dependency versions -->
+        <alpakka-s3.version>3.0.0</alpakka-s3.version>
+        <scala.version>2.13</scala.version>
+        <akka.version>2.6.10</akka.version>
+
+        <!-- Test dependency versions -->
+        <spring-boot-testing.version>2.3.1.RELEASE</spring-boot-testing.version>
+        <aws.s3.v1.version>1.11.1016</aws.s3.v1.version>
+        <aws.s3.v2.version>2.16.60</aws.s3.v2.version>
+        <localstack.version>1.15.3</localstack.version>
+
+        <!-- Testcontainers images -->
+        <testcontainers.localstack.image>localstack/localstack:0.12.9.1</testcontainers.localstack.image>
+    </properties>
+
+    <dependencies>
+        <!--
+        ~ Palisade
+        -->
+        <dependency>
+            <!-- Readers, Request & Response types -->
+            <groupId>uk.gov.gchq.palisade</groupId>
+            <artifactId>data-service</artifactId>
+            <version>0.5.0-${services.revision}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <!-- Alpakka S3 dependency-->
+            <groupId>com.lightbend.akka</groupId>
+            <artifactId>akka-stream-alpakka-s3_${scala.version}</artifactId>
+            <version>${alpakka-s3.version}</version>
+            <exclusions>
+                <!-- Use services provided akka version -->
+                <exclusion>
+                    <groupId>com.typesafe.akka</groupId>
+                    <artifactId>akka-stream_${scala.version}</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <!-- Use services provided akka version -->
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-stream_${scala.version}</artifactId>
+            <version>${akka.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--
+        ~ Test Dependencies
+        -->
+        <dependency>
+            <!-- AWS v1 dependency -->
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>${aws.s3.v1.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- AWS v2 dependency -->
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>${aws.s3.v2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring-boot-testing.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- S3 TestContainers Dependency -->
+            <groupId>org.testcontainers</groupId>
+            <artifactId>localstack</artifactId>
+            <version>${localstack.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>kafka</artifactId>
+            <version>1.15.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <!-- Substitute maven properties in values.yaml -->
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/values.yaml</include>
+                </includes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/values.yaml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <!-- Substitute maven properties in tests yaml -->
+                <filtering>true</filtering>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*.yaml</include>
+                </includes>
+            </testResource>
+        </testResources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+                    <artifactSet>
+                        <includes>
+                            <include>*:*</include>
+                        </includes>
+                    </artifactSet>
+                    <relocations>
+                        <relocation>
+                            <!-- This should leave the uk.gov.gchq.palisade module entirely (incl. imports) untouched by shading -->
+                            <pattern>akka</pattern>
+                            <shadedPattern>shade.akka</shadedPattern>
+                            <includes>
+                                <include>akka.shapeless.**</include>
+                                <include>akka.parboiled2.**</include>
+                                <include>akka.macros.**</include>
+                                <include>akka.http.**</include>
+                            </includes>
+                        </relocation>
+                    </relocations>
+                    <transformers>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>reference.conf</resource>
+                        </transformer>
+                    </transformers>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
