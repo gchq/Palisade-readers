@@ -31,7 +31,7 @@ import uk.gov.gchq.palisade.resource.ParentResource;
 import uk.gov.gchq.palisade.resource.impl.DirectoryResource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
-import uk.gov.gchq.palisade.util.ResourceBuilder;
+import uk.gov.gchq.palisade.util.AbstractResourceBuilder;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -89,12 +89,12 @@ class HadoopResourceServiceComponentTest {
 
         ConnectionDetail connectionDetail = new SimpleConnectionDetail().serviceName("data-service-mock");
         id1 = dir.resolve(getFileNameFromResourceDetails(FILE_NAME_VALUE_00001, TYPE_VALUE, FORMAT_VALUE));
-        resource1 = ((LeafResource) ResourceBuilder.create(id1))
+        resource1 = ((LeafResource) AbstractResourceBuilder.create(id1))
                 .type(TYPE_CLASSNAME)
                 .serialisedFormat(FORMAT_VALUE)
                 .connectionDetail(connectionDetail);
         id2 = dir.resolve(getFileNameFromResourceDetails(FILE_NAME_VALUE_00002, TYPE_VALUE, FORMAT_VALUE));
-        resource2 = ((LeafResource) ResourceBuilder.create(id2))
+        resource2 = ((LeafResource) AbstractResourceBuilder.create(id2))
                 .type(TYPE_CLASSNAME)
                 .serialisedFormat(FORMAT_VALUE)
                 .connectionDetail(connectionDetail);
@@ -225,7 +225,7 @@ class HadoopResourceServiceComponentTest {
     @Test
     void testShouldResolveParents() {
         final URI id = dir.resolve("folder1/folder2/" + getFileNameFromResourceDetails(FILE_NAME_VALUE_00001, TYPE_VALUE, FORMAT_VALUE));
-        final FileResource fileResource = (FileResource) ResourceBuilder.create(id);
+        final FileResource fileResource = (FileResource) AbstractResourceBuilder.create(id);
 
         final ParentResource parent1 = fileResource.getParent();
 
