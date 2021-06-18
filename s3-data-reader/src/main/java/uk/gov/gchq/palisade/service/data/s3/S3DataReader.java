@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.service.data.exception.ForbiddenException;
-import uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader;
+import uk.gov.gchq.palisade.service.data.reader.AbstractSerialisedDataReader;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -45,7 +45,7 @@ import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
  * to the resource as specified by the {@code LeafResource} in a S3 Bucket. This class is for the retrieval of Resources
  * only. Resources cannot be added via this Service.
  */
-public class S3DataReader extends SerialisedDataReader {
+public class S3DataReader extends AbstractSerialisedDataReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3DataReader.class);
     private static final int PARALLELISM = 1;
 

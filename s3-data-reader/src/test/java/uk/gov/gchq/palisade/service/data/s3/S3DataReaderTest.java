@@ -37,7 +37,7 @@ import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.service.data.stream.config.AkkaSystemConfig;
-import uk.gov.gchq.palisade.util.ResourceBuilder;
+import uk.gov.gchq.palisade.util.AbstractResourceBuilder;
 
 import java.io.IOException;
 import java.net.URI;
@@ -112,7 +112,7 @@ class S3DataReaderTest {
     @Order(3)
     void testReadResource() throws IOException {
         // We will add a test file to the bucket
-        var s3Resource = (FileResource) ((LeafResource) ResourceBuilder.create("s3://" + BUCKET_NAME + "/testFile.txt"))
+        var s3Resource = (FileResource) ((LeafResource) AbstractResourceBuilder.create("s3://" + BUCKET_NAME + "/testFile.txt"))
                 .type("text")
                 .serialisedFormat("text/plain; charset=UTF-8")
                 .connectionDetail(new SimpleConnectionDetail().serviceName("s3-data-service"));
