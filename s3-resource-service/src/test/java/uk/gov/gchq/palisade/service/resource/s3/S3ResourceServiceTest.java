@@ -40,7 +40,7 @@ import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.service.resource.stream.config.AkkaSystemConfig;
-import uk.gov.gchq.palisade.util.ResourceBuilder;
+import uk.gov.gchq.palisade.util.AbstractResourceBuilder;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -81,21 +81,21 @@ class S3ResourceServiceTest {
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localStackContainer.getAccessKey(), localStackContainer.getSecretKey())))
                 .build();
 
-        s3ResourceText = ((FileResource) ((LeafResource) ResourceBuilder.create("s3://" + BUCKET_NAME + "/testFile.txt"))
+        s3ResourceText = ((FileResource) ((LeafResource) AbstractResourceBuilder.create("s3://" + BUCKET_NAME + "/testFile.txt"))
                 .type("text")
                 .serialisedFormat("text/plain; charset=UTF-8")
                 .connectionDetail(new SimpleConnectionDetail().serviceName(s3Properties.getConnectionDetail())))
                 .attribute(S3ResourceService.USER_META_ATTR_PREFIX + s3Properties.getPalisadeTypeHeader(), "text")
                 .attribute(S3ResourceService.USER_META_ATTR_PREFIX + s3Properties.getPalisadeFormatHeader(), "text/plain; charset=UTF-8");
 
-        s3ResourceAvro = ((FileResource) ((LeafResource) ResourceBuilder.create("s3://" + BUCKET_NAME + "/testAvroFile.avro"))
+        s3ResourceAvro = ((FileResource) ((LeafResource) AbstractResourceBuilder.create("s3://" + BUCKET_NAME + "/testAvroFile.avro"))
                 .type("avro")
                 .serialisedFormat("avro/plain; charset=UTF-8")
                 .connectionDetail(new SimpleConnectionDetail().serviceName(s3Properties.getConnectionDetail())))
                 .attribute(S3ResourceService.USER_META_ATTR_PREFIX + s3Properties.getPalisadeTypeHeader(), "avro")
                 .attribute(S3ResourceService.USER_META_ATTR_PREFIX + s3Properties.getPalisadeFormatHeader(), "avro/plain; charset=UTF-8");
 
-        s3ResourceFormatText = ((FileResource) ((LeafResource) ResourceBuilder.create("s3://" + BUCKET_NAME + "/testFormatTextFile.txt"))
+        s3ResourceFormatText = ((FileResource) ((LeafResource) AbstractResourceBuilder.create("s3://" + BUCKET_NAME + "/testFormatTextFile.txt"))
                 .type("text")
                 .serialisedFormat("randomFormat")
                 .connectionDetail(new SimpleConnectionDetail().serviceName(s3Properties.getConnectionDetail())))

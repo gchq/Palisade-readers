@@ -34,7 +34,7 @@ import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.service.resource.service.ResourceService;
-import uk.gov.gchq.palisade.util.ResourceBuilder;
+import uk.gov.gchq.palisade.util.AbstractResourceBuilder;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -175,7 +175,7 @@ public class S3ResourceService implements ResourceService {
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
                     LOGGER.debug("Collected to attribute map {}", attributes);
 
-                    return ((FileResource) ((LeafResource) ResourceBuilder.create(fileUri))
+                    return ((FileResource) ((LeafResource) AbstractResourceBuilder.create(fileUri))
                             .type(type)
                             .serialisedFormat(serialisedFormat)
                             .connectionDetail(new SimpleConnectionDetail().serviceName(properties.getConnectionDetail())))

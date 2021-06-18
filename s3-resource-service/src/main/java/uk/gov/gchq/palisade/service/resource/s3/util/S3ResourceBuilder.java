@@ -21,7 +21,7 @@ import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.resource.impl.DirectoryResource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SystemResource;
-import uk.gov.gchq.palisade.util.ResourceBuilder;
+import uk.gov.gchq.palisade.util.AbstractResourceBuilder;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -31,9 +31,9 @@ import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PATH_SEP;
 import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
 
 /**
- * Builds an S3Resource, by extending the {@link ResourceBuilder}
+ * Builds an S3Resource, by extending the {@link AbstractResourceBuilder}
  */
-public class S3ResourceBuilder extends ResourceBuilder {
+public class S3ResourceBuilder extends AbstractResourceBuilder {
     private static final int NO_COMPONENTS = 0;
     private static final int SCHEME_ONLY = 1;
     private static final int SCHEME_AND_PATH_NO_AUTH = 2;
