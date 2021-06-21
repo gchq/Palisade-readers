@@ -50,7 +50,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class HadoopDataReaderTest {
 
     @TempDir
-    private Path testFolder;
+    Path testFolder;
 
     @Test
     void testReadTextFileWithNoRules() throws IOException {
