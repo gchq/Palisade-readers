@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.reader;
+package uk.gov.gchq.palisade.service.data.hadoop;
 
 import uk.gov.gchq.palisade.Context;
 import uk.gov.gchq.palisade.rule.Rule;

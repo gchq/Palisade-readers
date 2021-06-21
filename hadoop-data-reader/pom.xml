@@ -58,7 +58,8 @@
         <logback.version>1.2.3</logback.version>
 
         <!-- Test dependency versions -->
-        <junit.version>4.13.1</junit.version>
+        <jupiter.version>5.7.0</jupiter.version>
+        <assertj.version>3.19.0</assertj.version>
     </properties>
 
     <dependencies>
@@ -109,10 +110,16 @@
        ~ Test Dependencies
        -->
         <dependency>
-            <!-- JUnit -->
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
+            <!-- JUnit, Jupiter, SpringBootTest etc... -->
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
