@@ -25,8 +25,11 @@ import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.util.AbstractResourceBuilder;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -72,6 +75,17 @@ class HadoopResourceServiceTest {
         assertThat(success)
                 .as("Check that you cant add files to the HadoopResourceService")
                 .isFalse();
+    }
+
+    @Test
+    void testGetConf() throws IOException {
+        Map<String, String> conf = new HashMap<>();
+        conf.put("Key", "Value");
+        HadoopResourceService resourceService = new HadoopResourceService(conf);
+        Map<String, String> configMap = resourceService.getConf();
+        assertThat(configMap)
+                .as("Check the returned configuration is empty")
+                .isNotEmpty();
     }
 
 }
