@@ -56,7 +56,7 @@ public class S3Initialiser implements ApplicationContextInitializer<Configurable
 
         localStackContainer = new LocalStackContainer(localstackImageName)
                 .withServices(S3)
-                .withReuse(true);
+                .withReuse(false);
 
         context.getEnvironment().setActiveProfiles("s3");
 

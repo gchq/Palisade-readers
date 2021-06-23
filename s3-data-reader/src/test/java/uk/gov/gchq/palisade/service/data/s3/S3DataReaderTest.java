@@ -45,13 +45,13 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
-import static uk.gov.gchq.palisade.service.data.s3.S3Initializer.localstackContainer;
+import static uk.gov.gchq.palisade.service.data.s3.S3Initialiser.localStackContainer;
 
 /**
  * Tests for reading the data from a S3 Bucket.
  */
 @SpringBootTest(classes = {S3Configuration.class, AkkaSystemConfig.class})
-@ContextConfiguration(initializers = {S3Initializer.class})
+@ContextConfiguration(initializers = {S3Initialiser.class})
 @ActiveProfiles({"s3", "testcontainers"})
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -67,8 +67,8 @@ class S3DataReaderTest {
     void setup() {
         s3 = S3Client
                 .builder()
-                .endpointOverride(localstackContainer.getEndpointOverride(S3))
-                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localstackContainer.getAccessKey(), localstackContainer.getSecretKey())))
+                .endpointOverride(localStackContainer.getEndpointOverride(S3))
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localStackContainer.getAccessKey(), localStackContainer.getSecretKey())))
                 .build();
 
         // Build the bucket
@@ -82,7 +82,7 @@ class S3DataReaderTest {
                 .as("Check that the service has been started successfully")
                 .isNotNull();
 
-        assertThat(localstackContainer)
+        assertThat(localStackContainer)
                 .as("Check that the localstack container has been started successfully")
                 .isNotNull();
     }
