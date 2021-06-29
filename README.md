@@ -16,7 +16,9 @@ limitations under the License.
 
 # <img src="logos/logo.svg" width="180">
 
-### Palisade Readers
+## A Tool for Complex and Scalable Data Access Policy Enforcement
+
+# Palisade Readers
 
 The `Readers` library enables functionality for providing data with the relevant data restrictions applied.
 It provides the services needed to locate the references to the requested records, uses this to retrieve the data and then to extract each record where it can be filtered using the restrictions defined by the rules in place for the data.
