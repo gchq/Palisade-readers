@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
-import uk.gov.gchq.palisade.util.ResourceBuilder;
+import uk.gov.gchq.palisade.util.AbstractResourceBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,7 +32,7 @@ class S3ResourceBuilderTest {
         String resourceUri = "s3://bucket/some/object";
 
         // When
-        Resource resource = ResourceBuilder.create(resourceUri);
+        Resource resource = AbstractResourceBuilder.create(resourceUri);
 
         // Then
         assertThat(resource)
@@ -49,7 +49,7 @@ class S3ResourceBuilderTest {
         String resourceUri = "file:/some/object";
 
         // When
-        Resource resource = ResourceBuilder.create(resourceUri);
+        Resource resource = AbstractResourceBuilder.create(resourceUri);
 
         // Then
         assertThat(resource)

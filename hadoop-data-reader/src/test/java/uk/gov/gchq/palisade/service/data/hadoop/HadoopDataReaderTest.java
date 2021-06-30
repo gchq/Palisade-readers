@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.palisade.reader;
+package uk.gov.gchq.palisade.service.data.hadoop;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import uk.gov.gchq.palisade.Context;
 import uk.gov.gchq.palisade.data.serialise.SimpleStringSerialiser;
-import uk.gov.gchq.palisade.reader.util.PathUtils;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.rule.Rules;
-import uk.gov.gchq.palisade.service.data.hadoop.HadoopDataReader;
 import uk.gov.gchq.palisade.service.data.model.DataReaderRequest;
 import uk.gov.gchq.palisade.service.data.model.DataReaderResponse;
 import uk.gov.gchq.palisade.service.data.reader.DataFlavour;
@@ -39,22 +36,26 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class HadoopDataReaderTest {
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder(PathUtils.getTestDir(HadoopDataReaderTest.class));
+class HadoopDataReaderTest {
+
+    @TempDir
+    Path testFolder;
 
     @Test
-    public void testReadTextFileWithNoRules() throws IOException {
+    void testReadTextFileWithNoRules() throws IOException {
         // Given
-        final File tmpFile = testFolder.newFile("file1.txt");
+        final File tmpFile = Files.createFile(testFolder.resolve("file1.txt")).toFile();
         FileUtils.write(tmpFile, "some data\nsome more data", StandardCharsets.UTF_8);
 
         final Configuration conf = new Configuration();
@@ -77,13 +78,15 @@ public class HadoopDataReaderTest {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         response.getWriter().write(os);
         final Stream<String> lines = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()))).lines();
-        assertEquals(Arrays.asList("some data", "some more data"), lines.collect(Collectors.toList()));
+        assertThat(lines.collect(Collectors.toList()))
+                .as("Check the expected values are returned")
+                .isEqualTo(Arrays.asList("some data", "some more data"));
     }
 
     @Test
-    public void testReadTextFileWithRules() throws IOException {
+    void testReadTextFileWithRules() throws IOException {
         // Given
-        final File tmpFile = testFolder.newFile("file1.txt");
+        final File tmpFile = Files.createFile(testFolder.resolve("file1.txt")).toFile();
         FileUtils.write(tmpFile, "some data\nsome more data", StandardCharsets.UTF_8);
 
         final Configuration conf = new Configuration();
@@ -107,13 +110,15 @@ public class HadoopDataReaderTest {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         response.getWriter().write(os);
         final Stream<String> lines = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()))).lines();
-        assertEquals(Collections.singletonList("some data"), lines.collect(Collectors.toList()));
+        assertThat(lines.collect(Collectors.toList()))
+                .as("Check the expected values are returned")
+                .isEqualTo(Collections.singletonList("some data"));
     }
 
     @Test
-    public void testDecodeURIEncodedFilesCorrectly() throws IOException {
+    void testDecodeURIEncodedFilesCorrectly() throws IOException {
         // Given
-        final File tmpFile = testFolder.newFile("fi le1.txt");
+        final File tmpFile = Files.createFile(testFolder.resolve("fi le1.txt")).toFile();
         FileUtils.write(tmpFile, "some data\nsome more data", StandardCharsets.UTF_8);
 
         final Configuration conf = new Configuration();
@@ -136,7 +141,18 @@ public class HadoopDataReaderTest {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         response.getWriter().write(os);
         final Stream<String> lines = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()))).lines();
-        assertEquals(Arrays.asList("some data", "some more data"), lines.collect(Collectors.toList()));
+        assertThat(lines.collect(Collectors.toList()))
+                .as("Check the expected values are returned")
+                .isEqualTo(Arrays.asList("some data", "some more data"));
+    }
+
+    @Test
+    void testGetConfigMap() throws IOException {
+        HadoopDataReader dataReader = new HadoopDataReader();
+        Map<String, String> conf = dataReader.getConfMap();
+        assertThat(conf)
+                .as("Check the returned configuration is empty")
+                .isEmpty();
     }
 
     private static HadoopDataReader getReader(final Configuration conf) throws IOException {

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.palisade.reader.util;
+package uk.gov.gchq.palisade.service.data.hadoop.util;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.hadoop.fs.Path;

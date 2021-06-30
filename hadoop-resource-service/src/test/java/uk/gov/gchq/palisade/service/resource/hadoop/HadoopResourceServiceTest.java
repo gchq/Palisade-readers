@@ -22,11 +22,14 @@ import org.junit.jupiter.api.Test;
 import uk.gov.gchq.palisade.resource.ConnectionDetail;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
-import uk.gov.gchq.palisade.util.ResourceBuilder;
+import uk.gov.gchq.palisade.util.AbstractResourceBuilder;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -65,13 +68,24 @@ class HadoopResourceServiceTest {
         // Given this is a hadoop resource service
 
         // When
-        var resource = (LeafResource) ResourceBuilder.create(new URI("file:/hadoop/test_resource.avro"));
+        var resource = (LeafResource) AbstractResourceBuilder.create(new URI("file:/hadoop/test_resource.avro"));
         boolean success = service.addResource(resource);
 
         // Then
         assertThat(success)
                 .as("Check that you cant add files to the HadoopResourceService")
                 .isFalse();
+    }
+
+    @Test
+    void testGetConf() throws IOException {
+        Map<String, String> conf = new HashMap<>();
+        conf.put("Key", "Value");
+        HadoopResourceService resourceService = new HadoopResourceService(conf);
+        Map<String, String> configMap = resourceService.getConf();
+        assertThat(configMap)
+                .as("Check the returned configuration is empty")
+                .isNotEmpty();
     }
 
 }

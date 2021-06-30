@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.resource.LeafResource;
-import uk.gov.gchq.palisade.service.data.reader.SerialisedDataReader;
+import uk.gov.gchq.palisade.service.data.reader.AbstractSerialisedDataReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,10 +39,10 @@ import java.util.StringJoiner;
 import static java.util.Objects.requireNonNull;
 
 /**
- * An HadoopDataReader is an implementation of {@link SerialisedDataReader} for Hadoop that opens a file and returns
+ * An HadoopDataReader is an implementation of {@link AbstractSerialisedDataReader} for Hadoop that opens a file and returns
  * a single {@link InputStream} containing all the records.
  */
-public class HadoopDataReader extends SerialisedDataReader {
+public class HadoopDataReader extends AbstractSerialisedDataReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(HadoopDataReader.class);
 
     private FileSystem fs;

@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.resource.LeafResource;
-import uk.gov.gchq.palisade.util.ResourceBuilder;
+import uk.gov.gchq.palisade.util.AbstractResourceBuilder;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -118,7 +118,7 @@ public class HadoopResourceDetails {
     }
 
     public LeafResource getResource() {
-        return ((LeafResource) ResourceBuilder.create(fileName))
+        return ((LeafResource) AbstractResourceBuilder.create(fileName))
                 .type(type)
                 .serialisedFormat(format);
     }

@@ -21,7 +21,7 @@ import uk.gov.gchq.palisade.resource.Resource;
 import uk.gov.gchq.palisade.resource.impl.DirectoryResource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.resource.impl.SystemResource;
-import uk.gov.gchq.palisade.util.ResourceBuilder;
+import uk.gov.gchq.palisade.util.AbstractResourceBuilder;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -35,7 +35,7 @@ import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
  * parent class's {@code ResourceBuilder.create()} static method with a String or URI for a valid S3 Resource. This will then
  * prompt the {@code S3ResourceBuilder} to return an instance of {@code S3Resource} for the specified Resource.
  */
-public class S3ResourceBuilder extends ResourceBuilder {
+public class S3ResourceBuilder extends AbstractResourceBuilder {
     private static final int NO_COMPONENTS = 0;
     private static final int SCHEME_ONLY = 1;
     private static final int SCHEME_AND_PATH_NO_AUTH = 2;
