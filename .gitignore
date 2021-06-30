@@ -35,26 +35,24 @@ terraform.tfstate.backup
 dependency-reduced-pom.xml
 velocity.log.*
 velocity.log
+*.ipr
+*.iws
 
 ##VSCODE default files that dont need to be tracked
 eclipse-formatter.xml
 .vscode/
-
-
 
 # Created by https://www.toptal.com/developers/gitignore/api/eclipse
 # Edit at https://www.toptal.com/developers/gitignore?templates=eclipse
 
 ### Eclipse ###
 .metadata
-bin/
 tmp/
 *.tmp
 *.bak
 *.swp
 *~.nib
 local.properties
-.settings/
 .loadpath
 .recommenders
 
