@@ -25,7 +25,6 @@ import uk.gov.gchq.palisade.data.serialise.SimpleStringSerialiser;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.rule.Rules;
 import uk.gov.gchq.palisade.service.data.model.DataReaderRequest;
-import uk.gov.gchq.palisade.service.data.model.DataReaderResponse;
 import uk.gov.gchq.palisade.service.data.reader.DataFlavour;
 import uk.gov.gchq.palisade.user.User;
 
@@ -90,7 +89,7 @@ class HadoopDataReaderTest {
         final HadoopDataReader reader = getReader(conf);
         reader.addSerialiser(DataFlavour.of("string", "string"), new SimpleStringSerialiser());
 
-        final FileResource resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
+        var resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
         // Redact any records containing the word 'more'
         var rules = new Rules<String>().addRule("1", (PredicateRule<String>) (r, u, j) -> !r.contains("more"));
 
@@ -101,12 +100,13 @@ class HadoopDataReaderTest {
                 .rules(rules);
 
         // When
-        final DataReaderResponse response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
+        var response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
 
         // Then
         var os = new ByteArrayOutputStream();
         response.getWriter().write(os);
         final Stream<String> lines = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()))).lines();
+
         assertThat(lines.collect(Collectors.toList()))
                 .as("Check the expected values are returned")
                 .asList()
@@ -135,9 +135,10 @@ class HadoopDataReaderTest {
         var response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
 
         // Then
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        var os = new ByteArrayOutputStream();
         response.getWriter().write(os);
         final Stream<String> lines = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()))).lines();
+
         assertThat(lines.collect(Collectors.toList()))
                 .as("Check the expected values are returned")
                 .asList()

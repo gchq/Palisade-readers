@@ -18,13 +18,8 @@ package uk.gov.gchq.palisade.service.resource.s3.loader;
 
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.common.serialization.Deserializer;
-import org.apache.kafka.common.serialization.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,13 +30,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.serializer.support.SerializationFailedException;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import uk.gov.gchq.palisade.service.resource.stream.PropertiesConfigurer;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.AbstractMap;
 import java.util.List;
@@ -63,7 +56,6 @@ import static org.apache.kafka.clients.admin.AdminClientConfig.BOOTSTRAP_SERVERS
 )
 public class KafkaTestConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTestConfiguration.class);
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final List<NewTopic> topics = List.of(
             new NewTopic("user", 1, (short) 1),
@@ -134,29 +126,5 @@ public class KafkaTestConfiguration {
         String brokers = String.format("%s:%d", "localhost", mappedPort);
         LOGGER.info("brokers: " + brokers);
         return brokers;
-    }
-
-    // Serialiser for upstream test input
-    static class RequestSerialiser implements Serializer<JsonNode> {
-        @Override
-        public byte[] serialize(final String s, final JsonNode resourceRequest) {
-            try {
-                return MAPPER.writeValueAsBytes(resourceRequest);
-            } catch (JsonProcessingException e) {
-                throw new SerializationFailedException("Failed to serialise " + resourceRequest.toString(), e);
-            }
-        }
-    }
-
-    // Deserialiser for downstream test output
-    static class ResponseDeserialiser implements Deserializer<JsonNode> {
-        @Override
-        public JsonNode deserialize(final String s, final byte[] resourceResponse) {
-            try {
-                return MAPPER.readTree(resourceResponse);
-            } catch (IOException e) {
-                throw new SerializationFailedException("Failed to deserialise " + new String(resourceResponse), e);
-            }
-        }
     }
 }

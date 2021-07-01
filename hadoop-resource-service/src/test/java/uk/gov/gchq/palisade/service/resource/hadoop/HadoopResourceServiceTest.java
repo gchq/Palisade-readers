@@ -19,7 +19,6 @@ package uk.gov.gchq.palisade.service.resource.hadoop;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import uk.gov.gchq.palisade.resource.ConnectionDetail;
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.resource.impl.SimpleConnectionDetail;
 import uk.gov.gchq.palisade.util.AbstractResourceBuilder;
@@ -44,14 +43,14 @@ class HadoopResourceServiceTest {
     @Test
     void testResourceDetailsGetDataServiceConnection() {
         // Given
-        ConnectionDetail dataService = new SimpleConnectionDetail().serviceName("data-service");
+        var dataService = new SimpleConnectionDetail().serviceName("data-service");
         service.addDataService(dataService);
 
         URI uri = new File(".").toURI().resolve("type_file.format");
-        HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
+        var details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
 
         // When
-        LeafResource resource = service.addConnectionDetail(details);
+        var resource = service.addConnectionDetail(details);
 
         // Then
         assertThat(resource.getConnectionDetail())
@@ -84,8 +83,7 @@ class HadoopResourceServiceTest {
         HadoopResourceService resourceService = new HadoopResourceService(conf);
         Map<String, String> configMap = resourceService.getConf();
         assertThat(configMap)
-                .as("Check the returned configuration is empty")
+                .as("Check the returned configuration is not empty")
                 .isNotEmpty();
     }
-
 }

@@ -41,7 +41,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +50,7 @@ class HadoopResourceServiceComponentTest {
 
     private static final String FORMAT_VALUE = "txt";
     private static final String TYPE_VALUE = "bob";
-    private static final String TYPE_CLASSNAME = "com.type.bob";
+    private static final String TYPE_CLASS_NAME = "com.type.bob";
     private static final String FILE_NAME_VALUE_00001 = "00001";
     private static final String FILE_NAME_VALUE_00002 = "00002";
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().startsWith("win");
@@ -90,18 +89,18 @@ class HadoopResourceServiceComponentTest {
         ConnectionDetail connectionDetail = new SimpleConnectionDetail().serviceName("data-service-mock");
         id1 = dir.resolve(getFileNameFromResourceDetails(FILE_NAME_VALUE_00001, TYPE_VALUE, FORMAT_VALUE));
         resource1 = ((LeafResource) AbstractResourceBuilder.create(id1))
-                .type(TYPE_CLASSNAME)
+                .type(TYPE_CLASS_NAME)
                 .serialisedFormat(FORMAT_VALUE)
                 .connectionDetail(connectionDetail);
         id2 = dir.resolve(getFileNameFromResourceDetails(FILE_NAME_VALUE_00002, TYPE_VALUE, FORMAT_VALUE));
         resource2 = ((LeafResource) AbstractResourceBuilder.create(id2))
-                .type(TYPE_CLASSNAME)
+                .type(TYPE_CLASS_NAME)
                 .serialisedFormat(FORMAT_VALUE)
                 .connectionDetail(connectionDetail);
 
         resourceService = new HadoopResourceService(config);
         resourceService.addDataService(connectionDetail);
-        HadoopResourceDetails.addTypeSupport(TYPE_VALUE, TYPE_CLASSNAME);
+        HadoopResourceDetails.addTypeSupport(TYPE_VALUE, TYPE_CLASS_NAME);
     }
 
     @Test
@@ -110,7 +109,7 @@ class HadoopResourceServiceComponentTest {
         List<LeafResource> resultList = new ArrayList<>();
 
         // When making a get request to the resource service by resourceId
-        final Iterator<LeafResource> resourcesById = resourceService.getResourcesById(id1.toString());
+        var resourcesById = resourceService.getResourcesById(id1.toString());
         resourcesById.forEachRemaining(resultList::add);
 
         // Then assert that the expected resource(s) are returned
@@ -141,7 +140,7 @@ class HadoopResourceServiceComponentTest {
         List<LeafResource> resultList = new ArrayList<>();
 
         // When making a get request to the resource service by resourceId
-        final Iterator<LeafResource> resourcesById = resourceService.getResourcesById(dir.toString());
+        var resourcesById = resourceService.getResourcesById(dir.toString());
         resourcesById.forEachRemaining(resultList::add);
 
         // Then assert that the expected resource(s) are returned
@@ -157,7 +156,7 @@ class HadoopResourceServiceComponentTest {
         writeFile(fs, dir.resolve("./I-AM-AN-ILLEGAL-FILENAME"));
 
         // When making a get request to the resource service by resourceId
-        final Iterator<LeafResource> resourcesById = resourceService.getResourcesById(dir.toString());
+        var resourcesById = resourceService.getResourcesById(dir.toString());
         resourcesById.forEachRemaining(resourceList::add);
 
         // Then assert that the expected resource(s) are returned
@@ -171,10 +170,10 @@ class HadoopResourceServiceComponentTest {
         // Given a new file with a new type is added
         List<LeafResource> resultList = new ArrayList<>();
         writeFile(fs, dir, "00003", FORMAT_VALUE, "not" + TYPE_VALUE);
-        HadoopResourceDetails.addTypeSupport("not" + TYPE_VALUE, TYPE_CLASSNAME + ".not");
+        HadoopResourceDetails.addTypeSupport("not" + TYPE_VALUE, TYPE_CLASS_NAME + ".not");
 
         // When making a get request to the resource service by type
-        final Iterator<LeafResource> resourcesByType = resourceService.getResourcesByType(TYPE_CLASSNAME);
+        var resourcesByType = resourceService.getResourcesByType(TYPE_CLASS_NAME);
         resourcesByType.forEachRemaining(resultList::add);
 
         // Then assert that the expected resource(s) are returned
@@ -190,7 +189,7 @@ class HadoopResourceServiceComponentTest {
         writeFile(fs, dir, "00003", "not" + FORMAT_VALUE, TYPE_VALUE);
 
         // When making a get request to the resource service by serialisedFormat
-        final Iterator<LeafResource> resourcesBySerialisedFormat = resourceService.getResourcesBySerialisedFormat(FORMAT_VALUE);
+        var resourcesBySerialisedFormat = resourceService.getResourcesBySerialisedFormat(FORMAT_VALUE);
         resourcesBySerialisedFormat.forEachRemaining(resultList::add);
 
         // Then assert that the expected resource(s) are returned
@@ -206,7 +205,7 @@ class HadoopResourceServiceComponentTest {
         List<LeafResource> resultList = new ArrayList<>();
 
         // When making a get request to the resource service by resource
-        final Iterator<LeafResource> resourcesByResource = resourceService.getResourcesByResource(new DirectoryResource().id(dir.toString()));
+        var resourcesByResource = resourceService.getResourcesByResource(new DirectoryResource().id(dir.toString()));
         resourcesByResource.forEachRemaining(resultList::add);
 
         // Then assert that the expected resource(s) are returned
@@ -227,7 +226,7 @@ class HadoopResourceServiceComponentTest {
         final URI id = dir.resolve("folder1/folder2/" + getFileNameFromResourceDetails(FILE_NAME_VALUE_00001, TYPE_VALUE, FORMAT_VALUE));
         final FileResource fileResource = (FileResource) AbstractResourceBuilder.create(id);
 
-        final ParentResource parent1 = fileResource.getParent();
+        var parent1 = fileResource.getParent();
 
         assertThat(dir.resolve("folder1/folder2/"))
                 .as("Check the URI of the parent is the correct URI")
