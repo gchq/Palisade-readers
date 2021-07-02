@@ -34,10 +34,12 @@ import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
  * Builds an S3Resource, by extending the {@link AbstractResourceBuilder}
  */
 public class S3ResourceBuilder extends AbstractResourceBuilder {
+    private static final String S3_PATH_SEP = "/";
+    private static final String S3_PREFIX = "s3";
     private static final int NO_COMPONENTS = 0;
     private static final int SCHEME_ONLY = 1;
     private static final int SCHEME_AND_PATH_NO_AUTH = 2;
-    private static final int SCHEME_AND_AUTH_ONLY = 3;
+    private static final int SCHEME_AND_AUTHORITY_ONLY = 3;
 
     public S3ResourceBuilder() {
         // Empty Constructor
@@ -47,44 +49,38 @@ public class S3ResourceBuilder extends AbstractResourceBuilder {
         return new LinkedList<>(Arrays.asList(path.split(S3_PATH_SEP)));
     }
 
-    private static String parentPrefix(final String path) {
-        var pathComponents = splitComponents(path);
-        pathComponents.removeLast();
-        return String.join(S3_PATH_SEP, pathComponents);
-    }
-
     private static FileResource s3ObjectResource(final String key) {
-        return new FileResource()
-                .id(key)
-                .parent(parentResource(parentPrefix(key)));
+        return new FileResource().id(key);
     }
 
-    private static ParentResource parentResource(final String prefix) {
+    private static ParentResource s3ParentResource(final String prefix) {
         switch (splitComponents(prefix).size()) {
-            case NO_COMPONENTS:
-            case SCHEME_ONLY:
-            case SCHEME_AND_PATH_NO_AUTH:
+            case NO_COMPONENTS: // ''
+            case SCHEME_ONLY: // 's3:'
+            case SCHEME_AND_PATH_NO_AUTH: // 's3:/something'
                 // If we got an invalid uri
                 throw new IllegalArgumentException("Prefix '" + prefix + "' was too short, expected at least 's3://<bucketname>'");
-            case SCHEME_AND_AUTH_ONLY:
-                // If we got 's3://bucket' - the root resource
-                return new SystemResource()
-                        .id(prefix);
-            default:
-                // If we got 's3://bucket/dir[/other-dir]' - a directory
-                return new DirectoryResource()
-                        .id(prefix)
-                        .parent(parentResource(parentPrefix(prefix)));
+            case SCHEME_AND_AUTHORITY_ONLY: // 's3://bucket'
+                // If we got the root resource
+                return new SystemResource().id(prefix);
+            default: // 's3://bucket/dir[/other-dir]'
+                // If we got a directory
+                return new DirectoryResource().id(prefix);
         }
     }
 
     private static Resource s3Scheme(final URI uri) {
-        // Things in S3 are only files, even if the PATH_SEP or prefixes makes it look like directories
-        return s3ObjectResource(uri.toString());
+        // Things in S3 are only really files, even if the PATH_SEP or prefixes makes it look like directories
+        // However, for parsing resources within Palisade, they are all treated as if directories exist
+        if (uri.toString().endsWith(S3_PATH_SEP)) {
+            return s3ParentResource(uri.toString());
+        } else {
+            return s3ObjectResource(uri.toString());
+        }
     }
 
     @Override
-    public Resource build(final URI resourceUri) {
+    protected Resource build(final URI resourceUri) {
         return s3Scheme(resourceUri);
     }
 
