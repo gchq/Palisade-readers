@@ -50,7 +50,7 @@ class HadoopResourceServiceComponentTest {
 
     private static final String FORMAT_VALUE = "txt";
     private static final String TYPE_VALUE = "bob";
-    private static final String TYPE_CLASS_NAME = "com.type.bob";
+    private static final String TYPE_CLASSNAME = "com.type.bob";
     private static final String FILE_NAME_VALUE_00001 = "00001";
     private static final String FILE_NAME_VALUE_00002 = "00002";
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().startsWith("win");
@@ -89,18 +89,18 @@ class HadoopResourceServiceComponentTest {
         ConnectionDetail connectionDetail = new SimpleConnectionDetail().serviceName("data-service-mock");
         id1 = dir.resolve(getFileNameFromResourceDetails(FILE_NAME_VALUE_00001, TYPE_VALUE, FORMAT_VALUE));
         resource1 = ((LeafResource) AbstractResourceBuilder.create(id1))
-                .type(TYPE_CLASS_NAME)
+                .type(TYPE_CLASSNAME)
                 .serialisedFormat(FORMAT_VALUE)
                 .connectionDetail(connectionDetail);
         id2 = dir.resolve(getFileNameFromResourceDetails(FILE_NAME_VALUE_00002, TYPE_VALUE, FORMAT_VALUE));
         resource2 = ((LeafResource) AbstractResourceBuilder.create(id2))
-                .type(TYPE_CLASS_NAME)
+                .type(TYPE_CLASSNAME)
                 .serialisedFormat(FORMAT_VALUE)
                 .connectionDetail(connectionDetail);
 
         resourceService = new HadoopResourceService(config);
         resourceService.addDataService(connectionDetail);
-        HadoopResourceDetails.addTypeSupport(TYPE_VALUE, TYPE_CLASS_NAME);
+        HadoopResourceDetails.addTypeSupport(TYPE_VALUE, TYPE_CLASSNAME);
     }
 
     @Test
@@ -170,10 +170,10 @@ class HadoopResourceServiceComponentTest {
         // Given a new file with a new type is added
         List<LeafResource> resultList = new ArrayList<>();
         writeFile(fs, dir, "00003", FORMAT_VALUE, "not" + TYPE_VALUE);
-        HadoopResourceDetails.addTypeSupport("not" + TYPE_VALUE, TYPE_CLASS_NAME + ".not");
+        HadoopResourceDetails.addTypeSupport("not" + TYPE_VALUE, TYPE_CLASSNAME + ".not");
 
         // When making a get request to the resource service by type
-        var resourcesByType = resourceService.getResourcesByType(TYPE_CLASS_NAME);
+        var resourcesByType = resourceService.getResourcesByType(TYPE_CLASSNAME);
         resourcesByType.forEachRemaining(resultList::add);
 
         // Then assert that the expected resource(s) are returned
