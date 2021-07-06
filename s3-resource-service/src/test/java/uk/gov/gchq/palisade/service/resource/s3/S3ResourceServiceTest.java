@@ -24,8 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -49,15 +47,14 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
-import static uk.gov.gchq.palisade.service.resource.s3.S3Initializer.localStackContainer;
+import static uk.gov.gchq.palisade.service.resource.s3.S3Initialiser.localStackContainer;
 
 @SpringBootTest(classes = {S3Configuration.class, AkkaSystemConfig.class})
-@ContextConfiguration(initializers = {S3Initializer.class})
+@ContextConfiguration(initializers = {S3Initialiser.class})
 @ActiveProfiles({"s3", "testcontainers"})
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(Lifecycle.PER_CLASS)
 class S3ResourceServiceTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(S3ResourceServiceTest.class);
 
     @Autowired
     S3ResourceService service;

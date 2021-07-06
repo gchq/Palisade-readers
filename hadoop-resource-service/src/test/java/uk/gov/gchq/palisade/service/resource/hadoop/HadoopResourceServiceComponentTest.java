@@ -41,7 +41,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -110,7 +109,7 @@ class HadoopResourceServiceComponentTest {
         List<LeafResource> resultList = new ArrayList<>();
 
         // When making a get request to the resource service by resourceId
-        final Iterator<LeafResource> resourcesById = resourceService.getResourcesById(id1.toString());
+        var resourcesById = resourceService.getResourcesById(id1.toString());
         resourcesById.forEachRemaining(resultList::add);
 
         // Then assert that the expected resource(s) are returned
@@ -141,7 +140,7 @@ class HadoopResourceServiceComponentTest {
         List<LeafResource> resultList = new ArrayList<>();
 
         // When making a get request to the resource service by resourceId
-        final Iterator<LeafResource> resourcesById = resourceService.getResourcesById(dir.toString());
+        var resourcesById = resourceService.getResourcesById(dir.toString());
         resourcesById.forEachRemaining(resultList::add);
 
         // Then assert that the expected resource(s) are returned
@@ -157,7 +156,7 @@ class HadoopResourceServiceComponentTest {
         writeFile(fs, dir.resolve("./I-AM-AN-ILLEGAL-FILENAME"));
 
         // When making a get request to the resource service by resourceId
-        final Iterator<LeafResource> resourcesById = resourceService.getResourcesById(dir.toString());
+        var resourcesById = resourceService.getResourcesById(dir.toString());
         resourcesById.forEachRemaining(resourceList::add);
 
         // Then assert that the expected resource(s) are returned
@@ -174,7 +173,7 @@ class HadoopResourceServiceComponentTest {
         HadoopResourceDetails.addTypeSupport("not" + TYPE_VALUE, TYPE_CLASSNAME + ".not");
 
         // When making a get request to the resource service by type
-        final Iterator<LeafResource> resourcesByType = resourceService.getResourcesByType(TYPE_CLASSNAME);
+        var resourcesByType = resourceService.getResourcesByType(TYPE_CLASSNAME);
         resourcesByType.forEachRemaining(resultList::add);
 
         // Then assert that the expected resource(s) are returned
@@ -190,7 +189,7 @@ class HadoopResourceServiceComponentTest {
         writeFile(fs, dir, "00003", "not" + FORMAT_VALUE, TYPE_VALUE);
 
         // When making a get request to the resource service by serialisedFormat
-        final Iterator<LeafResource> resourcesBySerialisedFormat = resourceService.getResourcesBySerialisedFormat(FORMAT_VALUE);
+        var resourcesBySerialisedFormat = resourceService.getResourcesBySerialisedFormat(FORMAT_VALUE);
         resourcesBySerialisedFormat.forEachRemaining(resultList::add);
 
         // Then assert that the expected resource(s) are returned
@@ -206,7 +205,7 @@ class HadoopResourceServiceComponentTest {
         List<LeafResource> resultList = new ArrayList<>();
 
         // When making a get request to the resource service by resource
-        final Iterator<LeafResource> resourcesByResource = resourceService.getResourcesByResource(new DirectoryResource().id(dir.toString()));
+        var resourcesByResource = resourceService.getResourcesByResource(new DirectoryResource().id(dir.toString()));
         resourcesByResource.forEachRemaining(resultList::add);
 
         // Then assert that the expected resource(s) are returned
@@ -227,7 +226,7 @@ class HadoopResourceServiceComponentTest {
         final URI id = dir.resolve("folder1/folder2/" + getFileNameFromResourceDetails(FILE_NAME_VALUE_00001, TYPE_VALUE, FORMAT_VALUE));
         final FileResource fileResource = (FileResource) AbstractResourceBuilder.create(id);
 
-        final ParentResource parent1 = fileResource.getParent();
+        var parent1 = fileResource.getParent();
 
         assertThat(dir.resolve("folder1/folder2/"))
                 .as("Check the URI of the parent is the correct URI")

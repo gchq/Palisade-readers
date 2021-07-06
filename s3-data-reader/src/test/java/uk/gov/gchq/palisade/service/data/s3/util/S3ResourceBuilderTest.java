@@ -35,7 +35,7 @@ class S3ResourceBuilderTest {
         String resourceUri = "s3://bucket/some/object";
 
         // When
-        Resource resource = AbstractResourceBuilder.create(resourceUri);
+        var resource = AbstractResourceBuilder.create(resourceUri);
 
         // Then
         assertThat(resource)
@@ -52,7 +52,7 @@ class S3ResourceBuilderTest {
         String resourceUri = "file:/some/object";
 
         // When
-        Resource resource = AbstractResourceBuilder.create(resourceUri);
+        var resource = AbstractResourceBuilder.create(resourceUri);
 
         // Then
         assertThat(resource)

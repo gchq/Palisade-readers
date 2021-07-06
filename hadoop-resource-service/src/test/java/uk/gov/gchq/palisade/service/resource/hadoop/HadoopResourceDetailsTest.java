@@ -19,8 +19,6 @@ package uk.gov.gchq.palisade.service.resource.hadoop;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import uk.gov.gchq.palisade.resource.LeafResource;
-
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -39,10 +37,10 @@ class HadoopResourceDetailsTest {
     void testAcceptsSchemelessUri() throws URISyntaxException {
         // Given
         URI uri = new URI("/home/hadoop/resources/type_file.format");
-        HadoopResourceDetails expected = new HadoopResourceDetails(uri, "TYPE", "format");
+        var expected = new HadoopResourceDetails(uri, "TYPE", "format");
 
         // When
-        HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
+        var details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
 
         // Then
         assertThat(details)
@@ -54,10 +52,10 @@ class HadoopResourceDetailsTest {
     void testAcceptsAbsolutePath() throws URISyntaxException {
         // Given
         URI absolute = new URI("file:/home/hadoop/resources/type_file.format");
-        HadoopResourceDetails expected = new HadoopResourceDetails(absolute, "TYPE", "format");
+        var expected = new HadoopResourceDetails(absolute, "TYPE", "format");
 
         // When
-        HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(absolute);
+        var details = HadoopResourceDetails.getResourceDetailsFromFileName(absolute);
 
         // Then
         assertThat(details)
@@ -69,10 +67,10 @@ class HadoopResourceDetailsTest {
     void testAcceptsRelativePath() throws URISyntaxException {
         // Given
         URI relative = new URI("file:./type_file.format");
-        HadoopResourceDetails expected = new HadoopResourceDetails(relative, "TYPE", "format");
+        var expected = new HadoopResourceDetails(relative, "TYPE", "format");
 
         // When
-        HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(relative);
+        var details = HadoopResourceDetails.getResourceDetailsFromFileName(relative);
 
         // Then
         assertThat(details)
@@ -86,7 +84,7 @@ class HadoopResourceDetailsTest {
         URI invalidType = new File(".").toURI().resolve("file.format");
 
         // When the resource is retrieved with no type
-        Exception illegalAccessException = assertThrows(IllegalArgumentException.class,
+        var illegalAccessException = assertThrows(IllegalArgumentException.class,
                 () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidType), "Test should throw an exception");
 
         // Then check the assertion message
@@ -101,7 +99,7 @@ class HadoopResourceDetailsTest {
         URI invalidType = new File(".").toURI().resolve("_file.format");
 
         // When the resource is retrieved with an empty type
-        Exception illegalAccessException = assertThrows(IllegalArgumentException.class,
+        var illegalAccessException = assertThrows(IllegalArgumentException.class,
                 () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidType), "Test should throw an exception");
 
         // Then check the assertion message
@@ -116,7 +114,7 @@ class HadoopResourceDetailsTest {
         URI invalidFormat = new File(".").toURI().resolve("type_file");
 
         // When the resource is retrieved with no serialised format
-        Exception illegalAccessException = assertThrows(IllegalArgumentException.class,
+        var illegalAccessException = assertThrows(IllegalArgumentException.class,
                 () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidFormat), "Test should throw an exception");
 
         // Then check the assertion message
@@ -131,7 +129,7 @@ class HadoopResourceDetailsTest {
         URI invalidFormat = new File(".").toURI().resolve("type_file.");
 
         // When the resource is retrieved with an empty serialised format
-        Exception illegalAccessException = assertThrows(IllegalArgumentException.class,
+        var illegalAccessException = assertThrows(IllegalArgumentException.class,
                 () -> HadoopResourceDetails.getResourceDetailsFromFileName(invalidFormat), "Test should throw an exception");
 
         // Then check the assertion message
@@ -144,10 +142,10 @@ class HadoopResourceDetailsTest {
     void testFormatStringIsConsistent() {
         // Given
         URI uri = new File(".").toURI().resolve(HadoopResourceDetails.FORMAT_STRING);
-        HadoopResourceDetails expected = new HadoopResourceDetails(uri, "TYPE", "FORMAT");
+        var expected = new HadoopResourceDetails(uri, "TYPE", "FORMAT");
 
         // When
-        HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
+        var details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
 
         // Then
         assertThat(details)
@@ -158,10 +156,10 @@ class HadoopResourceDetailsTest {
     @Test
     void testDetailsReturnConsistentResource() {
         URI uri = new File(".").toURI().resolve(HadoopResourceDetails.FORMAT_STRING);
-        HadoopResourceDetails details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
+        var details = HadoopResourceDetails.getResourceDetailsFromFileName(uri);
 
         // When
-        LeafResource resource = details.getResource();
+        var resource = details.getResource();
         // Then
         assertThat(resource)
                 .as("Check that when extracting the components of the resource they have not been modified")
@@ -175,7 +173,7 @@ class HadoopResourceDetailsTest {
         URI uri = new File(".").toURI().resolve("a_file.txt");
 
         // When
-        Exception illegalAccessException = assertThrows(IllegalArgumentException.class,
+        var illegalAccessException = assertThrows(IllegalArgumentException.class,
                 () -> HadoopResourceDetails.getResourceDetailsFromFileName(uri), "Test should throw an exception");
 
         // Then check the assertion message
@@ -189,10 +187,7 @@ class HadoopResourceDetailsTest {
         // Given
         URI uri = URI.create("file:///edge_case/that-matches/if.using/fullPath");
 
-        // When
-        boolean details = HadoopResourceDetails.isValidResourceName(uri);
-
-        assertThat(details)
+        assertThat(HadoopResourceDetails.isValidResourceName(uri))
                 .as("Check that the resource uri is not valid")
                 .isFalse();
     }
