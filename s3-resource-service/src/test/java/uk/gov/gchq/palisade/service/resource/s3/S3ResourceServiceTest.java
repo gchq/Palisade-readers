@@ -57,8 +57,6 @@ import static uk.gov.gchq.palisade.service.resource.s3.S3Initializer.localStackC
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(Lifecycle.PER_CLASS)
 class S3ResourceServiceTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(S3ResourceServiceTest.class);
-
     @Autowired
     S3ResourceService service;
     @Autowired

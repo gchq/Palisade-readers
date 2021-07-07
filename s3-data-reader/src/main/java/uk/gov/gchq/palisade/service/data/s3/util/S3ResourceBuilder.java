@@ -27,9 +27,6 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PATH_SEP;
-import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
-
 /**
  * Builder for S3-based {@link FileResource}. Requires the URI for the S3 Resource. Use of this class is initiated by using the
  * parent class's {@code ResourceBuilder.create()} static method with a String or URI for a valid S3 Resource. This will then

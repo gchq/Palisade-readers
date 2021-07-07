@@ -27,11 +27,10 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PATH_SEP;
-import static uk.gov.gchq.palisade.service.resource.s3.S3Properties.S3_PREFIX;
-
 /**
- * Builds an S3Resource, by extending the {@link AbstractResourceBuilder}
+ * Builder for S3-based {@link FileResource}. Requires the URI for the S3 Resource. Use of this class is initiated by using the
+ * parent class's {@code ResourceBuilder.create()} static method with a String or URI for a valid S3 Resource. This will then
+ * prompt the {@code S3ResourceBuilder} to return an instance of {@code S3Resource} for the specified Resource.
  */
 public class S3ResourceBuilder extends AbstractResourceBuilder {
     private static final String S3_PATH_SEP = "/";
