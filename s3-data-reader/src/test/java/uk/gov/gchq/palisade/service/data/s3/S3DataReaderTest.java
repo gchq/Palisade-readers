@@ -118,7 +118,7 @@ class S3DataReaderTest {
                 .connectionDetail(new SimpleConnectionDetail().serviceName("s3-data-service"));
 
         // Given we write some test data to an object in a bucket
-        String testData = "Test data";
+        var testData = "Test data";
 
         // Using AWS client write to the S3 bucket
         s3.putObject(b -> b.acl(ObjectCannedACL.PUBLIC_READ_WRITE)

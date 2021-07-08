@@ -29,10 +29,10 @@ class S3ResourceBuilderTest {
     @Test
     void testResourceBuilderAcceptsS3Scheme() {
         // Given
-        String resourceUri = "s3://bucket/some/object";
+        var resourceUri = "s3://bucket/some/object";
 
         // When
-        Resource resource = AbstractResourceBuilder.create(resourceUri);
+        var resource = AbstractResourceBuilder.create(resourceUri);
 
         // Then
         assertThat(resource)
@@ -46,10 +46,10 @@ class S3ResourceBuilderTest {
     @Test
     void testResourceBuilderAlsoAcceptsFileScheme() {
         // Given
-        String resourceUri = "file:/some/object";
+        var resourceUri = "file:/some/object";
 
         // When
-        Resource resource = AbstractResourceBuilder.create(resourceUri);
+        var resource = AbstractResourceBuilder.create(resourceUri);
 
         // Then
         assertThat(resource)

@@ -28,8 +28,8 @@ import software.amazon.awssdk.core.SdkSystemSetting;
 
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 
-public class S3Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(S3Initializer.class);
+public class S3Initialiser implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(S3Initialiser.class);
 
     static LocalStackContainer localStackContainer;
 

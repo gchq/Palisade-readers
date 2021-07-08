@@ -25,7 +25,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 import uk.gov.gchq.palisade.service.resource.ResourceApplication;
-import uk.gov.gchq.palisade.service.resource.s3.S3Initializer;
+import uk.gov.gchq.palisade.service.resource.s3.S3Initialiser;
 import uk.gov.gchq.palisade.service.resource.s3.S3ResourceService;
 import uk.gov.gchq.palisade.service.resource.service.ResourceService;
 
@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         webEnvironment = WebEnvironment.RANDOM_PORT,
         properties = {"akka.discovery.config.services.kafka.from-config=false"}
 )
-@ContextConfiguration(initializers = S3Initializer.class)
+@ContextConfiguration(initializers = S3Initialiser.class)
 @Import(KafkaTestConfiguration.class)
 @ActiveProfiles({"db-test", "akka-test", "test-resource", "testcontainers", "s3"})
 class ResourceServiceLoadingTest {

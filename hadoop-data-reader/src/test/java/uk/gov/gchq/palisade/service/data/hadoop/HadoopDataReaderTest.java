@@ -25,7 +25,6 @@ import uk.gov.gchq.palisade.data.serialise.SimpleStringSerialiser;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
 import uk.gov.gchq.palisade.rule.Rules;
 import uk.gov.gchq.palisade.service.data.model.DataReaderRequest;
-import uk.gov.gchq.palisade.service.data.model.DataReaderResponse;
 import uk.gov.gchq.palisade.service.data.reader.DataFlavour;
 import uk.gov.gchq.palisade.user.User;
 
@@ -38,9 +37,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -62,17 +58,16 @@ class HadoopDataReaderTest {
         final HadoopDataReader reader = getReader(conf);
         reader.addSerialiser(DataFlavour.of("string", "string"), new SimpleStringSerialiser());
 
-        final FileResource resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
-        final Rules<String> rules = new Rules<>();
+        var resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
 
-        final DataReaderRequest request = new DataReaderRequest()
+        var request = new DataReaderRequest()
                 .resource(resource)
                 .user(new User())
                 .context(new Context())
-                .rules(rules);
+                .rules(new Rules<>());
 
         // When
-        final DataReaderResponse response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
+        var response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
 
         // Then
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -80,7 +75,8 @@ class HadoopDataReaderTest {
         final Stream<String> lines = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()))).lines();
         assertThat(lines.collect(Collectors.toList()))
                 .as("Check the expected values are returned")
-                .isEqualTo(Arrays.asList("some data", "some more data"));
+                .asList()
+                .containsOnly("some data", "some more data");
     }
 
     @Test
@@ -93,26 +89,28 @@ class HadoopDataReaderTest {
         final HadoopDataReader reader = getReader(conf);
         reader.addSerialiser(DataFlavour.of("string", "string"), new SimpleStringSerialiser());
 
-        final FileResource resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
+        var resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
         // Redact any records containing the word 'more'
-        final Rules<String> rules = new Rules<String>().addRule("1", (PredicateRule<String>) (r, u, j) -> !r.contains("more"));
+        var rules = new Rules<String>().addRule("1", (PredicateRule<String>) (r, u, j) -> !r.contains("more"));
 
-        final DataReaderRequest request = new DataReaderRequest()
+        var request = new DataReaderRequest()
                 .resource(resource)
                 .user(new User())
                 .context(new Context())
                 .rules(rules);
 
         // When
-        final DataReaderResponse response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
+        var response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
 
         // Then
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        var os = new ByteArrayOutputStream();
         response.getWriter().write(os);
         final Stream<String> lines = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()))).lines();
+
         assertThat(lines.collect(Collectors.toList()))
                 .as("Check the expected values are returned")
-                .isEqualTo(Collections.singletonList("some data"));
+                .asList()
+                .containsOnly("some data");
     }
 
     @Test
@@ -125,32 +123,32 @@ class HadoopDataReaderTest {
         final HadoopDataReader reader = getReader(conf);
         reader.addSerialiser(DataFlavour.of("string", "string"), new SimpleStringSerialiser());
 
-        final FileResource resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
-        final Rules<String> rules = new Rules<>();
+        var resource = new FileResource().id(tmpFile.getAbsolutePath()).type("string").serialisedFormat("string");
 
-        final DataReaderRequest request = new DataReaderRequest()
+        var request = new DataReaderRequest()
                 .resource(resource)
                 .user(new User())
                 .context(new Context())
-                .rules(rules);
+                .rules(new Rules<>());
 
         // When
-        final DataReaderResponse response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
+        var response = reader.read(request, new AtomicLong(0), new AtomicLong(0));
 
         // Then
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        var os = new ByteArrayOutputStream();
         response.getWriter().write(os);
         final Stream<String> lines = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()))).lines();
+
         assertThat(lines.collect(Collectors.toList()))
                 .as("Check the expected values are returned")
-                .isEqualTo(Arrays.asList("some data", "some more data"));
+                .asList()
+                .containsOnly("some data", "some more data");
     }
 
     @Test
     void testGetConfigMap() throws IOException {
-        HadoopDataReader dataReader = new HadoopDataReader();
-        Map<String, String> conf = dataReader.getConfMap();
-        assertThat(conf)
+        var dataReader = new HadoopDataReader();
+        assertThat(dataReader.getConfMap())
                 .as("Check the returned configuration is empty")
                 .isEmpty();
     }
