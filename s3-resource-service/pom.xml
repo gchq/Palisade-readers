@@ -36,7 +36,7 @@
 
     <!--  *********** Artifact ID ***********    -->
     <artifactId>s3-resource-service</artifactId>
-    <url>https://github.com/gchq/Palisade-readers/tree/develop/s3-resource</url>
+    <url>https://github.com/gchq/Palisade-readers/tree/develop/s3-resource-service</url>
     <name>GCHQ Palisade - S3 Resource Service</name>
     <description>
         Implementation of the Resource Service backed by a (provider-agnostic) S3 bucket.
