@@ -40,4 +40,4 @@ This is used to set up a processing stream for the client's request.
 The `SerialisedDataReader` will retrieve the data as an input stream.
 The `SerialisingResponseWriter` will then deserialise the stream into records where the rules are applied to redact or mask the records.
 
-This is then re-serialised into an output stream provided to the client. 
+This is then re-serialised into an output stream provided to the client.
