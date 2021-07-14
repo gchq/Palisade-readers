@@ -126,7 +126,7 @@ class S3DataReaderTest {
                 .key(URI.create(s3Resource.getId()).getPath().substring(1)), RequestBody.fromString(testData));
 
         // When we read the data back using the S3DataReader
-        var inputStream = reader.readRaw(s3Resource);
+        var inputStream = reader.read(s3Resource);
         var readData = new String(inputStream.readAllBytes());
 
         // Then it is equal to what was written

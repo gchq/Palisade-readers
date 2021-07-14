@@ -22,7 +22,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import uk.gov.gchq.palisade.service.data.reader.DataReader;
+import uk.gov.gchq.palisade.service.data.service.reader.DataReader;
 
 import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
 
