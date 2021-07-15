@@ -1,6 +1,6 @@
-uk.gov.gchq.palisade:s3-resource-service:jar:0.5.0-RELEASE
-+- uk.gov.gchq.palisade:resource-service:jar:0.5.0-RELEASE:provided
-|  +- uk.gov.gchq.palisade:common:jar:0.5.0-RELEASE:provided
+uk.gov.gchq.palisade:s3-resource-service:jar:0.5.0-SNAPSHOT
++- uk.gov.gchq.palisade:resource-service:jar:0.5.0-SNAPSHOT:provided
+|  +- uk.gov.gchq.palisade:common:jar:0.5.0-SNAPSHOT:provided
 |  |  \- org.apache.avro:avro:jar:1.8.2:provided
 |  |     +- org.codehaus.jackson:jackson-core-asl:jar:1.9.13:provided
 |  |     +- org.codehaus.jackson:jackson-mapper-asl:jar:1.9.13:provided
