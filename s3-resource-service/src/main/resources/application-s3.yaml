@@ -95,7 +95,7 @@ resource:
   implementation: s3
 
 s3:
-  connection-detail: "s3-data-service"
+  connection-detail: "data-service"
   palisade-type-header: "x-pal-type"
   palisade-format-header: "x-pal-format"
   user-meta-prefix: "x-amz-meta-"

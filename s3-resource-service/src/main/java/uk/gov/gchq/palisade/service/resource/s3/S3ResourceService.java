@@ -65,7 +65,7 @@ public class S3ResourceService implements ResourceService {
      * Constructor for the S3ResourceService, taking in S3Properties and a materaliser
      *
      * @param properties   S3Properties, containing bucketName, connection detail and headers.
-     * @param materialiser The Materializer is responsible for turning a stream blueprint into a running stream.
+     * @param materialiser The Materialiser is responsible for turning a stream blueprint into a running stream.
      */
     public S3ResourceService(final S3Properties properties, final Materializer materialiser) {
         this.properties = properties;
@@ -171,6 +171,9 @@ public class S3ResourceService implements ResourceService {
                     var type = userMetadata.get(USER_META_ATTR_PREFIX + properties.getPalisadeTypeHeader());
                     LOGGER.debug("Decided on type '{}'", type);
 
+                    var connectionDetail = new SimpleConnectionDetail().serviceName(properties.getConnectionDetail());
+                    LOGGER.debug("Decided on connectionDetail '{}' ", connectionDetail.getServiceName());
+
                     Map<String, String> attributes = Stream.concat(userMetadata.entrySet().stream(), systemMetadata.entrySet().stream())
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
                     LOGGER.debug("Collected to attribute map {}", attributes);
@@ -178,7 +181,7 @@ public class S3ResourceService implements ResourceService {
                     return ((FileResource) ((LeafResource) AbstractResourceBuilder.create(fileUri))
                             .type(type)
                             .serialisedFormat(serialisedFormat)
-                            .connectionDetail(new SimpleConnectionDetail().serviceName(properties.getConnectionDetail())))
+                            .connectionDetail(connectionDetail))
                             .attributes(attributes);
                 });
     }
