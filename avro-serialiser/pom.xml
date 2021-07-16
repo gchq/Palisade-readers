@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2018-2021 Crown Copyright
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>uk.gov.gchq.palisade</groupId>
+        <artifactId>readers</artifactId>
+        <version>0.5.0-${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <developers>
+        <developer>
+            <name>PalisadeDevelopers</name>
+            <organization>GCHQ</organization>
+            <organizationUrl>https://github.com/gchq</organizationUrl>
+        </developer>
+    </developers>
+
+    <!--  *********** Artifact ID ***********    -->
+    <artifactId>avro-serialiser</artifactId>
+    <url>https://github.com/gchq/Palisade-readers/tree/develop/s3-data-reader</url>
+    <name>GCHQ Palisade - Avro Serialiser</name>
+    <description>
+        Implementation of the Serialiser backed by the Avro data format.
+    </description>
+    <!--  *********** Artifact ID ***********    -->
+
+    <scm>
+        <url>${scm.url}</url>
+        <connection>${scm.connection}</connection>
+        <developerConnection>${scm.developer.connection}</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <properties>
+        <!-- Dependency Versions -->
+        <avro.version>1.8.2</avro.version>
+
+        <!-- Test Dependency Versions -->
+        <akka.version>2.6.10</akka.version>
+        <scala.version>2.13</scala.version>
+        <junit.jupiter.version>5.7.0</junit.jupiter.version>
+        <assertj.version>3.19.0</assertj.version>
+    </properties>
+
+    <dependencies>
+        <!--
+        ~ Palisade
+        -->
+        <dependency>
+            <!-- Serialiser interface -->
+            <groupId>uk.gov.gchq.palisade</groupId>
+            <artifactId>common</artifactId>
+            <version>0.5.0-${common.revision}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <!-- Core Akka streaming API -->
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-stream_${scala.version}</artifactId>
+            <version>${akka.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <!-- Avro Datum Reader/Writer -->
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>${avro.version}</version>
+        </dependency>
+
+        <!--
+        ~ Testing Dependencies
+        -->
+        <dependency>
+            <!-- Junit 5 / Jupiter -->
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- AssertJ fluent assertions -->
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <!-- Substitute maven properties in values.yaml -->
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/values.yaml</include>
+                </includes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/values.yaml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <!-- Substitute maven properties in tests yaml -->
+                <filtering>true</filtering>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*.yaml</include>
+                </includes>
+            </testResource>
+        </testResources>
+    </build>
+
+</project>

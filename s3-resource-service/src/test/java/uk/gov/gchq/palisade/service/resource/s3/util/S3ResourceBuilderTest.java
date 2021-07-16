@@ -18,8 +18,11 @@ package uk.gov.gchq.palisade.service.resource.s3.util;
 
 import org.junit.jupiter.api.Test;
 
+import uk.gov.gchq.palisade.resource.ParentResource;
 import uk.gov.gchq.palisade.resource.Resource;
+import uk.gov.gchq.palisade.resource.impl.DirectoryResource;
 import uk.gov.gchq.palisade.resource.impl.FileResource;
+import uk.gov.gchq.palisade.resource.impl.SystemResource;
 import uk.gov.gchq.palisade.util.AbstractResourceBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,18 +32,44 @@ class S3ResourceBuilderTest {
     @Test
     void testResourceBuilderAcceptsS3Scheme() {
         // Given
-        var resourceUri = "s3://bucket/some/object";
+        String resourceUri = "s3://bucket/some/object";
 
         // When
         var resource = AbstractResourceBuilder.create(resourceUri);
 
         // Then
         assertThat(resource)
-                .as("Check that when building a resource with an s3 prefix, it is an instance of a S3Resource")
+                .as("Check that when building a resource with an s3 prefix, it is an instance of a FileResource")
                 .isInstanceOf(FileResource.class)
                 .as("Check that the resourceId is formatted correctly")
                 .extracting(Resource::getId)
                 .isEqualTo(resourceUri);
+
+        // Given
+        var directoryResourceUri = "s3://bucket/some/";
+
+        // When
+        var directoryResource = AbstractResourceBuilder.create(directoryResourceUri);
+
+        // Then
+        assertThat(directoryResource)
+                .as("Check that when building a resource with an s3 prefix, it is an instance of a S3Resource")
+                .isInstanceOf(DirectoryResource.class)
+                .as("Check that the resource is the parent of the first resource")
+                .isEqualTo(((FileResource) resource).getParent());
+
+        // Given
+        var bucketResourceUri = "s3://bucket/";
+
+        // When
+        var bucketResource = AbstractResourceBuilder.create(bucketResourceUri);
+
+        // Then
+        assertThat(bucketResource)
+                .as("Check that when building a resource with an s3 prefix, it is an instance of a S3Resource")
+                .isInstanceOf(SystemResource.class)
+                .as("Check that the resource is the parent of the second resource")
+                .isEqualTo(((DirectoryResource) directoryResource).getParent());
     }
 
     @Test
