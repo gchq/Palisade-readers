@@ -29,4 +29,5 @@ To choose the s3-data-reader as the technology in your Palisade deployment, you 
 Or by configuring the implementation in the relevant yaml files:
 ```yaml
 data:
-        implementation: s3
+    implementation: s3
+```
