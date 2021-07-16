@@ -19,3 +19,14 @@ limitations under the License.
 ## A Tool for Complex and Scalable Data Access Policy Enforcement
 
 # Hadoop Resource Service
+
+The Hadoop Resource Service contains Hadoop specific configuration required to allow the Resource Service to communicate with Hadoop and check if resources exist.  
+If the resource does exist, a `LeafResource` is created with the resourceId and connection detail information so that it can be read by the Data Service.
+
+To choose the hadoop-resource-service as the technology in your Palisade deployment, you can do so by running the following:  
+```java -Dloader.path=hadoop-resource-service/target -jar resource-service.jar```  
+Or by configuring the implementation in the relevant yaml files:
+```yaml
+resource:
+        implementation: hadoop
+```

@@ -19,3 +19,15 @@ limitations under the License.
 ## A Tool for Complex and Scalable Data Access Policy Enforcement
 
 # Hadoop Data Reader
+
+The Hadoop Data Reader contains the Hadoop specific configuration required to allow the Data Service to read data from Apache Hadoop.
+
+The `readRaw` method in the HadoopDataReader opens a connection to Hadoop, and download the data as an InputStream, which is read by the Data Service.
+
+To choose the hadoop-data-reader as the technology in your Palisade deployment, you can do so by running the following:  
+```java -Dloader.path=hadoop-data-reader/target -jar data-service.jar```  
+Or by configuring the implementation in the relevant yaml files:
+```yaml
+data:
+    implementation: hadoop
+```
