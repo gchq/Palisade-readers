@@ -49,6 +49,8 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <O> the domain object type
  */
+// Suppress making serialiser class itself serialisable
+@SuppressWarnings({"java:S2057", "java:S1948"})
 public class AvroSerialiser<O> implements Serialiser<O> {
     private static final int PARALLELISM = 1;
     private static final Logger LOGGER = LoggerFactory.getLogger(AvroSerialiser.class);

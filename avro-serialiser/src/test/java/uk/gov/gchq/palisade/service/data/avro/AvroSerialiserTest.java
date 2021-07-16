@@ -84,6 +84,7 @@ class AvroSerialiserTest {
 
         // Then
         assertThat(recordStream.collect(Collectors.toList()))
+                .as("Check the serialised-deserialised records match their original counterparts")
                 .isEqualTo(records);
     }
 }
