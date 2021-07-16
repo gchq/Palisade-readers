@@ -33,7 +33,6 @@ In terms of code, there is one interface in the Data Service that is core to thi
 This provides the basis for all the solutions used in retrieving the data.
 
 The writer in the Data Service class `SerialisingResponseWriter` and the reader implementation in the abstract class `SerialisedDataReader` provide the implementation for the data retrieval.
-The class [HadoopDataReader](hadoop-reader/src/main/java/uk/gov/gchq/palisade/reader/HadoopDataReader.java) is the reader implementation for Hadoop.
 In the `SerialisingResponseWriter.write` method, these classes are used to first retrieve the references to the data plus the rules that will be used for filtering.
 This is used to set up a processing stream for the client's request.
 
@@ -41,3 +40,11 @@ The `SerialisedDataReader` will retrieve the data as an input stream.
 The `SerialisingResponseWriter` will then deserialise the stream into records where the rules are applied to redact or mask the records.
 
 This is then re-serialised into an output stream provided to the client.
+
+For information on the different implementations, see the following modules:
+- Hadoop
+    - [Hadoop Data Reader](hadoop-data-reader/README.md)
+    - [Hadoop Resource Service](hadoop-resource-service/README.md)
+- S3
+    - [S3 Data Reader](s3-data-reader/README.md)
+    - [S3 Resource Service](s3-resource-service/README.md)
