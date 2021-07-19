@@ -15,4 +15,3 @@
 data:
   serialisers:
     "[avro/binary]": "uk.gov.gchq.palisade.service.data.avro.AvroSerialiser"
-
