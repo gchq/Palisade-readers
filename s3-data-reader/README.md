@@ -31,3 +31,20 @@ Or by configuring the implementation in the relevant yaml files:
 data:
     implementation: s3
 ```
+
+To configure the Alpakka S3 Resource Service, read the specific [yaml](src/main/resources/application-s3.yaml), and the inline comments by each value, for example:
+```yaml
+alpakka.s3:
+  aws:
+    # If this section is absent, the fallback behavior is
+    # to use the same configuration as if credentials.provider = default
+    credentials:
+      # default: as described in software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider docs,
+      # attempts to get the credentials from either:
+      #   - environment variables
+      #   - system properties
+      #   - credentials file
+      #   - EC2 credentials service
+      #   - IAM / metadata
+      provider: default
+```
