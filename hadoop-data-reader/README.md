@@ -20,8 +20,8 @@ limitations under the License.
 
 # Hadoop Data Reader
 
-The Hadoop Data Reader contains the Hadoop specific configuration required to allow the Data Service to read data from [Apache Hadoop](https://hadoop.apache.org/) and for Palisade to work with Hadoop deployments.  
-Using the Hadoop API outlined [here](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html), and found here in [maven](https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common), the Data Service can then communicate with local file systems, HDFS (Hadoop file systems) and S3 object stores.
+The Hadoop Data Reader contains the Hadoop specific classes and configuration required to allow the Data Service to read data from [Apache Hadoop](https://hadoop.apache.org/) and for Palisade to work with Hadoop deployments.  
+Using the Hadoop API outlined [here](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html), and found [here in maven](https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common), the Data Service can then communicate with local file systems, HDFS (Hadoop file systems) and S3 object stores.
 
 The `readRaw` method in the HadoopDataReader opens a connection to Hadoop, and download the data as an InputStream, which is read by the Data Service, and serialised into a human-readable form.
 
@@ -34,5 +34,7 @@ data:
     implementation: hadoop
 ```
 
-However, although Hadoop supports local File Systems and S3 Object stores, it won't be the most efficient, and other modules should be considered.
+Although, although Hadoop supports local File Systems and S3 Object stores, it won't be the most efficient, and other modules should be considered.  
+For S3 object stores, read the [S3-Data-Reader README.md](../s3-data-reader/README.md).  
+For local file systems, read the [SimpleDataService](../../Palisade-services/data-service/README.md#Data Service) implementation. 
 
