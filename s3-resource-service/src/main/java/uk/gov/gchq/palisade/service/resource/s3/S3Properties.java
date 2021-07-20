@@ -27,7 +27,7 @@ import uk.gov.gchq.palisade.Generated;
 public class S3Properties {
     public static final String S3_PREFIX = "s3";
     public static final String S3_PATH_SEP = "/";
-    private String connectionDetail = "s3-data-service";
+    private String connectionDetail = "data-service";
     private String palisadeTypeHeader = "x-pal-type";
     private String palisadeFormatHeader = "x-pal-format";
     private String userMetaPrefix = "x-amz-meta-";
