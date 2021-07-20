@@ -10,8 +10,8 @@ List of third-party dependencies grouped by their license type
 * AssertJ fluent assertions ([org.assertj:assertj-core:3.18.0](https://assertj.github.io/doc/assertj-core/))
 * spring-boot-starter-test ([org.springframework.boot:spring-boot-starter-test:2.3.1.RELEASE](https://spring.io/projects/spring-boot))
 * AWS Java SDK :: Services :: Amazon S3 ([software.amazon.awssdk:s3:2.16.60](https://aws.amazon.com/sdkforjava))
-* GCHQ Palisade - Data Service ([uk.gov.gchq.palisade:data-service:0.5.0-RELEASE](https://github.com/gchq/Palisade-services/tree/develop/data-service))
-* GCHQ Palisade - Resource Service ([uk.gov.gchq.palisade:resource-service:0.5.0-RELEASE](https://github.com/gchq/Palisade-services/tree/develop/resource-service))
+* GCHQ Palisade - Data Service ([uk.gov.gchq.palisade:data-service:0.5.1-SNAPSHOT](https://github.com/gchq/Palisade-services/tree/develop/data-service))
+* GCHQ Palisade - Resource Service ([uk.gov.gchq.palisade:resource-service:0.5.1-SNAPSHOT](https://github.com/gchq/Palisade-services/tree/develop/resource-service))
 
 ### [Eclipse Public License 1.0](./licenses/eclipse_public_license_1.0.html):
 * Logback Classic Module ([ch.qos.logback:logback-classic:1.2.3](http://logback.qos.ch/logback-classic))
