@@ -55,7 +55,7 @@ class S3ResourceBuilderTest {
 
         // Then
         assertThat(directoryResource)
-                .as("Check that when building a resource with an s3 prefix, it is an instance of a S3Resource")
+                .as("Check that when building a resource with an s3 prefix, it is an instance of a DirectoryResource")
                 .isInstanceOf(DirectoryResource.class)
                 .as("Check that the resource is the parent of the first resource")
                 .isEqualTo(((FileResource) resource).getParent());
@@ -68,7 +68,7 @@ class S3ResourceBuilderTest {
 
         // Then
         assertThat(bucketResource)
-                .as("Check that when building a resource with an s3 prefix, it is an instance of a S3Resource")
+                .as("Check that when building a resource with an s3 prefix, it is an instance of a SystemResource")
                 .isInstanceOf(SystemResource.class)
                 .as("Check that the resource is the parent of the second resource")
                 .isEqualTo(((DirectoryResource) directoryResource).getParent());
