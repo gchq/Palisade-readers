@@ -1,6 +1,6 @@
-uk.gov.gchq.palisade:hadoop-data-reader:jar:0.5.0-SNAPSHOT
-+- uk.gov.gchq.palisade:data-service:jar:0.5.0-SNAPSHOT:provided
-|  +- uk.gov.gchq.palisade:common:jar:0.5.0-SNAPSHOT:provided
+uk.gov.gchq.palisade:hadoop-data-reader:jar:0.5.1-SNAPSHOT
++- uk.gov.gchq.palisade:data-service:jar:0.5.1-SNAPSHOT:provided
+|  +- uk.gov.gchq.palisade:common:jar:0.5.1-SNAPSHOT:provided
 |  +- com.typesafe.akka:akka-stream_2.13:jar:2.6.10:provided
 |  |  +- org.scala-lang:scala-library:jar:2.13.3:provided
 |  |  +- com.typesafe.akka:akka-actor_2.13:jar:2.6.10:provided
@@ -16,10 +16,6 @@ uk.gov.gchq.palisade:hadoop-data-reader:jar:0.5.0-SNAPSHOT
 |  |  |  \- org.lz4:lz4-java:jar:1.7.1:provided
 |  |  \- org.scala-lang.modules:scala-collection-compat_2.13:jar:2.2.0:provided
 |  +- com.typesafe.akka:akka-slf4j_2.13:jar:2.6.10:provided
-|  +- com.typesafe.akka:akka-http_2.13:jar:10.1.11:provided
-|  |  \- com.typesafe.akka:akka-http-core_2.13:jar:10.1.11:provided
-|  |     \- com.typesafe.akka:akka-parsing_2.13:jar:10.1.11:provided
-|  +- com.typesafe.akka:akka-http-jackson_2.13:jar:10.1.11:provided
 |  +- com.typesafe.akka:akka-discovery_2.13:jar:2.6.10:provided
 |  +- org.springframework.boot:spring-boot-starter-actuator:jar:2.3.1.RELEASE:provided
 |  |  +- org.springframework.boot:spring-boot-starter:jar:2.3.1.RELEASE:provided
@@ -39,9 +35,22 @@ uk.gov.gchq.palisade:hadoop-data-reader:jar:0.5.0-SNAPSHOT
 |  |  \- io.micrometer:micrometer-core:jar:1.5.1:provided
 |  |     +- org.hdrhistogram:HdrHistogram:jar:2.1.12:provided
 |  |     \- org.latencyutils:LatencyUtils:jar:2.0.3:provided
+|  +- org.springframework.boot:spring-boot-starter-web:jar:2.3.1.RELEASE:provided
+|  |  +- org.springframework.boot:spring-boot-starter-json:jar:2.3.1.RELEASE:provided
+|  |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.11.0:provided
+|  |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.11.0:provided
+|  |  +- org.springframework.boot:spring-boot-starter-tomcat:jar:2.3.1.RELEASE:provided
+|  |  |  +- org.apache.tomcat.embed:tomcat-embed-core:jar:9.0.36:provided
+|  |  |  +- org.glassfish:jakarta.el:jar:3.0.3:provided
+|  |  |  \- org.apache.tomcat.embed:tomcat-embed-websocket:jar:9.0.36:provided
+|  |  +- org.springframework:spring-web:jar:5.2.7.RELEASE:provided
+|  |  |  \- org.springframework:spring-beans:jar:5.2.7.RELEASE:provided
+|  |  \- org.springframework:spring-webmvc:jar:5.2.7.RELEASE:provided
+|  |     +- org.springframework:spring-aop:jar:5.2.7.RELEASE:provided
+|  |     +- org.springframework:spring-context:jar:5.2.7.RELEASE:provided
+|  |     \- org.springframework:spring-expression:jar:5.2.7.RELEASE:provided
 |  +- org.springframework.boot:spring-boot-starter-data-jpa:jar:2.3.1.RELEASE:provided
 |  |  +- org.springframework.boot:spring-boot-starter-aop:jar:2.3.1.RELEASE:provided
-|  |  |  +- org.springframework:spring-aop:jar:5.2.7.RELEASE:provided
 |  |  |  \- org.aspectj:aspectjweaver:jar:1.9.5:provided
 |  |  +- org.springframework.boot:spring-boot-starter-jdbc:jar:2.3.1.RELEASE:provided
 |  |  |  +- com.zaxxer:HikariCP:jar:3.4.5:provided
@@ -65,10 +74,7 @@ uk.gov.gchq.palisade:hadoop-data-reader:jar:0.5.0-SNAPSHOT
 |  |  +- org.springframework.data:spring-data-jpa:jar:2.3.1.RELEASE:provided
 |  |  |  +- org.springframework.data:spring-data-commons:jar:2.3.1.RELEASE:provided
 |  |  |  +- org.springframework:spring-orm:jar:5.2.7.RELEASE:provided
-|  |  |  +- org.springframework:spring-context:jar:5.2.7.RELEASE:provided
-|  |  |  |  \- org.springframework:spring-expression:jar:5.2.7.RELEASE:provided
-|  |  |  +- org.springframework:spring-tx:jar:5.2.7.RELEASE:provided
-|  |  |  \- org.springframework:spring-beans:jar:5.2.7.RELEASE:provided
+|  |  |  \- org.springframework:spring-tx:jar:5.2.7.RELEASE:provided
 |  |  \- org.springframework:spring-aspects:jar:5.2.7.RELEASE:provided
 |  +- com.h2database:h2:jar:1.4.200:provided
 |  \- org.springframework.boot:spring-boot-starter-data-redis:jar:2.3.1.RELEASE:provided

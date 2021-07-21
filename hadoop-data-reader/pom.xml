@@ -22,7 +22,7 @@
     <parent>
         <groupId>uk.gov.gchq.palisade</groupId>
         <artifactId>readers</artifactId>
-        <version>0.5.0-${revision}</version>
+        <version>0.5.1-${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -70,7 +70,7 @@
             <!-- Readers, Request & Response types -->
             <groupId>uk.gov.gchq.palisade</groupId>
             <artifactId>data-service</artifactId>
-            <version>0.5.0-${services.revision}</version>
+            <version>0.5.1-${services.revision}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

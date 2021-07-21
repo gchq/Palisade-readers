@@ -1,7 +1,12 @@
-uk.gov.gchq.palisade:s3-resource-service:jar:0.5.0-SNAPSHOT
-+- uk.gov.gchq.palisade:resource-service:jar:0.5.0-SNAPSHOT:provided
-|  +- uk.gov.gchq.palisade:common:jar:0.5.0-SNAPSHOT:provided
-|  |  \- org.slf4j:slf4j-api:jar:1.7.25:compile
+uk.gov.gchq.palisade:s3-resource-service:jar:0.5.1-SNAPSHOT
++- uk.gov.gchq.palisade:resource-service:jar:0.5.1-SNAPSHOT:provided
+|  +- uk.gov.gchq.palisade:common:jar:0.5.1-SNAPSHOT:provided
+|  |  \- org.apache.avro:avro:jar:1.8.2:provided
+|  |     +- org.codehaus.jackson:jackson-core-asl:jar:1.9.13:provided
+|  |     +- org.codehaus.jackson:jackson-mapper-asl:jar:1.9.13:provided
+|  |     +- com.thoughtworks.paranamer:paranamer:jar:2.7:provided
+|  |     +- org.xerial.snappy:snappy-java:jar:1.1.1.3:provided
+|  |     \- org.tukaani:xz:jar:1.5:provided
 |  +- com.typesafe.akka:akka-stream_2.13:jar:2.6.10:provided
 |  |  +- com.typesafe.akka:akka-actor_2.13:jar:2.6.10:provided
 |  |  |  +- com.typesafe:config:jar:1.4.0:provided
@@ -13,10 +18,10 @@ uk.gov.gchq.palisade:s3-resource-service:jar:0.5.0-SNAPSHOT
 |  +- com.typesafe.akka:akka-stream-kafka_2.13:jar:2.1.0-M1:provided
 |  |  +- org.apache.kafka:kafka-clients:jar:2.6.0:provided
 |  |  |  +- com.github.luben:zstd-jni:jar:1.4.4-7:provided
-|  |  |  +- org.lz4:lz4-java:jar:1.7.1:provided
-|  |  |  \- org.xerial.snappy:snappy-java:jar:1.1.7.3:provided
+|  |  |  \- org.lz4:lz4-java:jar:1.7.1:provided
 |  |  \- org.scala-lang.modules:scala-collection-compat_2.13:jar:2.2.0:provided
 |  +- com.typesafe.akka:akka-slf4j_2.13:jar:2.6.10:provided
+|  |  \- org.slf4j:slf4j-api:jar:1.7.30:compile
 |  +- com.typesafe.akka:akka-discovery_2.13:jar:2.6.10:provided
 |  +- org.springframework.boot:spring-boot-starter-actuator:jar:2.3.1.RELEASE:provided
 |  |  +- org.springframework.boot:spring-boot-actuator-autoconfigure:jar:2.3.1.RELEASE:provided
@@ -152,7 +157,7 @@ uk.gov.gchq.palisade:s3-resource-service:jar:0.5.0-SNAPSHOT
 |  \- org.xmlunit:xmlunit-core:jar:2.7.0:test
 +- org.testcontainers:localstack:jar:1.15.3:test
 |  \- org.testcontainers:testcontainers:jar:1.15.3:test
-|     +- org.apache.commons:commons-compress:jar:1.20:test
+|     +- org.apache.commons:commons-compress:jar:1.20:provided
 |     +- org.rnorth.duct-tape:duct-tape:jar:1.0.8:test
 |     +- org.rnorth.visible-assertions:visible-assertions:jar:2.1.2:test
 |     |  \- net.java.dev.jna:jna:jar:5.2.0:test
