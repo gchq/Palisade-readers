@@ -22,7 +22,7 @@
     <parent>
         <groupId>uk.gov.gchq.palisade</groupId>
         <artifactId>readers</artifactId>
-        <version>0.5.0-${revision}</version>
+        <version>0.5.1-${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -69,7 +69,7 @@
             <!-- Serialiser interface -->
             <groupId>uk.gov.gchq.palisade</groupId>
             <artifactId>common</artifactId>
-            <version>0.5.0-${common.revision}</version>
+            <version>0.5.1-${common.revision}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
