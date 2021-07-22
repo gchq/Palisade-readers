@@ -28,4 +28,4 @@ uk.gov.gchq.palisade:avro-serialiser:jar:0.5.1-SNAPSHOT
 |  +- org.junit.jupiter:junit-jupiter-params:jar:5.7.0:test
 |  \- org.junit.jupiter:junit-jupiter-engine:jar:5.7.0:test
 |     \- org.junit.platform:junit-platform-engine:jar:1.7.0:test
-\- org.assertj:assertj-core:jar:3.19.0:test
+\- org.assertj:assertj-core:jar:3.18.0:test

@@ -9,7 +9,6 @@ List of third-party dependencies grouped by their license type
 * Apache Avro ([org.apache.avro:avro:1.8.2](http://avro.apache.org))
 * Apache Hadoop Common ([org.apache.hadoop:hadoop-common:3.2.1](no url defined))
 * AssertJ fluent assertions ([org.assertj:assertj-core:3.18.0](https://assertj.github.io/doc/assertj-core/))
-* AssertJ fluent assertions ([org.assertj:assertj-core:3.19.0](https://assertj.github.io/doc/assertj-core/))
 * spring-boot-starter-test ([org.springframework.boot:spring-boot-starter-test:2.3.1.RELEASE](https://spring.io/projects/spring-boot))
 * AWS Java SDK :: Services :: Amazon S3 ([software.amazon.awssdk:s3:2.16.60](https://aws.amazon.com/sdkforjava))
 * GCHQ Palisade Common Library ([uk.gov.gchq.palisade:common:0.5.1-SNAPSHOT](https://github.com/gchq/Palisade-common))
