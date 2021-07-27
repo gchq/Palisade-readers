@@ -25,7 +25,7 @@ For Windows developer environments, we recommend setting up [WSL](https://docs.m
 The Palisade-readers repository enables functionality for providing the implementations needed for Palisade to integrate with existing products and technologies.
 
 A good starting point to understanding these modules is with the Data Service.
-For a single request to the Data Service, the request might look like `GET /read/chunked resourceId=hdfs:/some/protected/employee_file0.avro`, which can be broken down into a number of capabilities that are required:
+For a single request to the Data Service, the request might look like `GET /read/chunked resourceId=hdfs:/some/protected/employee_file0.avro token=some-uuid-token`, which can be broken down into a number of capabilities that are required:
 * Reading data from an `HDFS` cluster
 * Deserialising an `Avro` data-stream
 * Understanding what an `Employee` datatype looks like and how the rules on the `/protected` directory will apply to the fields
