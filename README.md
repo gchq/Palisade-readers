@@ -41,7 +41,7 @@ The Palisade-readers repository therefore implements many of these functions, ab
   All that is important is that this POJO exists somewhere on the classpath.
 
 The decoupling of these technology-specific implementations allows Palisade to be flexible enough to be trivially implemented into existing tech stacks and datasets.
-The above deployment could as easily have been using the [S3 Resource Service](s3-resource-service) and [S3 Data Reader](s3-data-reader) to serve a request for `GET /read/chunked resourceId=s3:/some/protected/employee_file0.avro`.
+The above deployment could as easily have been using the [S3 Resource Service](s3-resource-service) and [S3 Data Reader](s3-data-reader) to serve a request for `GET /read/chunked resourceId=s3:/some/protected/employee_file0.avro token=some-uuid-token`.
 
 For information on the different implementations, see the following modules:
 - Apache Avro Format
