@@ -69,7 +69,7 @@ public class S3DataReader implements DataReader {
 
     @Override
     public InputStream read(final LeafResource resource) {
-        LOGGER.debug("Invoking readRaw with resource: {}", resource);
+        LOGGER.debug("Invoking read with resource: {}", resource);
         return readSource(resource)
                 .runWith(StreamConverters.asInputStream(), materialiser);
     }
