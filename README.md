@@ -22,31 +22,33 @@ For Windows developer environments, we recommend setting up [WSL](https://docs.m
 
 # Palisade Readers
 
-The `Readers` library enables functionality for providing data with the relevant data restrictions applied.
-It provides the services needed to locate the references to the requested records, uses this to retrieve the data and then to extract each record where it can be filtered using the restrictions defined by the rules in place for the data.
+The Palisade-readers repository enables functionality for providing the implementations needed for Palisade to integrate with existing products and technologies.
 
-A good starting point to understanding this library is with the Data Service.
-The client will have sent the initial request to access data with the Palisade Service and received a response with a unique identifier for the request.
-This is then used to send a request to the Data Service to retrieve the data.
-The Reader library provides the functionality for the Data Service to retrieve the data.
-This information is then used to return an output stream of the for the service to process the data before returning it to the client.
+A good starting point to understanding these modules is with the Data Service.
+For a single request to the Data Service, the request might look like `GET /read/chunked resourceId=hdfs:/some/protected/employee_file0.avro`, which can be broken down into a number of capabilities that are required:
+* Reading data from an `HDFS` cluster
+* Deserialising an `Avro` data-stream
+* Understanding what an `Employee` datatype looks like and how the rules on the `/protected` directory will apply to the fields
+* How to return data for the `/read/chunked` API endpoint
 
-In terms of code, there is one interface in the Data Service that is core to this library, the `DataReader`.
-This provides the basis for all the solutions used in retrieving the data.
+The Palisade-readers repository therefore implements many of these functions, abstracted away from the inner workings of the core [Palisade-services](https://github.com/gchq/Palisade-services):
+* In this case, the Data Service's default API is for the `/read/chunked` endpoint, and is therefore already implemented in the [ReadChunkedDataService](https://github.com/gchq/Palisade-services/blob/develop/data-service/src/main/java/uk/gov/gchq/palisade/service/data/service/ReadChunkedDataService.java), but we could imagine other protocols.
+* To read from an `HDFS` filesystem, we need the Resource Service to discover the available resources (like doing an `ls` on a directory), as well as needing the Data Service to read the raw bytes of that resource.
+  We implement the [Hadoop Resource Service](hadoop-resource-service) and [Hadoop Data Reader](hadoop-data-reader) to enable this functionality.
+* To work with the raw bytes returned from the Data Reader, we need to deserialise into Java objects.
+  We implement the [Avro Serialiser](avro-serialiser) that, given a domain class, will serialise and deserialise between Java objects of this class and plain bytes.
+* The domain class for the aforementioned serialiser in this case is `Employee`, which is implemented elsewhere and equivalent to a schema definition and is generally a property of the specific dataset, not the Palisade deployment in general.
+  All that is important is that this POJO exists somewhere on the classpath.
 
-The writer in the Data Service class `SerialisingResponseWriter` and the reader implementation in the abstract class `SerialisedDataReader` provide the implementation for the data retrieval.
-In the `SerialisingResponseWriter.write` method, these classes are used to first retrieve the references to the data plus the rules that will be used for filtering.
-This is used to set up a processing stream for the client's request.
-
-The `SerialisedDataReader` will retrieve the data as an input stream.
-The `SerialisingResponseWriter` will then deserialise the stream into records where the rules are applied to redact or mask the records.
-
-This is then re-serialised into an output stream provided to the client.
+The decoupling of these technology-specific implementations allows Palisade to be flexible enough to be trivially implemented into existing tech stacks and datasets.
+The above deployment could as easily have been using the [S3 Resource Service](s3-resource-service) and [S3 Data Reader](s3-data-reader) to serve a request for `GET /read/chunked resourceId=s3:/some/protected/employee_file0.avro`.
 
 For information on the different implementations, see the following modules:
-- Hadoop
-    - [Hadoop Data Reader](hadoop-data-reader/README.md)
+- Apache Avro Format
+    - [Avro Serialiser](avro-serialiser/README.md)
+- Apache Hadoop Distributed File System
     - [Hadoop Resource Service](hadoop-resource-service/README.md)
-- S3
-    - [S3 Data Reader](s3-data-reader/README.md)
+    - [Hadoop Data Reader](hadoop-data-reader/README.md)
+- Amazon S3 Object Storage
     - [S3 Resource Service](s3-resource-service/README.md)
+    - [S3 Data Reader](s3-data-reader/README.md)
