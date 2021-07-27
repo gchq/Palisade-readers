@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.Generated;
 import uk.gov.gchq.palisade.resource.LeafResource;
-import uk.gov.gchq.palisade.service.data.reader.AbstractSerialisedDataReader;
+import uk.gov.gchq.palisade.service.data.service.reader.DataReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,15 +34,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.StringJoiner;
 
 import static java.util.Objects.requireNonNull;
 
 /**
- * An HadoopDataReader is an implementation of {@link AbstractSerialisedDataReader} for Hadoop that opens a file and returns
+ * An HadoopDataReader is an implementation of {@link DataReader} for Hadoop that opens a file and returns
  * a single {@link InputStream} containing all the records.
  */
-public class HadoopDataReader extends AbstractSerialisedDataReader {
+public class HadoopDataReader implements DataReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(HadoopDataReader.class);
 
     private FileSystem fs;
@@ -74,6 +75,35 @@ public class HadoopDataReader extends AbstractSerialisedDataReader {
      */
     public HadoopDataReader(final Map<String, String> conf) throws IOException {
         this(createConfig(conf));
+    }
+
+    @Override
+    public boolean accepts(final LeafResource leafResource) {
+        return Set.of("hdfs", "file").contains(URI.create(leafResource.getId()).getScheme());
+    }
+
+    @Override
+    public InputStream read(final LeafResource resource) {
+        requireNonNull(resource, "resource is required");
+
+        InputStream inputStream;
+        try {
+            //1st attempt: process this as a URI
+            inputStream = fs.open(new Path(new URI(resource.getId())));
+        } catch (URISyntaxException e) {
+            LOGGER.debug("Issue encountered while reading resource {} as a URI: {}", resource.getId(), e);
+            //2nd attempt: process as a string
+            try {
+                inputStream = fs.open(new Path(resource.getId()));
+            } catch (final IOException ex) {
+                throw new ReadResourceException("Unable to read resource: " + resource.getId(), ex);
+            }
+        } catch (final IOException e) {
+            throw new ReadResourceException("Unable to read resource: " + resource.getId(), e);
+        }
+
+        LOGGER.debug("Successfully created stream to resource {}", resource);
+        return inputStream;
     }
 
     private static Configuration createConfig(final Map<String, String> conf) {
@@ -121,31 +151,6 @@ public class HadoopDataReader extends AbstractSerialisedDataReader {
     public HadoopDataReader fs(final FileSystem fs) {
         this.setFs(fs);
         return this;
-    }
-
-
-    @Override
-    protected InputStream readRaw(final LeafResource resource) {
-        requireNonNull(resource, "resource is required");
-
-        InputStream inputStream;
-        try {
-            //1st attempt: process this as a URI
-            inputStream = fs.open(new Path(new URI(resource.getId())));
-        } catch (URISyntaxException e) {
-            LOGGER.debug("Issue encountered while reading resource {} as a URI: {}", resource.getId(), e);
-            //2nd attempt: process as a string
-            try {
-                inputStream = fs.open(new Path(resource.getId()));
-            } catch (final IOException ex) {
-                throw new ReadResourceException("Unable to read resource: " + resource.getId(), ex);
-            }
-        } catch (final IOException e) {
-            throw new ReadResourceException("Unable to read resource: " + resource.getId(), e);
-        }
-
-        LOGGER.debug("Successfully created stream to resource {}", resource);
-        return inputStream;
     }
 
     @Generated

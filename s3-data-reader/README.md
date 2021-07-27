@@ -22,7 +22,7 @@ limitations under the License.
 
 The S3 Data Reader contains the S3 specific configuration required to allow the Data Service to read data from AWS S3 using [alpakka s3](https://doc.akka.io/docs/alpakka/current/s3.html).  
 
-The `readRaw` method in the S3DataReader first checks if the user has access to the bucket within S3, and if so, downloads the LeafResource via Alpakkas S3 download API.
+The `read` method in the S3DataReader first checks if the user has access to the bucket within S3, and if so, downloads the LeafResource via Alpakkas S3 download API.
 
 To choose the s3-data-reader as the technology in your Palisade deployment, you can do so by running the following:  
 ```java -Dloader.path=s3-data-reader/target -jar data-service.jar```  

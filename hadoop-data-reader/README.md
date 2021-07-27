@@ -23,9 +23,9 @@ limitations under the License.
 The Hadoop Data Reader contains the Hadoop specific classes and configuration required to allow the Data Service to read data from [Apache Hadoop](https://hadoop.apache.org/) and for Palisade to work with Hadoop deployments.  
 Using the Hadoop API outlined [here](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html), and found [here in maven](https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common), the Data Service can then communicate with local file systems, HDFS (Hadoop file systems) and S3 object stores.
 
-The `readRaw` method in the HadoopDataReader opens a connection to Hadoop, and download the data as an InputStream, which is read by the Data Service, and serialised into a human-readable form.
+The `read` method in the [HadoopDataReader](src/main/java/uk/gov/gchq/palisade/service/data/hadoop/HadoopDataReader.java) opens a connection to Hadoop, and downloads the data as an `InputStream`, which is used by the Data Service.
 
-To choose the hadoop-data-reader as the technology in your Palisade deployment, you can do so by running the following:  
+To choose the `hadoop-data-reader` as the technology in your Palisade deployment, you can do so by running the following:  
 ```java -Dloader.path=hadoop-data-reader/target -jar data-service.jar``` 
 
 Or by configuring the implementation in the relevant yaml files:
@@ -36,5 +36,4 @@ data:
 
 Although, although Hadoop supports local File Systems and S3 Object stores, it won't be the most efficient, and other modules should be considered.  
 For S3 object stores, read the [S3-Data-Reader README.md](../s3-data-reader/README.md).  
-For local file systems, read the [SimpleDataService](../../Palisade-services/data-service/README.md#Data Service) implementation. 
-
+For local file systems, read the [SimpleDataService](https://github.com/gchq/Palisade-services/blob/develop/data-service/src/main/java/uk/gov/gchq/palisade/service/data/service/reader/SimpleDataReader.java) implementation. 

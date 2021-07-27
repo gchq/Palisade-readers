@@ -76,6 +76,8 @@
     </properties>
 
     <modules>
+        <!-- Avro implementations -->
+        <module>avro-serialiser</module>
         <!-- Hadoop implementations -->
         <module>hadoop-resource-service</module>
         <module>hadoop-data-reader</module>

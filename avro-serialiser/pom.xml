@@ -35,11 +35,11 @@
     </developers>
 
     <!--  *********** Artifact ID ***********    -->
-    <artifactId>hadoop-resource-service</artifactId>
-    <url>https://github.com/gchq/Palisade-readers/tree/develop/hadoop-resource</url>
-    <name>GCHQ Palisade - Hadoop Resource Service</name>
+    <artifactId>avro-serialiser</artifactId>
+    <url>https://github.com/gchq/Palisade-readers/tree/develop/s3-data-reader</url>
+    <name>GCHQ Palisade - Avro Serialiser</name>
     <description>
-        Hadoop HDFS implementation for Palisade Resource Service
+        Implementation of the Serialiser backed by the Avro data format.
     </description>
     <!--  *********** Artifact ID ***********    -->
 
@@ -51,13 +51,13 @@
     </scm>
 
     <properties>
-        <!-- Dependency versions -->
-        <gson.version>2.8.6</gson.version>
-        <jackson.version>2.11.0</jackson.version>
-        <hadoop.version>3.2.1</hadoop.version>
+        <!-- Dependency Versions -->
+        <avro.version>1.8.2</avro.version>
 
-        <!-- Test dependency versions -->
-        <junit.version>5.5.2</junit.version>
+        <!-- Test Dependency Versions -->
+        <akka.version>2.6.10</akka.version>
+        <scala.version>2.13</scala.version>
+        <junit.jupiter.version>5.7.0</junit.jupiter.version>
         <assertj.version>3.18.0</assertj.version>
     </properties>
 
@@ -66,51 +66,39 @@
         ~ Palisade
         -->
         <dependency>
-            <!-- Readers, Request & Response types -->
+            <!-- Serialiser interface -->
             <groupId>uk.gov.gchq.palisade</groupId>
-            <artifactId>resource-service</artifactId>
-            <version>0.5.1-${services.revision}</version>
+            <artifactId>common</artifactId>
+            <version>0.5.1-${common.revision}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
+            <!-- Core Akka streaming API -->
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-stream_${scala.version}</artifactId>
+            <version>${akka.version}</version>
+            <optional>true</optional>
         </dependency>
+
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
+            <!-- Avro Datum Reader/Writer -->
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>${avro.version}</version>
         </dependency>
-        <dependency>
-            <!-- Hadoop config classes -->
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-common</artifactId>
-            <version>${hadoop.version}</version>
-            <exclusions>
-                <!-- Exclude incompatible Log4J -->
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
         <!--
-       ~ Test Dependencies
-       -->
+        ~ Testing Dependencies
+        -->
         <dependency>
-            <!-- JUnit -->
+            <!-- Junit 5 / Jupiter -->
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <!-- AssertJ for test assertions -->
+            <!-- AssertJ fluent assertions -->
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>

@@ -21,7 +21,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import uk.gov.gchq.palisade.service.data.reader.DataReader;
+import uk.gov.gchq.palisade.service.data.service.reader.DataReader;
 
 import java.io.IOException;
 
@@ -38,7 +38,7 @@ public class HadoopConfiguration {
     }
 
     /**
-     * Bean implementation for {@link HadoopDataReader} which extends {@link uk.gov.gchq.palisade.service.data.reader.AbstractSerialisedDataReader} and is used for setting hadoopConfigurations and reading raw data.
+     * Bean implementation for {@link HadoopDataReader} which extends {@link DataReader} and is used for setting hadoopConfigurations and reading raw data.
      *
      * @param configuration a hadoop configuration specifying the target cluster
      * @return a new instance of {@link HadoopDataReader}
