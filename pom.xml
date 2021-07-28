@@ -110,6 +110,7 @@
                 <snapshots.repository.url>https://oss.sonatype.org/content/repositories/snapshots</snapshots.repository.url>
                 <!-- Build configuration for release -->
                 <revision>RELEASE</revision>
+                <common.revision>RELEASE</common.revision>
                 <services.revision>RELEASE</services.revision>
                 <maven.test.skip>true</maven.test.skip>
             </properties>
