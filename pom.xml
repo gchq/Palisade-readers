@@ -21,7 +21,7 @@
 
     <groupId>uk.gov.gchq.palisade</groupId>
     <artifactId>readers</artifactId>
-    <version>0.5.1-${revision}</version>
+    <version>0.5.2-${revision}</version>
     <name>GCHQ Palisade Readers Implementations</name>
     <description>Technology-specific integrations for Palisade services</description>
     <url>https://github.com/gchq/Palisade-readers</url>
