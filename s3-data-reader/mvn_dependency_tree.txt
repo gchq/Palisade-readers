@@ -1,6 +1,6 @@
-uk.gov.gchq.palisade:s3-data-reader:jar:0.5.1-SNAPSHOT
-+- uk.gov.gchq.palisade:data-service:jar:0.5.1-SNAPSHOT:provided
-|  +- uk.gov.gchq.palisade:common:jar:0.5.1-SNAPSHOT:provided
+uk.gov.gchq.palisade:s3-data-reader:jar:0.5.1-RELEASE
++- uk.gov.gchq.palisade:data-service:jar:0.5.1-RELEASE:provided
+|  +- uk.gov.gchq.palisade:common:jar:0.5.1-RELEASE:provided
 |  |  \- org.slf4j:slf4j-api:jar:1.7.25:compile
 |  +- com.typesafe.akka:akka-stream-kafka_2.13:jar:2.1.0-M1:provided
 |  |  +- org.apache.kafka:kafka-clients:jar:2.6.0:provided
