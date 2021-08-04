@@ -20,6 +20,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -101,6 +102,11 @@ class HadoopResourceServiceComponentTest {
         resourceService = new HadoopResourceService(config);
         resourceService.addDataService(connectionDetail);
         HadoopResourceDetails.addTypeSupport(TYPE_VALUE, TYPE_CLASSNAME);
+    }
+
+    @AfterEach
+    void cleanUp() throws IOException {
+        fs.delete(new Path(dir), true);
     }
 
     @Test

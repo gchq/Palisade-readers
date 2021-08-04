@@ -21,7 +21,7 @@
 
     <groupId>uk.gov.gchq.palisade</groupId>
     <artifactId>readers</artifactId>
-    <version>0.5.0-${revision}</version>
+    <version>0.5.1-${revision}</version>
     <name>GCHQ Palisade Readers Implementations</name>
     <description>Technology-specific integrations for Palisade services</description>
     <url>https://github.com/gchq/Palisade-readers</url>
@@ -76,6 +76,8 @@
     </properties>
 
     <modules>
+        <!-- Avro implementations -->
+        <module>avro-serialiser</module>
         <!-- Hadoop implementations -->
         <module>hadoop-resource-service</module>
         <module>hadoop-data-reader</module>
@@ -108,6 +110,7 @@
                 <snapshots.repository.url>https://oss.sonatype.org/content/repositories/snapshots</snapshots.repository.url>
                 <!-- Build configuration for release -->
                 <revision>RELEASE</revision>
+                <common.revision>RELEASE</common.revision>
                 <services.revision>RELEASE</services.revision>
                 <maven.test.skip>true</maven.test.skip>
             </properties>

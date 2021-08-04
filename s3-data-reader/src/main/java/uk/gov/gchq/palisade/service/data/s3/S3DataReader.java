@@ -16,6 +16,7 @@
 
 package uk.gov.gchq.palisade.service.data.s3;
 
+import akka.Done;
 import akka.NotUsed;
 import akka.japi.Pair;
 import akka.stream.Materializer;
@@ -31,11 +32,12 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.palisade.resource.LeafResource;
 import uk.gov.gchq.palisade.service.data.exception.ForbiddenException;
-import uk.gov.gchq.palisade.service.data.reader.AbstractSerialisedDataReader;
+import uk.gov.gchq.palisade.service.data.service.reader.DataReader;
 
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
@@ -45,7 +47,7 @@ import static uk.gov.gchq.palisade.service.data.s3.S3Properties.S3_PREFIX;
  * to the resource as specified by the {@code LeafResource} in a S3 Bucket. This class is for the retrieval of Resources
  * only. Resources cannot be added via this Service.
  */
-public class S3DataReader extends AbstractSerialisedDataReader {
+public class S3DataReader implements DataReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3DataReader.class);
     private static final int PARALLELISM = 1;
 
@@ -61,13 +63,19 @@ public class S3DataReader extends AbstractSerialisedDataReader {
     }
 
     @Override
-    protected InputStream readRaw(final LeafResource resource) {
-        LOGGER.debug("Invoking readRaw with resource: {}", resource);
-        return readRawSource(resource)
+    public boolean accepts(final LeafResource leafResource) {
+        return S3_PREFIX.equals(URI.create(leafResource.getId()).getScheme());
+    }
+
+    @Override
+    public InputStream read(final LeafResource resource) {
+        LOGGER.debug("Invoking read with resource: {}", resource);
+        return readSource(resource)
                 .runWith(StreamConverters.asInputStream(), materialiser);
     }
 
-    protected Source<ByteString, NotUsed> readRawSource(final LeafResource resource) {
+    @Override
+    public Source<ByteString, CompletionStage<Done>> readSource(final LeafResource resource) {
         URI resourceUri = URI.create(resource.getId());
 
         if (!resourceUri.getScheme().equals(S3_PREFIX)) {
@@ -84,7 +92,8 @@ public class S3DataReader extends AbstractSerialisedDataReader {
 
         return checkBucketAccessible(bucket)
                 .flatMapMerge(PARALLELISM, access -> downloadObject(bucket, resourcePrefix))
-                .flatMapMerge(PARALLELISM, Pair::first);
+                .flatMapMerge(PARALLELISM, Pair::first)
+                .mapMaterializedValue(notUsed -> CompletableFuture.completedStage(Done.done()));
     }
 
     /**
