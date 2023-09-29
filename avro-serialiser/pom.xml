@@ -52,7 +52,7 @@
 
     <properties>
         <!-- Dependency Versions -->
-        <avro.version>1.8.2</avro.version>
+        <avro.version>1.11.3</avro.version>
 
         <!-- Test Dependency Versions -->
         <akka.version>2.6.10</akka.version>
